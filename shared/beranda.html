@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beranda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="container" style="padding: 1rem;">
+    <div class="search-wrapper">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Cari judul atau perusahaan...">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+    <div class="categories" id="categoriesContainer"></div>
+    <div class="job-count" id="jobCountDisplay">Memuat lowongan...</div>
+    <div class="job-grid" id="jobList"></div>
+</div>
+<script src="../script.js"></script>
+<script>
+    // Inisialisasi ulang untuk halaman ini (tanpa role buttons)
+    initJobsData();
+    renderCategories('categoriesContainer');
+    renderJobs('jobList', 'jobCountDisplay');
+    bindSearchEvents();
+</script>
+</body>
+</html>
