@@ -1,51 +1,28 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Profil Saya</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        .profile-card { max-width: 600px; margin: 2rem auto; background: white; padding: 1.5rem; border-radius: 24px; }
-        input { width: 100%; padding: 10px; margin: 8px 0; border-radius: 40px; border: 1px solid #ccc; }
-        button { background: #0a5b8c; color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; cursor: pointer; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil Saya</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="../style.css">
+  <style>.profile-card { max-width: 600px; margin: 2rem auto; background: white; padding: 1.5rem; border-radius: 24px; } input { width: 100%; padding: 10px; margin: 8px 0; border-radius: 40px; border: 1px solid #ccc; } button { background: #0a5b8c; color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; cursor: pointer; }</style>
 </head>
 <body>
 <div class="profile-card">
-    <h2>Profil Saya</h2>
-    <input type="text" id="nama" placeholder="Nama">
-    <input type="email" id="email" placeholder="Email">
-    <input type="tel" id="telp" placeholder="Telepon">
-    <button onclick="simpanProfil()">Simpan Profil</button>
-    <hr>
-    <h3>Lamaran Saya</h3>
-    <div id="lamaranList">Belum ada lamaran.</div>
+  <h2>Profil Saya</h2>
+  <input type="text" id="nama" placeholder="Nama">
+  <input type="email" id="email" placeholder="Email">
+  <input type="tel" id="telp" placeholder="Telepon">
+  <button onclick="simpanProfil()">Simpan Profil</button>
+  <hr><h3>Lamaran Saya</h3>
+  <div id="lamaranList">Belum ada lamaran.</div>
 </div>
 <script>
-    function simpanProfil() {
-        const profil = {
-            nama: document.getElementById('nama').value,
-            email: document.getElementById('email').value,
-            telp: document.getElementById('telp').value
-        };
-        localStorage.setItem('profilSaya', JSON.stringify(profil));
-        alert('Profil disimpan');
-    }
-    function loadProfil() {
-        const profil = JSON.parse(localStorage.getItem('profilSaya') || '{}');
-        document.getElementById('nama').value = profil.nama || '';
-        document.getElementById('email').value = profil.email || '';
-        document.getElementById('telp').value = profil.telp || '';
-    }
-    function loadLamaran() {
-        const lamaran = JSON.parse(localStorage.getItem('lamaranSaya') || '[]');
-        const container = document.getElementById('lamaranList');
-        if (lamaran.length === 0) container.innerHTML = 'Belum ada lamaran.';
-        else container.innerHTML = lamaran.map(l => `<div>${l.posisi} - ${l.perusahaan} (${l.tanggal})</div>`).join('');
-    }
-    loadProfil();
-    loadLamaran();
+  function simpanProfil() { const profil = { nama: document.getElementById('nama').value, email: document.getElementById('email').value, telp: document.getElementById('telp').value }; localStorage.setItem('profilSaya', JSON.stringify(profil)); alert('Profil disimpan'); }
+  function loadProfil() { const profil = JSON.parse(localStorage.getItem('profilSaya') || '{}'); document.getElementById('nama').value = profil.nama || ''; document.getElementById('email').value = profil.email || ''; document.getElementById('telp').value = profil.telp || ''; }
+  function loadLamaran() { const lamaran = JSON.parse(localStorage.getItem('lamaranSaya') || '[]'); const container = document.getElementById('lamaranList'); if (lamaran.length === 0) container.innerHTML = 'Belum ada lamaran.'; else container.innerHTML = lamaran.map(l => `<div>${l.posisi} - ${l.perusahaan} (${l.tanggal})</div>`).join(''); }
+  loadProfil(); loadLamaran();
 </script>
 </body>
 </html>
