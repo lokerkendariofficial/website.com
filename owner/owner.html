@@ -12,8 +12,6 @@
     .menu-overlay { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; transition: left 0.3s; z-index: 1001; overflow-y: auto; }
     .menu-overlay.open { left: 0; }
     .menu-overlay .close-btn { text-align: right; padding: 12px; font-size: 1.5rem; cursor: pointer; }
-    .menu-overlay a { display: block; padding: 12px 20px; text-decoration: none; color: #1e293b; border-bottom: 1px solid #e2e8f0; }
-    .menu-overlay a:hover { background: #f1f5f9; color: #0a5b8c; }
     .backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; }
     .backdrop.show { display: block; }
     .content-area { padding: 20px; }
@@ -26,15 +24,7 @@
 <div class="backdrop" id="backdrop"></div>
 <div class="menu-overlay" id="menuOverlay">
   <div class="close-btn" id="closeMenuBtn">&times;</div>
-  <a href="#" data-page="beranda">🏠 Beranda</a>
-  <a href="#" data-page="pasang">📝 Pasang Iklan</a>
-  <a href="#" data-page="profil">👤 Profil</a>
-  <a href="#" data-page="kontak">📧 Kontak</a>
-  <a href="#" data-page="konfirmasi">✅ Konfirmasi Iklan</a>
-  <a href="#" data-page="kelola-user">👥 Kelola User</a>
-  <a href="#" data-page="laporan">📊 Laporan</a>
-  <a href="#" data-page="pengaturan">⚙️ Pengaturan Sistem</a>
-  <a href="#" data-page="logout">🚪 Kembali ke Beranda</a>
+  <div id="menuContainer"></div> <!-- menu akan dimuat di sini -->
 </div>
 <div class="content-area" id="mainContent">
   <div id="jobList" class="job-grid"></div>
@@ -48,15 +38,50 @@
 </div>
 <script src="../script.js"></script>
 <script>
-  const hamburger = document.getElementById('hamburgerBtn'), menu = document.getElementById('menuOverlay'), backdrop = document.getElementById('backdrop'), closeMenuBtn = document.getElementById('closeMenuBtn');
+  // Memuat menu dari hamburger.html
+  fetch('../hamburger.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('menuContainer').innerHTML = html;
+      // Setelah menu dimuat, pasang event listener
+      document.querySelectorAll('#menuContainer a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const page = link.getAttribute('data-page');
+          loadContent(page);
+          closeMenu();
+        });
+      });
+    });
+
+  // Fungsi menu dan konten
+  const hamburger = document.getElementById('hamburgerBtn');
+  const menu = document.getElementById('menuOverlay');
+  const backdrop = document.getElementById('backdrop');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+
   function openMenu() { menu.classList.add('open'); backdrop.classList.add('show'); }
   function closeMenu() { menu.classList.remove('open'); backdrop.classList.remove('show'); }
   hamburger.addEventListener('click', openMenu);
   closeMenuBtn.addEventListener('click', closeMenu);
   backdrop.addEventListener('click', closeMenu);
-  function loadContent(page) { closeMenu(); if (page === 'beranda') { renderJobs(); document.getElementById('jobCountDisplay').style.display = 'block'; } else if (page === 'logout') { window.location.href = '../index.html'; } else { document.getElementById('jobList').innerHTML = `<div class="container"><h2>Halaman ${page}</h2><p>Fitur sedang dikembangkan.</p></div>`; document.getElementById('jobCountDisplay').style.display = 'none'; } }
-  document.querySelectorAll('.menu-overlay a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); loadContent(a.getAttribute('data-page')); }));
-  initJobsData(); renderJobs();
+
+  function loadContent(page) {
+    closeMenu();
+    if (page === 'beranda') {
+      renderJobs();
+      document.getElementById('jobCountDisplay').style.display = 'block';
+    } else if (page === 'logout') {
+      window.location.href = '../index.html';
+    } else {
+      document.getElementById('jobList').innerHTML = `<div class="container"><h2>Halaman ${page}</h2><p>Fitur sedang dikembangkan.</p></div>`;
+      document.getElementById('jobCountDisplay').style.display = 'none';
+    }
+  }
+
+  initJobsData();
+  renderJobs();
+
   const modal = document.getElementById('detailModal'), closeModalBtn = document.getElementById('closeModalBtn');
   closeModalBtn.onclick = () => modal.classList.remove('active');
   modal.onclick = e => { if(e.target === modal) modal.classList.remove('active'); };
