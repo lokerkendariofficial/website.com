@@ -12,7 +12,7 @@
       color: white;
       padding: 12px 20px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       position: sticky;
       top: 0;
@@ -25,31 +25,60 @@
       font-size: 1.8rem;
       cursor: pointer;
     }
+    /* menu overlay dari kiri */
     .menu-overlay {
       position: fixed;
       top: 0;
-      right: -280px;
+      left: -280px;
       width: 280px;
       height: 100%;
       background: white;
-      box-shadow: -2px 0 8px rgba(0,0,0,0.15);
-      transition: right 0.3s ease;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+      transition: left 0.3s ease;
       z-index: 1001;
       overflow-y: auto;
     }
-    .menu-overlay.open { right: 0; }
-    .menu-overlay .close-btn { text-align: right; padding: 12px; font-size: 1.5rem; cursor: pointer; }
-    .menu-overlay a { display: block; padding: 12px 20px; color: #1e293b; text-decoration: none; border-bottom: 1px solid #e2e8f0; }
-    .menu-overlay a:hover { background: #f1f5f9; color: #0a5b8c; }
-    .backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; }
-    .backdrop.show { display: block; }
-    .content-area { padding: 20px; }
+    .menu-overlay.open {
+      left: 0;
+    }
+    .menu-overlay .close-btn {
+      text-align: right;
+      padding: 12px;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .menu-overlay a {
+      display: block;
+      padding: 12px 20px;
+      color: #1e293b;
+      text-decoration: none;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .menu-overlay a:hover {
+      background: #f1f5f9;
+      color: #0a5b8c;
+    }
+    .backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: none;
+    }
+    .backdrop.show {
+      display: block;
+    }
+    .content-area {
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
 <div class="dashboard-header">
   <button class="hamburger" id="hamburgerBtn">☰</button>
-  <span><i class="fas fa-crown"></i> Pemilik</span>
 </div>
 <div class="backdrop" id="backdrop"></div>
 <div class="menu-overlay" id="menuOverlay">
