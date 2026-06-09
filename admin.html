@@ -3,56 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Loker Kendari</title>
+  <title>Dashboard Admin - Loker Kendari</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="style.css">
-  <style>
-    .dashboard-container { display: flex; height: calc(100vh - 60px); }
-    .sidebar { width: 260px; background: white; border-right: 1px solid #e2e8f0; padding: 1rem 0; overflow-y: auto; }
-    .sidebar a { display: block; padding: 10px 20px; color: #1e293b; text-decoration: none; }
-    .sidebar a:hover { background: #f1f5f9; color: #0a5b8c; }
-    .content { flex: 1; background: #f8fafc; }
-    iframe { width: 100%; height: 100%; border: none; }
-    .top-bar { background: #0a5b8c; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .top-bar button { background: white; color: #0a5b8c; border: none; padding: 5px 15px; border-radius: 20px; cursor: pointer; }
-  </style>
 </head>
 <body>
-<div class="top-bar">
-  <span><i class="fas fa-crown"></i> Dashboard</span>
-  <button onclick="window.location.href='index.html'">Kembali ke Beranda</button>
+<div class="top-bar" style="background:#2c3e66;">
+  <span><i class="fas fa-tools"></i> Dashboard Admin</span>
+  <button onclick="location.href='index.html'">Kembali ke Pilihan Peran</button>
 </div>
 <div class="dashboard-container">
-  <aside class="sidebar" id="sidebarMenu"></aside>
-  <div class="content">
-    <iframe id="mainFrame" src="shared/beranda.html"></iframe>
+  <aside class="sidebar">
+    <a href="#" onclick="loadContent('beranda')">🏠 Beranda</a>
+    <a href="#" onclick="loadContent('pasang')">📝 Pasang Iklan</a>
+    <a href="#" onclick="loadContent('profil')">👤 Profil</a>
+    <a href="#" onclick="loadContent('kontak')">📧 Kontak</a>
+    <a href="#" onclick="loadContent('konfirmasi')">✅ Konfirmasi Iklan</a>
+    <a href="#" onclick="loadContent('kelola-user')">👥 Kelola User</a>
+    <a href="#" onclick="loadContent('laporan')">📊 Laporan</a>
+  </aside>
+  <div class="content" id="mainContent">
+    <div id="jobList" class="job-grid"></div>
+    <div id="jobCountDisplay" style="text-align:center;"></div>
   </div>
 </div>
+<div id="detailModal" class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header"><h2>Detail Lowongan</h2><button class="modal-close" id="closeModalBtn">&times;</button></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+<script src="script.js"></script>
 <script>
-  const role = 'owner'; // 'owner' 'admin' 'user'
-  const menu = {
-    owner: ['🏠 Beranda', '📝 Pasang Iklan', '👤 Profil', '📧 Kontak', '✅ Konfirmasi Iklan', '👥 Kelola User', '📊 Laporan', '⚙️ Pengaturan Sistem'],
-    admin: ['🏠 Beranda', '📝 Pasang Iklan', '👤 Profil', '📧 Kontak', '✅ Konfirmasi Iklan', '👥 Kelola User', '📊 Laporan'],
-    user: ['🏠 Beranda', '📝 Pasang Iklan', '👤 Profil']
-  };
-  const links = {
-    '🏠 Beranda': 'shared/beranda.html',
-    '📝 Pasang Iklan': 'shared/pasang.html',
-    '👤 Profil': 'shared/profil.html',
-    '📧 Kontak': 'shared/kontak.html',
-    '✅ Konfirmasi Iklan': 'shared/konfirmasi.html',
-    '👥 Kelola User': 'shared/kelola-user.html',
-    '📊 Laporan': 'shared/laporan.html',
-    '⚙️ Pengaturan Sistem': 'shared/pengaturan-sistem.html'
-  };
-  const sidebar = document.getElementById('sidebarMenu');
-  menu[role].forEach(item => {
-    const a = document.createElement('a');
-    a.href = '#';
-    a.innerHTML = item;
-    a.onclick = (e) => { e.preventDefault(); document.getElementById('mainFrame').src = links[item]; };
-    sidebar.appendChild(a);
-  });
+  function loadContent(page) {
+    if (page === 'beranda') {
+      renderJobs();
+      document.getElementById('jobCountDisplay').style.display = 'block';
+    } else {
+      document.getElementById('jobList').innerHTML = `<div class="container"><h2>Halaman ${page}</h2><p>Konten sedang dikembangkan.</p></div>`;
+    }
+  }
+  initJobsData();
+  renderJobs();
+  const modal = document.getElementById('detailModal');
+  const closeBtn = document.getElementById('closeModalBtn');
+  closeBtn.onclick = () => modal.classList.remove('active');
+  modal.onclick = (e) => { if(e.target === modal) modal.classList.remove('active'); };
 </script>
 </body>
 </html>
