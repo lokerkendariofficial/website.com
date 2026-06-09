@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kontak & Lamaran</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .contact-card { max-width: 600px; margin: 2rem auto; background: white; padding: 1.5rem; border-radius: 24px; }
+        input, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 40px; border: 1px solid #ccc; }
+        button { background: #0a5b8c; color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="contact-card">
+    <h2>Kirim Lamaran</h2>
+    <form id="lamaranForm">
+        <input type="text" id="nama" placeholder="Nama lengkap" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="posisi" placeholder="Posisi yang dilamar" required>
+        <textarea id="pesan" rows="4" placeholder="Pesan lamaran"></textarea>
+        <button type="submit">Kirim Lamaran</button>
+    </form>
+</div>
+<script>
+    document.getElementById('lamaranForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const lamaran = {
+            id: Date.now(),
+            nama: document.getElementById('nama').value,
+            email: document.getElementById('email').value,
+            posisi: document.getElementById('posisi').value,
+            pesan: document.getElementById('pesan').value,
+            tanggal: new Date().toLocaleString()
+        };
+        let list = JSON.parse(localStorage.getItem('lamaranSaya') || '[]');
+        list.unshift(lamaran);
+        localStorage.setItem('lamaranSaya', JSON.stringify(list));
+        alert('Lamaran terkirim!');
+        e.target.reset();
+    });
+</script>
+</body>
+</html>
