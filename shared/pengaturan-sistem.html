@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Pengaturan Sistem</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan Sistem</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div class="container">
-    <h2>Pengaturan Sistem</h2>
-    <p>Halaman ini hanya untuk pemilik. Anda dapat menambahkan fitur backup, restore, dll.</p>
-    <button onclick="localStorage.clear(); alert('Data direset (kecuali default akan muncul lagi setelah reload)'); location.reload();">Reset Data</button>
+  <h2>Pengaturan Sistem</h2>
+  <p>Halaman ini hanya untuk pemilik. Anda dapat menambahkan fitur backup, restore, dll.</p>
+  <button id="resetBtn" style="background:#dc2626; color:white; padding:10px; border-radius:40px; border:none; cursor:pointer;">Reset Data</button>
 </div>
+<script>
+  document.getElementById('resetBtn').addEventListener('click', () => { if (confirm('Yakin ingin mereset semua data? Aksi ini tidak bisa dibatalkan.')) { localStorage.clear(); alert('Data telah direset. Halaman akan dimuat ulang.'); location.reload(); } });
+</script>
 </body>
 </html>
