@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Tombol Hamburger - Demo Loker Kendari</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f7fb;
+      color: #1e293b;
+    }
+    /* header dengan hamburger */
+    .header {
+      background: #0a5b8c;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hamburger {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+    /* menu overlay dari kanan */
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 280px;
+      height: 100%;
+      background: white;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.15);
+      transition: right 0.3s ease;
+      z-index: 1001;
+      overflow-y: auto;
+    }
+    .menu-overlay.open {
+      right: 0;
+    }
+    .menu-overlay .close-btn {
+      text-align: right;
+      padding: 12px;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .menu-overlay a {
+      display: block;
+      padding: 12px 20px;
+      color: #1e293b;
+      text-decoration: none;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .menu-overlay a:hover {
+      background: #f1f5f9;
+      color: #0a5b8c;
+    }
+    .backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: none;
+    }
+    .backdrop.show {
+      display: block;
+    }
+    .content {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin: 1rem 0;
+    }
+    button {
+      background: #0a5b8c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <span><strong>🍔 Demo Tombol Hamburger</strong> | Loker Kendari</span>
+  <button class="hamburger" id="hamburgerBtn">☰</button>
+</div>
+<div class="backdrop" id="backdrop"></div>
+<div class="menu-overlay" id="menuOverlay">
+  <div class="close-btn" id="closeMenuBtn">&times;</div>
+  <a href="#">🏠 Beranda</a>
+  <a href="#">📝 Pasang Iklan</a>
+  <a href="#">👤 Profil</a>
+  <a href="#">📧 Kontak</a>
+  <a href="#">✅ Konfirmasi Iklan</a>
+  <a href="#">👥 Kelola User</a>
+  <a href="#">📊 Laporan</a>
+  <a href="#">⚙️ Pengaturan Sistem</a>
+  <a href="#">🚪 Logout</a>
+</div>
+<div class="content">
+  <h1>🍔 Tombol Hamburger</h1>
+  <div class="card">
+    <p><strong>Fungsi utama tombol hamburger</strong> adalah menghemat ruang layar dengan menyembunyikan menu navigasi di balik ikon tiga garis horizontal.</p>
+    <p>Saat diketuk, tombol ini akan membuka daftar pilihan menu tersembunyi yang berisi fitur, pengaturan, atau halaman lain di dalam aplikasi.</p>
+    <p>Klik ikon ☰ di pojok kanan atas untuk melihat menu navigasi yang muncul dari sisi kanan layar.</p>
+    <button onclick="alert('Ini contoh interaksi. Menu sudah muncul dari hamburger.')">Coba Klik Saya (Info)</button>
+  </div>
+  <p style="margin-top: 2rem; font-size: 0.8rem;">© 2026 Loker Kendari Official - Contoh implementasi tombol hamburger</p>
+</div>
+<script>
+  const hamburger = document.getElementById('hamburgerBtn');
+  const menuOverlay = document.getElementById('menuOverlay');
+  const backdrop = document.getElementById('backdrop');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+
+  function openMenu() {
+    menuOverlay.classList.add('open');
+    backdrop.classList.add('show');
+  }
+  function closeMenu() {
+    menuOverlay.classList.remove('open');
+    backdrop.classList.remove('show');
+  }
+  hamburger.addEventListener('click', openMenu);
+  closeMenuBtn.addEventListener('click', closeMenu);
+  backdrop.addEventListener('click', closeMenu);
+</script>
+</body>
+</html>
