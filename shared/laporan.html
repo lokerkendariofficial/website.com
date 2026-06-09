@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Laporan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="container">
+    <h2>Laporan Statistik</h2>
+    <p id="stats"></p>
+</div>
+<script>
+    const loker = JSON.parse(localStorage.getItem('lokerData') || '[]');
+    const pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const lamaran = JSON.parse(localStorage.getItem('lamaranSaya') || '[]');
+    document.getElementById('stats').innerHTML = `
+        <ul>
+            <li>Total Lowongan Aktif: ${loker.length}</li>
+            <li>Iklan Menunggu Konfirmasi: ${pending.length}</li>
+            <li>Jumlah User Terdaftar: ${users.length}</li>
+            <li>Lamaran Masuk: ${lamaran.length}</li>
+        </ul>
+    `;
+</script>
+</body>
+</html>
