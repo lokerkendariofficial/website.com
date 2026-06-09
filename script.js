@@ -1,4 +1,4 @@
-// ==================== SCRIPT.JS ====================
+// ==================== script.js ====================
 let jobsData = [];
 let currentCategory = "all";
 let searchKeyword = "";
