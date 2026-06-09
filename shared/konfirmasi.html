@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Konfirmasi Iklan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .job-card { margin-bottom: 1rem; }
+        button.approve { background: #10b981; margin-right: 0.5rem; }
+        button.reject { background: #ef4444; }
+    </style>
+</head>
+<body>
+<div class="container" id="pendingList"></div>
+<script>
+    function loadPending() {
+        let pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
+        const container = document.getElementById('pendingList');
+        if (pending.length === 0) {
+            container.innerHTML = '<p>Tidak ada iklan menunggu konfirmasi.</p>';
+            return;
+        }
+        container.innerHTML = pending.map(job => `
+            <div class="job-card">
+                <h3>${job.title}</h3>
+                <p>${job.company} - ${job.location}</p>
+                <button class="approve" data-id="${job.id}">Setujui</button>
+                <button class="reject" data-id="${job.id}">Tolak</button>
+            </div>
+        `).join('');
+        document.querySelectorAll('.approve').forEach(btn => btn.addEventListener('click', () => approve(btn.dataset.id)));
+        document.querySelectorAll('.reject').forEach(btn => btn.addEventListener('click', () => reject(btn.dataset.id)));
+    }
+    function approve(id) {
+        let pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
+        const job = pending.find(j => j.id == id);
+        if (job) {
+            let loker = JSON.parse(localStorage.getItem('lokerData') || '[]');
+            loker.unshift(job);
+            localStorage.setItem('lokerData', JSON.stringify(loker));
+            pending = pending.filter(j => j.id != id);
+            localStorage.setItem('pendingIklan', JSON.stringify(pending));
+            alert('Iklan disetujui');
+            loadPending();
+        }
+    }
+    function reject(id) {
+        let pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
+        pending = pending.filter(j => j.id != id);
+        localStorage.setItem('pendingIklan', JSON.stringify(pending));
+        alert('Iklan ditolak');
+        loadPending();
+    }
+    loadPending();
+</script>
+</body>
+</html>
