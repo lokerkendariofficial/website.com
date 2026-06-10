@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Beranda - Loker Kendari</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="beranda.css">
+  <link rel="stylesheet" href="hamburger.css">
+</head>
+<body>
+<div class="dashboard-header">
+  <button class="hamburger" id="hamburgerBtn">☰</button>
+</div>
+<div class="backdrop" id="backdrop"></div>
+<div class="menu-overlay" id="menuOverlay">
+  <div class="close-btn" id="closeMenuBtn">&times;</div>
+  <div id="menuContainer"></div>
+</div>
+<div class="content-area">
+  <div class="container">
+    <div class="header">
+      <h1>LokerKendari</h1>
+      <p>Lowongan kerja terpercaya di Sulawesi Tenggara</p>
+    </div>
+    <div class="search-wrapper">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Cari judul atau perusahaan...">
+        <button id="searchBtn"><i class="fas fa-search"></i></button>
+      </div>
+    </div>
+    <div class="categories" id="categoriesContainer"></div>
+    <div class="job-count" id="jobCountDisplay">Memuat lowongan...</div>
+    <div class="job-grid" id="jobList"></div>
+    <div class="footer">© 2026 Loker Kendari Official</div>
+  </div>
+</div>
+<div id="detailModal" class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header"><h2><i class="fas fa-briefcase"></i> Detail Lowongan</h2><button class="modal-close" id="closeModalBtn">&times;</button></div>
+    <div class="modal-body" id="modalBody">Memuat...</div>
+  </div>
+</div>
+<script src="beranda.js"></script>
+<script src="hamburger.js"></script>
+</body>
+</html>
