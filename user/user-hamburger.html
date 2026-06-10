@@ -6,17 +6,8 @@
   <title>User Panel - Loker Kendari (Hamburger)</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: #f8fafc;
-      color: #1e293b;
-    }
-    /* Header hanya berisi hamburger (kiri) dan logo (kanan) */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: system-ui, sans-serif; background: #f8fafc; }
     .header {
       background: #0e7490;
       color: white;
@@ -35,11 +26,7 @@
       font-size: 1.8rem;
       cursor: pointer;
     }
-    .logo {
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    /* Menu overlay dari kiri */
+    .logo { font-weight: bold; font-size: 1.2rem; }
     .menu-overlay {
       position: fixed;
       top: 0;
@@ -48,31 +35,20 @@
       height: 100%;
       background: white;
       box-shadow: 2px 0 8px rgba(0,0,0,0.15);
-      transition: left 0.3s ease;
+      transition: left 0.3s;
       z-index: 1001;
       overflow-y: auto;
     }
-    .menu-overlay.open {
-      left: 0;
-    }
-    .menu-overlay .close-btn {
-      text-align: right;
-      padding: 12px;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
+    .menu-overlay.open { left: 0; }
+    .menu-overlay .close-btn { text-align: right; padding: 12px; font-size: 1.5rem; cursor: pointer; }
     .menu-overlay a {
       display: block;
       padding: 12px 20px;
       text-decoration: none;
       color: #1e293b;
       border-bottom: 1px solid #e2e8f0;
-      font-size: 1rem;
     }
-    .menu-overlay a:hover {
-      background: #f1f5f9;
-      color: #0a5b8c;
-    }
+    .menu-overlay a:hover { background: #f1f5f9; color: #0a5b8c; }
     .backdrop {
       position: fixed;
       top: 0;
@@ -83,30 +59,17 @@
       z-index: 1000;
       display: none;
     }
-    .backdrop.show {
-      display: block;
-    }
-    /* Area iframe */
-    .content-area {
-      padding: 20px;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
+    .backdrop.show { display: block; }
+    .content-area { padding: 20px; max-width: 1280px; margin: 0 auto; }
     iframe {
       width: 100%;
       height: calc(100vh - 70px);
       border: none;
       background: white;
       border-radius: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    @media (max-width: 640px) {
-      .content-area {
-        padding: 12px;
-      }
-    }
+    @media (max-width: 640px) { .content-area { padding: 12px; } }
   </style>
-  <!-- Load modul auth -->
   <script src="../auth/config.js"></script>
   <script src="../auth/session.js"></script>
   <script src="../auth/rules.js"></script>
@@ -117,10 +80,7 @@
 </head>
 <body>
 <script>
-  // Proteksi halaman user
-  if (!guard('user.html')) {
-    // redirect sudah terjadi
-  }
+  if (!guard('user.html')) {}
 </script>
 <div class="header">
   <button class="hamburger" id="hamburgerBtn">☰</button>
@@ -141,39 +101,24 @@
   const hamburger = document.getElementById('hamburgerBtn');
   const menu = document.getElementById('menuOverlay');
   const backdrop = document.getElementById('backdrop');
-  const closeMenuBtn = document.getElementById('closeMenuBtn');
+  const closeBtn = document.getElementById('closeMenuBtn');
   const iframe = document.getElementById('mainFrame');
 
-  function openMenu() {
-    menu.classList.add('open');
-    backdrop.classList.add('show');
-  }
-  function closeMenu() {
-    menu.classList.remove('open');
-    backdrop.classList.remove('show');
-  }
+  function openMenu() { menu.classList.add('open'); backdrop.classList.add('show'); }
+  function closeMenu() { menu.classList.remove('open'); backdrop.classList.remove('show'); }
   hamburger.addEventListener('click', openMenu);
-  closeMenuBtn.addEventListener('click', closeMenu);
+  closeBtn.addEventListener('click', closeMenu);
   backdrop.addEventListener('click', closeMenu);
 
-  function loadPage(url) {
-    iframe.src = url;
-    closeMenu();
-  }
-
+  function loadPage(url) { iframe.src = url; closeMenu(); }
   document.querySelectorAll('.menu-overlay a').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const page = link.getAttribute('data-page');
-      if (page === 'beranda') {
-        loadPage('beranda.html');
-      } else if (page === 'pasang') {
-        loadPage('pasang.html');
-      } else if (page === 'profil') {
-        loadPage('profil.html');
-      } else if (page === 'logout') {
-        logoutUnique(); // fungsi dari account.js
-      }
+      if (page === 'beranda') loadPage('beranda.html');
+      else if (page === 'pasang') loadPage('pasang.html');
+      else if (page === 'profil') loadPage('profil.html');
+      else if (page === 'logout') logoutUnique();
     });
   });
 </script>
