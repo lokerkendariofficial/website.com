@@ -36,7 +36,6 @@
       font-size: 1rem;
       outline: none;
     }
-    input:focus { border-color: #0a5b8c; box-shadow: 0 0 0 2px rgba(10,91,140,0.1); }
     button {
       width: 100%;
       padding: 12px;
@@ -46,24 +45,17 @@
       border-radius: 40px;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 0.5rem;
     }
-    .error {
-      color: #dc2626;
-      font-size: 0.8rem;
-      margin-top: 0.5rem;
-      text-align: center;
-    }
-    .info {
-      text-align: center;
-      font-size: 0.7rem;
-      color: #777;
-      margin-top: 1rem;
-    }
+    .error { color: #dc2626; font-size: 0.8rem; margin-top: 0.5rem; text-align: center; }
+    .info { text-align: center; font-size: 0.7rem; color: #777; margin-top: 1rem; }
   </style>
+  <script src="auth/config.js"></script>
   <script src="auth/session.js"></script>
   <script src="auth/rules.js"></script>
   <script src="auth/security.js"></script>
+  <script src="auth/account.js"></script>
+  <script src="auth/guard.js"></script>
+  <script src="auth/init.js"></script>
 </head>
 <body>
 <div class="login-card">
@@ -72,36 +64,30 @@
     <p>Official • Lowongan Kerja Terpercaya</p>
   </div>
   <div class="form-group">
-    <input type="text" id="loginId" placeholder="Nomor Telepon / Username / Email">
+    <input type="text" id="loginId" placeholder="ID (900900/9090/9091)" autocomplete="off">
   </div>
   <div class="form-group">
     <input type="password" id="password" placeholder="Password">
   </div>
   <button id="loginBtn">Masuk</button>
-  <div id="loginError" class="error"></div>
+  <div id="error" class="error"></div>
   <div class="info">Pendaftar pertama otomatis menjadi PEMILIK</div>
 </div>
 <script>
-  const loginBtn = document.getElementById('loginBtn');
-  const loginId = document.getElementById('loginId');
-  const password = document.getElementById('password');
-  const errorDiv = document.getElementById('loginError');
-
-  loginBtn.addEventListener('click', async () => {
-    const id = loginId.value.trim();
-    const pass = password.value;
+  document.getElementById('loginBtn').onclick = () => {
+    const id = document.getElementById('loginId').value.trim();
+    const pass = document.getElementById('password').value;
     if (!id || !pass) {
-      errorDiv.innerText = 'Harap isi semua field.';
+      document.getElementById('error').innerText = 'Harap isi semua field.';
       return;
     }
-    const result = login(id, pass);
-    if (result.success) {
-      // Redirect ke dashboard sesuai role (dashboard.html akan membaca role)
+    const res = loginUnique(id, pass);
+    if (res.success) {
       window.location.href = 'dashboard.html';
     } else {
-      errorDiv.innerText = result.msg;
+      document.getElementById('error').innerText = res.msg;
     }
-  });
+  };
 </script>
 </body>
 </html>
