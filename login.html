@@ -3,29 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login / Register - Loker Kendari</title>
+  <title>Login - Loker Kendari</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="login.css">
 </head>
 <body>
 <div class="login-card">
   <h1>Loker Kendari</h1>
-  <div class="toggle-buttons">
-    <button id="showLogin" class="active">Login</button>
-    <button id="showRegister">Register</button>
+  <p class="sub">Login dengan ID dan Password</p>
+  <div class="form-group">
+    <input type="text" id="loginId" placeholder="ID (900900 / 9090 / 9091)" autocomplete="off">
   </div>
-  <div id="loginForm">
-    <input type="email" id="loginEmail" placeholder="Email" autocomplete="email">
+  <div class="form-group">
     <input type="password" id="loginPassword" placeholder="Password">
-    <button id="loginBtn">Masuk</button>
-    <div id="loginError" class="error"></div>
   </div>
-  <div id="registerForm" style="display:none">
-    <input type="text" id="regNama" placeholder="Nama Lengkap">
-    <input type="email" id="regEmail" placeholder="Email">
-    <input type="password" id="regPassword" placeholder="Password">
-    <button id="registerBtn">Daftar</button>
-    <div id="registerError" class="error"></div>
+  <button id="loginBtn">Masuk</button>
+  <div id="loginError" class="error"></div>
+  <div class="info">
+    <p>Akun default:</p>
+    <ul>
+      <li>Pemilik: 900900 / 900900</li>
+      <li>Admin: 9090 / 9090</li>
+      <li>User: 9091 / 9091</li>
+    </ul>
   </div>
 </div>
 <script src="auth.js"></script>
