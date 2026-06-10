@@ -13,69 +13,26 @@
   <p class="sub">Iklan Anda akan ditampilkan setelah diverifikasi admin.</p>
   <form id="postForm">
     <div class="form-row">
-      <div class="form-group">
-        <label>Judul Lowongan</label>
-        <input type="text" id="title" required>
-      </div>
-      <div class="form-group">
-        <label>Nama Perusahaan</label>
-        <input type="text" id="company" required>
-      </div>
+      <div class="form-group"><label>Judul Lowongan</label><input type="text" id="title" required></div>
+      <div class="form-group"><label>Nama Perusahaan</label><input type="text" id="company" required></div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label>Lokasi</label>
-        <input type="text" id="location" required>
-      </div>
-      <div class="form-group">
-        <label>Tipe Pekerjaan</label>
-        <select id="type">
-          <option value="Fulltime">Fulltime</option>
-          <option value="Parttime">Parttime</option>
-          <option value="Kontrak">Kontrak</option>
-          <option value="Remote">Remote</option>
-        </select>
-      </div>
+      <div class="form-group"><label>Lokasi</label><input type="text" id="location" required></div>
+      <div class="form-group"><label>Tipe</label><select id="type"><option>Fulltime</option><option>Parttime</option><option>Kontrak</option><option>Remote</option></select></div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label>Kategori</label>
-        <select id="category">
-          <option value="it">IT & Teknologi</option>
-          <option value="marketing">Pemasaran</option>
-          <option value="admin">Administrasi</option>
-          <option value="education">Pendidikan</option>
-          <option value="lainnya">Lainnya</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Gaji (contoh: 5jt - 7jt)</label>
-        <input type="text" id="salary" placeholder="Nego">
-      </div>
+      <div class="form-group"><label>Kategori</label><select id="category"><option value="it">IT</option><option value="marketing">Marketing</option><option value="admin">Administrasi</option><option value="education">Pendidikan</option><option value="lainnya">Lainnya</option></select></div>
+      <div class="form-group"><label>Gaji</label><input type="text" id="salary" placeholder="Nego"></div>
     </div>
-    <div class="form-group full-width">
-      <label>Deskripsi pekerjaan</label>
-      <textarea id="desc" rows="4" required></textarea>
-    </div>
+    <div class="form-group full-width"><label>Deskripsi</label><textarea id="desc" rows="4" required></textarea></div>
     <div class="form-row">
-      <div class="form-group">
-        <label>Alamat kantor (opsional)</label>
-        <input type="text" id="address">
-      </div>
-      <div class="form-group">
-        <label>Kualifikasi (opsional)</label>
-        <input type="text" id="qualification">
-      </div>
+      <div class="form-group"><label>Alamat (opsional)</label><input type="text" id="address"></div>
+      <div class="form-group"><label>Kualifikasi (opsional)</label><input type="text" id="qualification"></div>
     </div>
-    <div class="form-group full-width">
-      <label>Kontak (email/WA, opsional)</label>
-      <input type="text" id="contact">
-    </div>
+    <div class="form-group full-width"><label>Kontak (opsional)</label><input type="text" id="contact"></div>
     <button type="submit">Kirim Iklan</button>
   </form>
-  <div class="logout-link">
-    <a href="#" id="logoutBtn">🚪 Logout</a>
-  </div>
+  <div class="logout-link"><a href="#" id="logoutBtn">🚪 Logout</a></div>
 </div>
 <script src="auth.js"></script>
 <script src="posting.js"></script>
