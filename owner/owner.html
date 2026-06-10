@@ -5,65 +5,119 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Dashboard Pemilik - Loker Kendari</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/owner.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: system-ui, sans-serif; background: #f5f7fb; }
+    .header {
+      background: #0a5b8c;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .hamburger {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+    .logo {
+      font-size: 1.2rem;
+      font-weight: bold;
+      flex-grow: 1;
+    }
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100%;
+      background: white;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+      transition: left 0.3s;
+      z-index: 1001;
+      overflow-y: auto;
+    }
+    .menu-overlay.open { left: 0; }
+    .menu-overlay .close-btn {
+      text-align: right;
+      padding: 12px;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .menu-overlay a {
+      display: block;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: #1e293b;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .menu-overlay a:hover { background: #f1f5f9; color: #0a5b8c; }
+    .backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: none;
+    }
+    .backdrop.show { display: block; }
+    iframe {
+      width: 100%;
+      height: calc(100vh - 60px);
+      border: none;
+    }
+  </style>
 </head>
 <body>
-<div class="dashboard-header">
+<div class="header">
   <button class="hamburger" id="hamburgerBtn">☰</button>
+  <div class="logo">👑 Loker Kendari Official (Pemilik)</div>
 </div>
 <div class="backdrop" id="backdrop"></div>
 <div class="menu-overlay" id="menuOverlay">
   <div class="close-btn" id="closeMenuBtn">&times;</div>
-  <div id="menuContainer"></div>
+  <a href="#" data-page="beranda">🏠 Beranda</a>
+  <a href="#" data-page="pasang">📝 Pasang Iklan</a>
+  <a href="#" data-page="profil">👤 Profil</a>
+  <a href="#" data-page="kontak">📧 Kontak</a>
+  <a href="#" data-page="konfirmasi">✅ Konfirmasi Iklan</a>
+  <a href="#" data-page="kelola-user">👥 Kelola User</a>
+  <a href="#" data-page="laporan">📊 Laporan</a>
+  <a href="#" data-page="pengaturan">⚙️ Pengaturan Sistem</a>
+  <a href="#" data-page="logout">🚪 Kembali ke Beranda</a>
 </div>
-<div class="content-area" id="mainContent">
-  <div id="jobList" class="job-grid"></div>
-  <div id="jobCountDisplay" style="text-align:center; margin-top:1rem;"></div>
-</div>
-<div id="detailModal" class="modal-overlay">
-  <div class="modal-container">
-    <div class="modal-header"><h2><i class="fas fa-briefcase"></i> Detail Lowongan</h2><button class="modal-close" id="closeModalBtn">&times;</button></div>
-    <div class="modal-body" id="modalBody">Memuat...</div>
-  </div>
-</div>
-<script src="../script.js"></script>
+<iframe id="mainFrame" src="../beranda/beranda.html"></iframe>
 <script>
-  fetch('../hamburger.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('menuContainer').innerHTML = html;
-      document.querySelectorAll('#menuContainer a').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const page = link.getAttribute('data-page');
-          loadContent(page);
-          closeMenu();
-        });
-      });
-    });
-  const hamburger = document.getElementById('hamburgerBtn'), menu = document.getElementById('menuOverlay'), backdrop = document.getElementById('backdrop'), closeMenuBtn = document.getElementById('closeMenuBtn');
+  const hamburger = document.getElementById('hamburgerBtn');
+  const menu = document.getElementById('menuOverlay');
+  const backdrop = document.getElementById('backdrop');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+  const iframe = document.getElementById('mainFrame');
+
   function openMenu() { menu.classList.add('open'); backdrop.classList.add('show'); }
   function closeMenu() { menu.classList.remove('open'); backdrop.classList.remove('show'); }
   hamburger.addEventListener('click', openMenu);
   closeMenuBtn.addEventListener('click', closeMenu);
   backdrop.addEventListener('click', closeMenu);
-  function loadContent(page) {
-    closeMenu();
-    if (page === 'beranda') {
-      renderJobs();
-      document.getElementById('jobCountDisplay').style.display = 'block';
-    } else if (page === 'logout') {
-      window.location.href = '../index.html';
-    } else {
-      document.getElementById('jobList').innerHTML = `<div class="container"><h2>Halaman ${page}</h2><p>Fitur sedang dikembangkan.</p></div>`;
-      document.getElementById('jobCountDisplay').style.display = 'none';
-    }
-  }
-  initJobsData(); renderJobs();
-  const modal = document.getElementById('detailModal'), closeModalBtn = document.getElementById('closeModalBtn');
-  closeModalBtn.onclick = () => modal.classList.remove('active');
-  modal.onclick = e => { if(e.target === modal) modal.classList.remove('active'); };
+
+  function loadPage(url) { iframe.src = url; closeMenu(); }
+  document.querySelectorAll('.menu-overlay a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const page = link.getAttribute('data-page');
+      if (page === 'beranda') loadPage('../beranda/beranda.html');
+      else if (page === 'logout') window.location.href = '../index.html';
+      else loadPage(`../shared/${page}.html`); // asumsikan file shared ada
+    });
+  });
 </script>
 </body>
 </html>
