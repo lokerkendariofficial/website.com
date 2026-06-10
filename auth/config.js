@@ -1,4 +1,4 @@
-// auth/config.js - Konfigurasi global sistem
+// auth/config.js - Konfigurasi global
 window.APP_CONFIG = {
   name: 'Loker Kendari Official',
   version: '2.0',
