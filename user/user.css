@@ -1,0 +1,96 @@
+/* user/user.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+}
+.header {
+  background: #0e7490;
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.hamburger {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+.logo {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  height: 100%;
+  background: white;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+  transition: left 0.3s;
+  z-index: 1001;
+  overflow-y: auto;
+}
+.menu-overlay.open {
+  left: 0;
+}
+.menu-overlay .close-btn {
+  text-align: right;
+  padding: 12px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.menu-overlay a {
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+}
+.menu-overlay a:hover {
+  background: #f1f5f9;
+  color: #0a5b8c;
+}
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: none;
+}
+.backdrop.show {
+  display: block;
+}
+.content-area {
+  padding: 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+iframe {
+  width: 100%;
+  height: calc(100vh - 70px);
+  border: none;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+@media (max-width: 640px) {
+  .content-area {
+    padding: 12px;
+  }
+}
