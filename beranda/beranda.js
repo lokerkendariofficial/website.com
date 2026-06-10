@@ -1,0 +1,116 @@
+let jobsData = [];
+let currentCategory = "all";
+let searchKeyword = "";
+
+function initJobsData() {
+  const stored = localStorage.getItem('lokerData');
+  if (stored && JSON.parse(stored).length > 0) {
+    jobsData = JSON.parse(stored);
+  } else {
+    jobsData = [
+      { id: 1, title: "Crew", company: "PT TRIPLEK", location: "Mandonga", type: "Remote", salary: "2.2 jt", category: "it", desc: "Sangat terampil", address: "Mandonga", qualification: "SMA/SMK", contact: "WA: 0812" },
+      { id: 2, title: "Mekanik", company: "Bengkel mobil", location: "Konawe", type: "Kontrak", salary: "4.5 jt", category: "lainnya", desc: "Perbaikan kendaraan", address: "Konawe", qualification: "SMK Otomotif", contact: "WA: 0852" }
+    ];
+    localStorage.setItem('lokerData', JSON.stringify(jobsData));
+  }
+  jobsData = jobsData.map(j => { if (!j.category) j.category = "lainnya"; return j; });
+}
+
+function getUniqueCategories() {
+  const cats = new Set();
+  jobsData.forEach(j => cats.add(j.category));
+  return Array.from(cats).sort();
+}
+
+function renderCategories() {
+  const container = document.getElementById('categoriesContainer');
+  if (!container) return;
+  const cats = getUniqueCategories();
+  let html = `<div class="chip ${currentCategory === 'all' ? 'active' : ''}" data-cat="all"><i class="fas fa-list"></i> Semua</div>`;
+  cats.forEach(c => {
+    let display = c;
+    if (c === "it") display = "IT";
+    if (c === "marketing") display = "Pemasaran";
+    if (c === "admin") display = "Administrasi";
+    if (c === "education") display = "Pendidikan";
+    if (c === "lainnya") display = "Lainnya";
+    html += `<div class="chip ${currentCategory === c ? 'active' : ''}" data-cat="${c}"><i class="fas fa-tag"></i> ${display}</div>`;
+  });
+  container.innerHTML = html;
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      currentCategory = chip.dataset.cat;
+      renderCategories();
+      renderJobs();
+    });
+  });
+}
+
+function renderJobs() {
+  let filtered = [...jobsData];
+  if (currentCategory !== "all") filtered = filtered.filter(j => j.category === currentCategory);
+  if (searchKeyword.trim()) {
+    const kw = searchKeyword.toLowerCase();
+    filtered = filtered.filter(j => j.title.toLowerCase().includes(kw) || j.company.toLowerCase().includes(kw));
+  }
+  const container = document.getElementById('jobList');
+  const countSpan = document.getElementById('jobCountDisplay');
+  if (!container) return;
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-msg">Tidak ada lowongan.</div>';
+    if (countSpan) countSpan.innerText = '0 lowongan';
+    return;
+  }
+  if (countSpan) countSpan.innerText = `${filtered.length} lowongan ditemukan`;
+  container.innerHTML = filtered.map(job => `
+    <div class="job-card">
+      <div class="job-title">${escapeHtml(job.title)}</div>
+      <div class="job-company"><i class="fas fa-building"></i> ${escapeHtml(job.company)}</div>
+      <div class="job-details">
+        <span><i class="fas fa-map-marker-alt"></i> ${escapeHtml(job.location)}</span>
+        <span><i class="fas fa-clock"></i> ${escapeHtml(job.type)}</span>
+        <span><i class="fas fa-money-bill-wave"></i> ${escapeHtml(job.salary)}</span>
+      </div>
+      <div class="job-desc">${escapeHtml(job.desc.substring(0, 80))}${job.desc.length>80?'...':''}</div>
+      <div class="card-footer"><button class="btn-detail" data-id="${job.id}">Lihat Selengkapnya</button></div>
+    </div>
+  `).join('');
+  document.querySelectorAll('.btn-detail').forEach(btn => {
+    btn.addEventListener('click', () => showModal(jobsData.find(j => j.id == btn.dataset.id)));
+  });
+}
+
+function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]); }
+
+function showModal(job) {
+  const modal = document.getElementById('detailModal');
+  const body = document.getElementById('modalBody');
+  if (!job) return;
+  body.innerHTML = `
+    <div class="detail-section"><strong>${escapeHtml(job.company)}</strong><h3>${escapeHtml(job.title)}</h3></div>
+    <div class="detail-section"><div><strong>Lokasi:</strong> ${escapeHtml(job.location)}</div><div><strong>Tipe:</strong> ${escapeHtml(job.type)}</div><div><strong>Gaji:</strong> ${escapeHtml(job.salary)}</div></div>
+    <div class="detail-section"><div><strong>Alamat:</strong> ${escapeHtml(job.address||'Tidak tersedia')}</div></div>
+    <div class="detail-section"><div><strong>Kualifikasi:</strong> ${escapeHtml(job.qualification||'Tidak ada')}</div></div>
+    <div class="detail-section"><div><strong>Deskripsi:</strong> ${escapeHtml(job.desc)}</div></div>
+    <div class="detail-section"><div><strong>Kontak:</strong> ${escapeHtml(job.contact||'Tidak tersedia')}</div></div>
+  `;
+  modal.classList.add('active');
+}
+
+function closeModal() {
+  const modal = document.getElementById('detailModal');
+  if (modal) modal.classList.remove('active');
+}
+document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
+document.getElementById('detailModal')?.addEventListener('click', e => { if(e.target === e.currentTarget) closeModal(); });
+
+function doSearch() {
+  searchKeyword = document.getElementById('searchInput')?.value.trim() || '';
+  renderJobs();
+}
+document.getElementById('searchBtn')?.addEventListener('click', doSearch);
+document.getElementById('searchInput')?.addEventListener('keypress', e => { if(e.key === 'Enter') doSearch(); });
+
+initJobsData();
+renderCategories();
+renderJobs();
