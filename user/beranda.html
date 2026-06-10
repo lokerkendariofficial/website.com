@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beranda Lowongan</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { background: white; padding: 0; margin: 0; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 1rem; }
+    .header h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Lowongan Terbaru</h1>
+  </div>
+  <div class="search-wrapper">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Cari judul atau perusahaan...">
+      <button id="searchBtn"><i class="fas fa-search"></i></button>
+    </div>
+  </div>
+  <div class="categories" id="categoriesContainer"></div>
+  <div class="job-count" id="jobCountDisplay">Memuat lowongan...</div>
+  <div class="job-grid" id="jobList"></div>
+  <div class="footer">© Loker Kendari Official</div>
+</div>
+<div id="detailModal" class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header"><h2>Detail Lowongan</h2><button class="modal-close" id="closeModalBtn">&times;</button></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+<script src="../script.js"></script>
+<script>
+  // Inisialisasi data lowongan (global)
+  initJobsData();
+  renderCategories();
+  renderJobs();
+  bindSearchEvents();
+  // Modal close
+  const modal = document.getElementById('detailModal');
+  const closeModal = document.getElementById('closeModalBtn');
+  if (closeModal) closeModal.onclick = () => modal.classList.remove('active');
+  modal.onclick = (e) => { if(e.target === modal) modal.classList.remove('active'); };
+  // Override tombol Lamar (bisa ditambahkan di renderJobs, tapi script.js sudah punya alert)
+</script>
+</body>
+</html>
