@@ -1,13 +1,31 @@
-// auth/session.js - Manajemen user, login, register
-function getUsers() { return JSON.parse(localStorage.getItem('users') || '[]'); }
-function saveUsers(users) { localStorage.setItem('users', JSON.stringify(users)); }
-function getCurrentUser() { return JSON.parse(localStorage.getItem('currentUser') || 'null'); }
-function setCurrentUser(user) { localStorage.setItem('currentUser', JSON.stringify(user)); }
-function logout() { localStorage.removeItem('currentUser'); window.location.href = '../index.html'; }
+// auth/session.js - Manajemen user dan session
+function getUsers() {
+  return JSON.parse(localStorage.getItem('users') || '[]');
+}
+function saveUsers(users) {
+  localStorage.setItem('users', JSON.stringify(users));
+}
+function getCurrentUser() {
+  return JSON.parse(sessionStorage.getItem('currentUser') || 'null');
+}
+function setCurrentUser(user) {
+  sessionStorage.setItem('currentUser', JSON.stringify(user));
+}
+function logout() {
+  sessionStorage.removeItem('currentUser');
+  window.location.href = '../index.html';
+}
 
 function addLog(userId, username, aksi, detail) {
   let logs = JSON.parse(localStorage.getItem('logAktivitas') || '[]');
-  logs.unshift({ id: Date.now(), userId, username, aksi, detail, timestamp: new Date().toISOString() });
+  logs.unshift({
+    id: Date.now(),
+    userId,
+    username,
+    aksi,
+    detail,
+    timestamp: new Date().toISOString()
+  });
   if (logs.length > 1000) logs.pop();
   localStorage.setItem('logAktivitas', JSON.stringify(logs));
 }
@@ -34,10 +52,17 @@ function register(loginId, nama, password) {
   const config = JSON.parse(localStorage.getItem('sistemConfig') || '{"metodeLogin":"username_email"}');
   const isFirst = users.length === 0;
   const fieldName = config.metodeLogin === 'telepon' ? 'nomorTelepon' : 'username';
-  if (users.find(u => u[fieldName] === loginId)) return { success: false, msg: 'ID sudah terdaftar.' };
+  if (users.find(u => u[fieldName] === loginId)) {
+    return { success: false, msg: 'ID sudah terdaftar.' };
+  }
   const newUser = {
-    id: Date.now(), nama, password: btoa(password), role: isFirst ? 'pemilik' : 'user', isOwner: isFirst,
-    createdAt: new Date().toISOString(), lastLogin: null
+    id: Date.now(),
+    nama,
+    password: btoa(password),
+    role: isFirst ? 'pemilik' : 'user',
+    isOwner: isFirst,
+    createdAt: new Date().toISOString(),
+    lastLogin: null
   };
   newUser[fieldName] = loginId;
   users.push(newUser);
@@ -51,18 +76,25 @@ function login(loginId, password) {
   const config = JSON.parse(localStorage.getItem('sistemConfig') || '{"metodeLogin":"username_email"}');
   const fieldName = config.metodeLogin === 'telepon' ? 'nomorTelepon' : 'username';
   let user = users.find(u => u[fieldName] === loginId && u.password === btoa(password));
-  if (!user) user = users.find(u => (u.nomorTelepon === loginId || u.username === loginId) && u.password === btoa(password));
+  if (!user) {
+    user = users.find(u => (u.nomorTelepon === loginId || u.username === loginId) && u.password === btoa(password));
+  }
   if (!user) return { success: false, msg: 'ID atau password salah.' };
   user.lastLogin = new Date().toISOString();
   saveUsers(users);
-  setCurrentUser({ id: user.id, loginId: user[fieldName] || user.nomorTelepon || user.username, nama: user.nama, role: user.role, loginAt: Date.now() });
+  setCurrentUser({
+    id: user.id,
+    loginId: user[fieldName] || user.nomorTelepon || user.username,
+    nama: user.nama,
+    role: user.role,
+    loginAt: Date.now()
+  });
   addLog(user.id, user.nama, 'LOGIN', `User ${user.nama} login`);
   return { success: true, role: user.role };
 }
 
 ensureDefaultAccounts();
 
-// Ekspor ke global
 window.getUsers = getUsers;
 window.saveUsers = saveUsers;
 window.getCurrentUser = getCurrentUser;
