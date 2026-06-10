@@ -5,48 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profil Saya</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #f8fafc;
-      padding: 20px;
-    }
-    .profile-card {
-      max-width: 600px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 24px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    h2, h3 {
-      color: #0a5b8c;
-      margin-bottom: 1rem;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #cbd5e1;
-      border-radius: 40px;
-      font-size: 0.9rem;
-    }
-    button {
-      background: #0a5b8c;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 40px;
-      width: 100%;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .lamaran-item {
-      border-bottom: 1px solid #e2e8f0;
-      padding: 10px 0;
-    }
-  </style>
+  <link rel="stylesheet" href="profil.css">
   <script src="../auth/session.js"></script>
   <script src="../auth/account.js"></script>
 </head>
@@ -62,44 +21,6 @@
   <h3><i class="fas fa-paper-plane"></i> Lamaran Saya</h3>
   <div id="lamaranList">Memuat...</div>
 </div>
-<script>
-  const user = getCurrentUser();
-  if (!user) window.location.href = '../index.html';
-
-  function simpanProfil() {
-    const profil = {
-      nama: document.getElementById('nama').value,
-      email: document.getElementById('email').value,
-      telp: document.getElementById('telp').value
-    };
-    saveUserProfil(profil);
-    alert('Profil disimpan');
-  }
-  function loadProfil() {
-    const data = loadUserData();
-    if (data && data.profil) {
-      document.getElementById('nama').value = data.profil.nama || '';
-      document.getElementById('email').value = data.profil.email || '';
-      document.getElementById('telp').value = data.profil.telp || '';
-    }
-  }
-  function loadLamaran() {
-    const data = loadUserData();
-    const container = document.getElementById('lamaranList');
-    if (!data || !data.lamaran || data.lamaran.length === 0) {
-      container.innerHTML = '<p>Belum ada lamaran yang dikirim.</p>';
-      return;
-    }
-    container.innerHTML = data.lamaran.map(l => `
-      <div class="lamaran-item">
-        <strong>${escapeHtml(l.posisi)}</strong> - ${escapeHtml(l.perusahaan)}<br>
-        <small>Dikirim: ${l.tanggal}</small>
-      </div>
-    `).join('');
-  }
-  function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]); }
-  loadProfil();
-  loadLamaran();
-</script>
+<script src="profil.js"></script>
 </body>
 </html>
