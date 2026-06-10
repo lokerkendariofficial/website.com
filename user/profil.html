@@ -3,14 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profil Saya - User</title>
+  <title>Profil Saya</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="../css/style.css">
   <style>
-    .profile-card { max-width: 600px; margin: 2rem auto; background: white; padding: 1.5rem; border-radius: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    input { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 40px; }
-    button { background: #0a5b8c; color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; cursor: pointer; }
-    .lamaran-item { border-bottom: 1px solid #e2e8f0; padding: 10px 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f8fafc;
+      padding: 20px;
+    }
+    .profile-card {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2, h3 {
+      color: #0a5b8c;
+      margin-bottom: 1rem;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 40px;
+      font-size: 0.9rem;
+    }
+    button {
+      background: #0a5b8c;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 40px;
+      width: 100%;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .lamaran-item {
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 0;
+    }
   </style>
   <script src="../auth/session.js"></script>
   <script src="../auth/account.js"></script>
@@ -51,8 +86,8 @@
   function loadLamaran() {
     const data = loadUserData();
     const container = document.getElementById('lamaranList');
-    if (!data || !data.lamaran.length) {
-      container.innerHTML = '<p>Belum ada lamaran.</p>';
+    if (!data || !data.lamaran || data.lamaran.length === 0) {
+      container.innerHTML = '<p>Belum ada lamaran yang dikirim.</p>';
       return;
     }
     container.innerHTML = data.lamaran.map(l => `
@@ -62,7 +97,7 @@
       </div>
     `).join('');
   }
-  function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+  function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]); }
   loadProfil();
   loadLamaran();
 </script>
