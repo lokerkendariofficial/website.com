@@ -18,15 +18,6 @@ function ensureDefaultAccounts() {
 }
 ensureDefaultAccounts();
 
-function register(username, nama, password) {
-  let users = getUsers();
-  if (users.find(u => u.username === username)) return { success: false, msg: 'ID sudah terdaftar.' };
-  const newUser = { id: Date.now(), nama, username, password: btoa(password), role: 'user' };
-  users.push(newUser);
-  saveUsers(users);
-  return { success: true };
-}
-
 function login(username, password) {
   let users = getUsers();
   const user = users.find(u => u.username === username && u.password === btoa(password));
