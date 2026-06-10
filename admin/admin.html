@@ -2,85 +2,22 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Dashboard Admin - Loker Kendari</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: system-ui, sans-serif; background: #f5f7fb; }
-    .header {
-      background: #2c3e66;
-      color: white;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .hamburger { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
-    .logo { font-size: 1.2rem; font-weight: bold; flex-grow: 1; }
-    .menu-overlay {
-      position: fixed;
-      top: 0;
-      left: -280px;
-      width: 280px;
-      height: 100%;
-      background: white;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.15);
-      transition: left 0.3s;
-      z-index: 1001;
-      overflow-y: auto;
-    }
-    .menu-overlay.open { left: 0; }
-    .menu-overlay .close-btn { text-align: right; padding: 12px; font-size: 1.5rem; cursor: pointer; }
-    .menu-overlay a { display: block; padding: 12px 20px; text-decoration: none; color: #1e293b; border-bottom: 1px solid #e2e8f0; }
-    .menu-overlay a:hover { background: #f1f5f9; }
-    .backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: none; }
-    .backdrop.show { display: block; }
-    iframe { width: 100%; height: calc(100vh - 60px); border: none; }
+    body { font-family: system-ui; background: #f8fafc; padding: 2rem; text-align: center; }
+    .card { background: white; max-width: 600px; margin: 0 auto; padding: 2rem; border-radius: 24px; }
+    h1 { color: #2c3e66; }
+    button { background: #2c3e66; color: white; border: none; padding: 10px 20px; border-radius: 40px; cursor: pointer; margin-top: 1rem; }
   </style>
 </head>
 <body>
-<div class="header">
-  <button class="hamburger" id="hamburgerBtn">☰</button>
-  <div class="logo">🔧 Loker Kendari Official (Admin)</div>
+<div class="card">
+  <h1><i class="fas fa-tools"></i> Dashboard Admin</h1>
+  <p>Selamat datang, Admin! Anda dapat mengelola lowongan.</p>
+  <button onclick="logout()">Logout</button>
 </div>
-<div class="backdrop" id="backdrop"></div>
-<div class="menu-overlay" id="menuOverlay">
-  <div class="close-btn" id="closeMenuBtn">&times;</div>
-  <a href="#" data-page="beranda">🏠 Beranda</a>
-  <a href="#" data-page="pasang">📝 Pasang Iklan</a>
-  <a href="#" data-page="profil">👤 Profil</a>
-  <a href="#" data-page="kontak">📧 Kontak</a>
-  <a href="#" data-page="konfirmasi">✅ Konfirmasi Iklan</a>
-  <a href="#" data-page="kelola-user">👥 Kelola User</a>
-  <a href="#" data-page="laporan">📊 Laporan</a>
-  <a href="#" data-page="logout">🚪 Kembali ke Beranda</a>
-</div>
-<iframe id="mainFrame" src="../beranda/beranda.html"></iframe>
-<script>
-  const hamburger = document.getElementById('hamburgerBtn');
-  const menu = document.getElementById('menuOverlay');
-  const backdrop = document.getElementById('backdrop');
-  const closeMenuBtn = document.getElementById('closeMenuBtn');
-  const iframe = document.getElementById('mainFrame');
-  function openMenu() { menu.classList.add('open'); backdrop.classList.add('show'); }
-  function closeMenu() { menu.classList.remove('open'); backdrop.classList.remove('show'); }
-  hamburger.addEventListener('click', openMenu);
-  closeMenuBtn.addEventListener('click', closeMenu);
-  backdrop.addEventListener('click', closeMenu);
-  function loadPage(url) { iframe.src = url; closeMenu(); }
-  document.querySelectorAll('.menu-overlay a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const page = link.getAttribute('data-page');
-      if (page === 'beranda') loadPage('../beranda/beranda.html');
-      else if (page === 'logout') window.location.href = '../index.html';
-      else loadPage(`../shared/${page}.html`);
-    });
-  });
-</script>
+<script src="auth.js"></script>
 </body>
 </html>
