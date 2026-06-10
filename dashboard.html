@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html><head><script src="auth/config.js"></script><script src="auth/session.js"></script><script src="auth/rules.js"></script><script src="auth/security.js"></script><script src="auth/account.js"></script><script src="auth/guard.js"></script></head>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script src="auth/config.js"></script>
+  <script src="auth/session.js"></script>
+  <script src="auth/rules.js"></script>
+  <script src="auth/security.js"></script>
+  <script src="auth/account.js"></script>
+  <script src="auth/guard.js"></script>
+</head>
 <body>
 <script>
-  if (!requireValidSession()) {}
-  const user = getCurrentUser();
-  if (user.role === 'pemilik') location.href = 'owner/owner.html';
-  else if (user.role === 'admin') location.href = 'admin/admin.html';
-  else location.href = 'user/user.html';
+  if (!requireValidSession()) {
+    // redirect sudah terjadi
+  } else {
+    const user = getCurrentUser();
+    if (user.role === 'pemilik') window.location.href = 'owner/owner.html';
+    else if (user.role === 'admin') window.location.href = 'admin/admin.html';
+    else window.location.href = 'user/user.html';
+  }
 </script>
 </body>
 </html>
