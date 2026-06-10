@@ -22,7 +22,7 @@ document.getElementById('loginBtn').onclick = () => {
   const password = document.getElementById('loginPassword').value;
   const res = login(email, password);
   if (res.success) {
-    // redirect ke posting.html (atau halaman asal)
+    // redirect ke posting.html setelah login
     window.location.href = 'posting.html';
   } else {
     document.getElementById('loginError').innerText = res.msg;
