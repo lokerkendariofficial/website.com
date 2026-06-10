@@ -3,41 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>User Dashboard - Loker Kendari</title>
+  <title>User Panel - Loker Kendari</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: system-ui, sans-serif; background: #f5f7fb; }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+    }
+    /* Header */
     .header {
       background: #0e7490;
       color: white;
-      padding: 12px 20px;
+      padding: 12px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .logo { font-weight: bold; font-size: 1.2rem; }
+    .logo {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
     .nav-links a {
       color: white;
       text-decoration: none;
-      margin-left: 20px;
-      padding: 5px 10px;
-      border-radius: 20px;
+      padding: 6px 12px;
+      border-radius: 30px;
+      transition: background 0.2s;
+      font-size: 0.9rem;
     }
-    .nav-links a:hover { background: rgba(255,255,255,0.2); }
-    .content-area { padding: 20px; }
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    /* Konten area */
+    .content-area {
+      padding: 20px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
     iframe {
       width: 100%;
       height: calc(100vh - 80px);
       border: none;
       background: white;
-      border-radius: 16px;
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     @media (max-width: 640px) {
       .header { flex-direction: column; text-align: center; }
-      .nav-links a { margin: 0 10px; display: inline-block; }
+      .nav-links { justify-content: center; }
+      .content-area { padding: 12px; }
     }
   </style>
   <!-- Load auth modules -->
@@ -52,7 +76,7 @@
 <body>
 <script>
   if (!guard('user.html')) {
-    // redirect terjadi di guard
+    // redirect dilakukan oleh guard
   }
 </script>
 <div class="header">
