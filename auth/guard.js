@@ -1,10 +1,6 @@
-// auth/guard.js - Middleware sederhana untuk melindungi halaman
+// auth/guard.js - Middleware cepat untuk proteksi halaman
 function guard(page, redirect = '../index.html') {
+  if (!requireValidSession(redirect)) return false;
   return protectPage(page, redirect);
 }
-
-// Contoh pemakaian di halaman dashboard:
-// <script src="../auth/guard.js"></script>
-// <script>guard('owner.html');</script>
-
 window.guard = guard;
