@@ -1,28 +1,91 @@
-// auth/rules.js - Dokumentasi aturan keamanan (mirip Firebase Rules)
-/*
-  RULES_VERSION = '1';
-  service loker {
-    match /lowongan {
-      allow read: if true;
-      allow write: if request.auth.role in ['pemilik', 'admin'];
-    }
-    match /pendingIklan {
-      allow read: if request.auth.role in ['pemilik', 'admin'];
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth.role in ['pemilik', 'admin'];
-    }
-    match /users {
-      allow read: if request.auth.role in ['pemilik', 'admin'];
-      allow write: if request.auth.role in ['pemilik', 'admin'];
-    }
-    match /lamaran/{userId} {
-      allow read: if request.auth.uid == userId || request.auth.role in ['pemilik', 'admin'];
-      allow create: if request.auth != null;
-    }
-    match /logs {
-      allow read: if request.auth.role == 'pemilik';
-    }
-    // ... dst
+// auth/rules.js - Aturan keamanan (Firebase rules style)
+const RULES = {
+  // Koleksi / resource
+  lowongan: {
+    read: ['pemilik', 'admin', 'user'],
+    write: ['pemilik', 'admin'],
+    delete: ['pemilik', 'admin']
+  },
+  pendingIklan: {
+    read: ['pemilik', 'admin'],
+    create: ['pemilik', 'admin', 'user'],
+    update: ['pemilik', 'admin'],
+    delete: ['pemilik', 'admin']
+  },
+  users: {
+    read: ['pemilik', 'admin'],
+    write: ['pemilik', 'admin'],
+    delete: ['pemilik', 'admin']
+  },
+  lamaran: {
+    readSelf: ['pemilik', 'admin', 'user'],
+    readAll: ['pemilik', 'admin'],
+    create: ['pemilik', 'admin', 'user']
+  },
+  logs: {
+    read: ['pemilik'],
+    delete: ['pemilik']
+  },
+  kategori: {
+    read: ['pemilik', 'admin', 'user'],
+    write: ['pemilik']
+  },
+  notifikasi: {
+    read: ['pemilik', 'admin', 'user'],
+    write: ['pemilik']
+  },
+  backup: {
+    read: ['pemilik'],
+    write: ['pemilik']
+  },
+  sistem: {
+    write: ['pemilik']
   }
-*/
-console.log('Firebase-like rules loaded (static version)');
+};
+
+// Mendefinisikan aksi-aksi spesifik untuk pengecekan
+const PERMISSIONS = {
+  // lowongan
+  'lowongan.baca': RULES.lowongan.read,
+  'lowongan.tulis': RULES.lowongan.write,
+  'lowongan.hapus': RULES.lowongan.delete,
+
+  // pending
+  'pending.baca': RULES.pendingIklan.read,
+  'pending.buat': RULES.pendingIklan.create,
+  'pending.approve': RULES.pendingIklan.update,
+  'pending.tolak': RULES.pendingIklan.delete,
+
+  // user management
+  'user.lihat': RULES.users.read,
+  'user.ubahRole': RULES.users.write,
+  'user.hapus': RULES.users.delete,
+
+  // lamaran
+  'lamaran.lihat.sendiri': RULES.lamaran.readSelf,
+  'lamaran.lihat.semua': RULES.lamaran.readAll,
+  'lamaran.buat': RULES.lamaran.create,
+
+  // log
+  'log.lihat': RULES.logs.read,
+  'log.hapus': RULES.logs.delete,
+
+  // kategori
+  'kategori.baca': RULES.kategori.read,
+  'kategori.kelola': RULES.kategori.write,
+
+  // notifikasi
+  'notifikasi.baca': RULES.notifikasi.read,
+  'notifikasi.buat': RULES.notifikasi.write,
+
+  // backup & reset
+  'backup': RULES.backup.read,
+  'restore': RULES.backup.write,
+  'reset': RULES.backup.write,
+
+  // sistem
+  'sistem.ubah': RULES.sistem.write
+};
+
+window.RULES = RULES;
+window.PERMISSIONS = PERMISSIONS;
