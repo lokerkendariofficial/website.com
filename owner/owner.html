@@ -6,6 +6,7 @@
   <title>Dashboard Pemilik - Loker Kendari</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
+    /* gaya dashboard (sama seperti sebelumnya) */
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family: system-ui, sans-serif; background: #f5f7fb; }
     .header {
@@ -19,18 +20,8 @@
       top: 0;
       z-index: 100;
     }
-    .hamburger {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.8rem;
-      cursor: pointer;
-    }
-    .logo {
-      font-size: 1.2rem;
-      font-weight: bold;
-      flex-grow: 1;
-    }
+    .hamburger { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
+    .logo { font-size: 1.2rem; font-weight: bold; flex-grow: 1; }
     .menu-overlay {
       position: fixed;
       top: 0;
@@ -44,20 +35,8 @@
       overflow-y: auto;
     }
     .menu-overlay.open { left: 0; }
-    .menu-overlay .close-btn {
-      text-align: right;
-      padding: 12px;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-    .menu-overlay a {
-      display: block;
-      padding: 12px 20px;
-      text-decoration: none;
-      color: #1e293b;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .menu-overlay a:hover { background: #f1f5f9; color: #0a5b8c; }
+    .menu-overlay .close-btn { text-align: right; padding: 12px; font-size: 1.5rem; cursor: pointer; }
+    .menu-overlay a { display: block; padding: 12px 20px; text-decoration: none; color: #1e293b; border-bottom: 1px solid #e2e8f0; }
     .backdrop {
       position: fixed;
       top: 0;
@@ -69,14 +48,21 @@
       display: none;
     }
     .backdrop.show { display: block; }
-    iframe {
-      width: 100%;
-      height: calc(100vh - 60px);
-      border: none;
-    }
+    iframe { width: 100%; height: calc(100vh - 60px); border: none; }
   </style>
+  <script src="../auth/session.js"></script>
+  <script src="../auth/rules.js"></script>
+  <script src="../auth/security.js"></script>
+  <script src="../auth/guard.js"></script>
 </head>
 <body>
+<script>
+  // Proteksi halaman owner
+  if (!guard('owner.html')) {
+    // redirect sudah terjadi di dalam guard
+    throw new Error('Akses ditolak');
+  }
+</script>
 <div class="header">
   <button class="hamburger" id="hamburgerBtn">☰</button>
   <div class="logo">👑 Loker Kendari Official (Pemilik)</div>
@@ -92,7 +78,7 @@
   <a href="#" data-page="kelola-user">👥 Kelola User</a>
   <a href="#" data-page="laporan">📊 Laporan</a>
   <a href="#" data-page="pengaturan">⚙️ Pengaturan Sistem</a>
-  <a href="#" data-page="logout">🚪 Kembali ke Beranda</a>
+  <a href="#" data-page="logout">🚪 Logout</a>
 </div>
 <iframe id="mainFrame" src="../beranda/beranda.html"></iframe>
 <script>
@@ -114,8 +100,8 @@
       e.preventDefault();
       const page = link.getAttribute('data-page');
       if (page === 'beranda') loadPage('../beranda/beranda.html');
-      else if (page === 'logout') window.location.href = '../index.html';
-      else loadPage(`../shared/${page}.html`); // asumsikan file shared ada
+      else if (page === 'logout') logout();
+      else loadPage(`../shared/${page}.html`);
     });
   });
 </script>
