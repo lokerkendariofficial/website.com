@@ -5,66 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>User Panel - Loker Kendari</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: #f8fafc;
-      color: #1e293b;
-    }
-    /* Header */
-    .header {
-      background: #0e7490;
-      color: white;
-      padding: 12px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .logo {
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .nav-links a {
-      color: white;
-      text-decoration: none;
-      padding: 6px 12px;
-      border-radius: 30px;
-      transition: background 0.2s;
-      font-size: 0.9rem;
-    }
-    .nav-links a:hover {
-      background: rgba(255,255,255,0.2);
-    }
-    /* Konten area */
-    .content-area {
-      padding: 20px;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-    iframe {
-      width: 100%;
-      height: calc(100vh - 80px);
-      border: none;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    @media (max-width: 640px) {
-      .header { flex-direction: column; text-align: center; }
-      .nav-links { justify-content: center; }
-      .content-area { padding: 12px; }
-    }
-  </style>
-  <!-- Load auth modules -->
+  <link rel="stylesheet" href="user.css">
+  <!-- Load modul auth -->
   <script src="../auth/config.js"></script>
   <script src="../auth/session.js"></script>
   <script src="../auth/rules.js"></script>
@@ -75,26 +17,24 @@
 </head>
 <body>
 <script>
-  if (!guard('user.html')) {
-    // redirect dilakukan oleh guard
-  }
+  // Proteksi halaman user
+  if (!guard('user.html')) {}
 </script>
 <div class="header">
-  <div class="logo">👤 User Panel - Loker Kendari</div>
-  <div class="nav-links">
-    <a href="#" onclick="loadPage('beranda.html')">🏠 Beranda</a>
-    <a href="#" onclick="loadPage('pasang.html')">📝 Pasang Iklan</a>
-    <a href="#" onclick="loadPage('profil.html')">👤 Profil</a>
-    <a href="#" onclick="logoutUnique()">🚪 Kembali ke Beranda</a>
-  </div>
+  <button class="hamburger" id="hamburgerBtn">☰</button>
+  <div class="logo">👤 Loker Kendari (User)</div>
+</div>
+<div class="backdrop" id="backdrop"></div>
+<div class="menu-overlay" id="menuOverlay">
+  <div class="close-btn" id="closeMenuBtn">&times;</div>
+  <a href="#" data-page="beranda">🏠 Beranda</a>
+  <a href="#" data-page="pasang">📝 Pasang Iklan</a>
+  <a href="#" data-page="profil">👤 Profil</a>
+  <a href="#" data-page="logout">🚪 Kembali ke Beranda</a>
 </div>
 <div class="content-area">
   <iframe id="mainFrame" src="beranda.html"></iframe>
 </div>
-<script>
-  function loadPage(url) {
-    document.getElementById('mainFrame').src = url;
-  }
-</script>
+<script src="user.js"></script>
 </body>
 </html>
