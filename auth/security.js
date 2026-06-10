@@ -1,15 +1,13 @@
-// auth/security.js - Fungsi keamanan
+// auth/security.js - Fungsi can, canAccessPage, protectPage
 function can(action, userRole) {
   if (!userRole) return false;
-  const allowedRoles = window.PERMISSIONS[action];
-  if (!allowedRoles) return false;
-  return allowedRoles.includes(userRole);
+  const allowed = window.PERMISSIONS[action];
+  return allowed ? allowed.includes(userRole) : false;
 }
 
 function canAccessPage(page, userRole) {
-  // Mapping halaman ke action yang dibutuhkan
   const pageRules = {
-    'owner.html': 'sistem.ubah', // owner boleh akses semua, pakai salah satu action
+    'owner.html': 'sistem.ubah',
     'admin.html': 'pending.baca',
     'user.html': 'lamaran.buat',
     'konfirmasi.html': 'pending.baca',
@@ -22,16 +20,13 @@ function canAccessPage(page, userRole) {
   };
   const base = page.split('/').pop();
   const action = pageRules[base];
-  if (!action) return true; // jika tidak ada aturan, izinkan
+  if (!action) return true;
   return can(action, userRole);
 }
 
 function protectPage(page, redirect = '../index.html') {
   const user = getCurrentUser();
-  if (!user) {
-    window.location.href = redirect;
-    return false;
-  }
+  if (!user) { window.location.href = redirect; return false; }
   if (!canAccessPage(page, user.role)) {
     alert('Akses ditolak!');
     window.location.href = redirect;
