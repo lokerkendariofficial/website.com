@@ -9,27 +9,28 @@ function ensureDefaultAccounts() {
   let users = getUsers();
   if (users.length === 0) {
     users = [
-      { id: 1, nama: 'Pemilik Utama', email: 'pemilik@loker.com', password: btoa('pemilik123'), role: 'pemilik' },
-      { id: 2, nama: 'User Biasa', email: 'user@loker.com', password: btoa('user123'), role: 'user' }
+      { id: 1, nama: 'Pemilik Utama', username: '900900', password: btoa('900900'), role: 'pemilik' },
+      { id: 2, nama: 'Admin Sistem', username: '9090', password: btoa('9090'), role: 'admin' },
+      { id: 3, nama: 'User Biasa', username: '9091', password: btoa('9091'), role: 'user' }
     ];
     saveUsers(users);
   }
 }
 ensureDefaultAccounts();
 
-function register(nama, email, password) {
+function register(username, nama, password) {
   let users = getUsers();
-  if (users.find(u => u.email === email)) return { success: false, msg: 'Email sudah terdaftar.' };
-  const newUser = { id: Date.now(), nama, email, password: btoa(password), role: 'user' };
+  if (users.find(u => u.username === username)) return { success: false, msg: 'ID sudah terdaftar.' };
+  const newUser = { id: Date.now(), nama, username, password: btoa(password), role: 'user' };
   users.push(newUser);
   saveUsers(users);
   return { success: true };
 }
 
-function login(email, password) {
+function login(username, password) {
   let users = getUsers();
-  const user = users.find(u => u.email === email && u.password === btoa(password));
-  if (!user) return { success: false, msg: 'Email atau password salah.' };
-  setCurrentUser({ id: user.id, nama: user.nama, email: user.email, role: user.role });
+  const user = users.find(u => u.username === username && u.password === btoa(password));
+  if (!user) return { success: false, msg: 'ID atau password salah.' };
+  setCurrentUser({ id: user.id, nama: user.nama, username: user.username, role: user.role });
   return { success: true, role: user.role };
 }
