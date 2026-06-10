@@ -3,38 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Konfirmasi Iklan - Loker Kendari</title>
+  <title>Konfirmasi Iklan</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="../css/style.css">
   <style>
-    body { background: #f8fafc; padding: 20px; }
-    .container { max-width: 800px; margin: 0 auto; }
-    .job-card { background: white; border-radius: 16px; padding: 1.2rem; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    button.approve { background: #10b981; color: white; border: none; padding: 6px 16px; border-radius: 40px; margin-right: 0.5rem; cursor: pointer; }
+    .job-card { margin-bottom: 1rem; background: white; padding: 1rem; border-radius: 16px; }
+    button.approve { background: #10b981; margin-right: 0.5rem; color: white; border: none; padding: 6px 16px; border-radius: 40px; cursor: pointer; }
     button.reject { background: #ef4444; color: white; border: none; padding: 6px 16px; border-radius: 40px; cursor: pointer; }
-    .info { font-size: 0.8rem; color: #475569; margin-top: 8px; }
   </style>
   <script src="../auth/session.js"></script>
-  <script src="../auth/rules.js"></script>
+  <script src="../auth/account.js"></script>
   <script src="../auth/security.js"></script>
 </head>
 <body>
 <div class="container">
-  <h2><i class="fas fa-check-circle"></i> Konfirmasi Iklan</h2>
-  <div id="pendingList">Memuat...</div>
+  <h2><i class="fas fa-check-circle"></i> Konfirmasi Iklan Pending</h2>
+  <div id="pendingList"></div>
 </div>
 <script>
-  (function() {
-    // Cek akses: hanya pemilik dan admin yang boleh
-    const user = getCurrentUser();
-    if (!user || !can('pending.baca', user.role)) {
-      document.getElementById('pendingList').innerHTML = '<p style="color:red;">Akses ditolak. Anda tidak memiliki izin untuk melihat halaman ini.</p>';
-      return;
-    }
-
+  const user = getCurrentUser();
+  if (!user || !can('pending.baca', user.role)) {
+    document.getElementById('pendingList').innerHTML = '<p style="color:red;">Akses ditolak. Anda tidak memiliki izin.</p>';
+  } else {
     let pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
-    const users = getUsers(); // untuk mengambil nama pembuat
-
     function loadPending() {
       pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
       const container = document.getElementById('pendingList');
@@ -42,66 +33,46 @@
         container.innerHTML = '<p>Tidak ada iklan menunggu konfirmasi.</p>';
         return;
       }
-      container.innerHTML = pending.map(job => {
-        const userCreator = users.find(u => u.id == job.userId);
-        const creatorName = userCreator ? userCreator.nama : 'Tidak diketahui';
-        return `
-          <div class="job-card">
-            <h3>${escapeHtml(job.title)}</h3>
-            <p><strong>${escapeHtml(job.company)}</strong> - ${escapeHtml(job.location)}</p>
-            <div class="info">📅 Diajukan oleh: ${escapeHtml(creatorName)} | Tipe: ${escapeHtml(job.type)} | Gaji: ${escapeHtml(job.salary)}</div>
-            <div style="margin-top: 12px;">
-              <button class="approve" data-id="${job.id}">✅ Setujui</button>
-              <button class="reject" data-id="${job.id}">❌ Tolak</button>
-            </div>
-          </div>
-        `;
-      }).join('');
+      container.innerHTML = pending.map(job => `
+        <div class="job-card">
+          <h3>${escapeHtml(job.title)}</h3>
+          <p><strong>${escapeHtml(job.company)}</strong> - ${escapeHtml(job.location)}</p>
+          <p><small>Diajukan oleh: ${escapeHtml(job.userName || 'Tidak diketahui')}</small></p>
+          <button class="approve" data-id="${job.id}">✅ Setujui</button>
+          <button class="reject" data-id="${job.id}">❌ Tolak</button>
+        </div>
+      `).join('');
       document.querySelectorAll('.approve').forEach(btn => btn.addEventListener('click', () => approve(btn.dataset.id)));
       document.querySelectorAll('.reject').forEach(btn => btn.addEventListener('click', () => reject(btn.dataset.id)));
     }
-
     function approve(id) {
       const job = pending.find(j => j.id == id);
-      if (!job) return;
-      if (!can('pending.approve', user.role)) {
-        alert('Anda tidak memiliki izin untuk menyetujui iklan.');
-        return;
+      if (job) {
+        let loker = JSON.parse(localStorage.getItem('lokerData') || '[]');
+        delete job.status;
+        job.uploadedAt = Date.now();
+        loker.unshift(job);
+        localStorage.setItem('lokerData', JSON.stringify(loker));
+        pending = pending.filter(j => j.id != id);
+        localStorage.setItem('pendingIklan', JSON.stringify(pending));
+        addLog(user.id, user.nama, 'APPROVE', `Menyetujui iklan "${job.title}" dari ${job.company}`);
+        alert('Iklan disetujui dan sudah tampil di beranda.');
+        loadPending();
       }
-      let loker = JSON.parse(localStorage.getItem('lokerData') || '[]');
-      // Hapus status pending dan tambahkan waktu upload
-      delete job.status;
-      job.uploadedAt = Date.now();
-      loker.unshift(job);
-      localStorage.setItem('lokerData', JSON.stringify(loker));
-      pending = pending.filter(j => j.id != id);
-      localStorage.setItem('pendingIklan', JSON.stringify(pending));
-      addLog(user.id, user.nama, 'APPROVE_IKLAN', `Menyetujui iklan "${job.title}" dari ${job.company}`);
-      alert('Iklan disetujui dan sudah tampil di beranda.');
-      loadPending();
     }
-
     function reject(id) {
       const job = pending.find(j => j.id == id);
-      if (!job) return;
-      if (!can('pending.tolak', user.role)) {
-        alert('Anda tidak memiliki izin untuk menolak iklan.');
-        return;
+      if (job) {
+        pending = pending.filter(j => j.id != id);
+        localStorage.setItem('pendingIklan', JSON.stringify(pending));
+        addLog(user.id, user.nama, 'REJECT', `Menolak iklan "${job.title}" dari ${job.company}`);
+        alert('Iklan ditolak.');
+        loadPending();
       }
-      pending = pending.filter(j => j.id != id);
-      localStorage.setItem('pendingIklan', JSON.stringify(pending));
-      addLog(user.id, user.nama, 'REJECT_IKLAN', `Menolak iklan "${job.title}" dari ${job.company}`);
-      alert('Iklan ditolak.');
-      loadPending();
     }
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
-    }
-
+    function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
     loadPending();
-  })();
+  }
 </script>
 </body>
 </html>
