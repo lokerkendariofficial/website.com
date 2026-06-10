@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pasang Iklan - Loker Kendari</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="posting.css">
+</head>
+<body>
+<div class="post-card">
+  <h2><i class="fas fa-paper-plane"></i> Pasang Iklan Lowongan</h2>
+  <p class="sub">Iklan Anda akan ditampilkan setelah diverifikasi admin.</p>
+  <form id="postForm">
+    <input type="text" id="title" placeholder="Judul Lowongan" required>
+    <input type="text" id="company" placeholder="Nama Perusahaan" required>
+    <input type="text" id="location" placeholder="Lokasi" required>
+    <select id="type">
+      <option value="Fulltime">Fulltime</option>
+      <option value="Parttime">Parttime</option>
+      <option value="Kontrak">Kontrak</option>
+      <option value="Remote">Remote</option>
+    </select>
+    <select id="category">
+      <option value="it">IT & Teknologi</option>
+      <option value="marketing">Pemasaran</option>
+      <option value="admin">Administrasi</option>
+      <option value="education">Pendidikan</option>
+      <option value="lainnya">Lainnya</option>
+    </select>
+    <input type="text" id="salary" placeholder="Gaji (contoh: 5jt - 7jt)">
+    <textarea id="desc" rows="4" placeholder="Deskripsi pekerjaan" required></textarea>
+    <input type="text" id="address" placeholder="Alamat kantor (opsional)">
+    <input type="text" id="qualification" placeholder="Kualifikasi (opsional)">
+    <input type="text" id="contact" placeholder="Kontak (email/WA, opsional)">
+    <button type="submit">Kirim Iklan</button>
+  </form>
+  <div class="logout-link">
+    <a href="#" id="logoutBtn">🚪 Logout</a>
+  </div>
+</div>
+<script src="auth.js"></script>
+<script src="posting.js"></script>
+</body>
+</html>
