@@ -2,48 +2,98 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Beranda - Loker Kendari</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beranda - Lowongan</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="beranda.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .admin-actions { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+    .btn-edit, .btn-delete { background: #f0f0f0; border: none; padding: 4px 12px; border-radius: 20px; cursor: pointer; font-size: 0.7rem; }
+    .btn-edit { color: #0a5b8c; }
+    .btn-delete { color: #dc2626; }
+  </style>
+  <script src="../auth/session.js"></script>
+  <script src="../auth/account.js"></script>
+  <script src="../auth/security.js"></script>
 </head>
 <body>
 <div class="container">
   <div class="header">
-    <h1>LokerKendari</h1>
-    <p>Lowongan kerja terpercaya di Sulawesi Tenggara</p>
+    <h1>Daftar Lowongan</h1>
   </div>
-
   <div class="search-wrapper">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Cari judul atau perusahaan...">
       <button id="searchBtn"><i class="fas fa-search"></i></button>
     </div>
   </div>
-
   <div class="categories" id="categoriesContainer"></div>
-
-  <div class="job-count" id="jobCountDisplay">Memuat lowongan...</div>
+  <div class="job-count" id="jobCountDisplay"></div>
   <div class="job-grid" id="jobList"></div>
-
-  <div class="footer">
-    © 2026 Loker Kendari Official - Portal Lowongan Kerja
-  </div>
+  <div class="footer">© Loker Kendari Official</div>
 </div>
-
-<!-- Modal Detail Lowongan -->
 <div id="detailModal" class="modal-overlay">
   <div class="modal-container">
-    <div class="modal-header">
-      <h2><i class="fas fa-briefcase"></i> Detail Lowongan</h2>
-      <button class="modal-close" id="closeModalBtn">&times;</button>
-    </div>
-    <div class="modal-body" id="modalBody">
-      Memuat...
-    </div>
+    <div class="modal-header"><h2>Detail Lowongan</h2><button class="modal-close" id="closeModalBtn">&times;</button></div>
+    <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
+<script src="../script.js"></script>
+<script>
+  let currentUser = getCurrentUser();
+  let isOwner = currentUser && currentUser.role === 'pemilik';
 
-<script src="beranda.js"></script>
+  // Override renderJobs untuk menambahkan tombol hapus jika owner
+  const originalRenderJobs = window.renderJobs;
+  window.renderJobs = function() {
+    originalRenderJobs();
+    if (isOwner) {
+      document.querySelectorAll('.job-card').forEach(card => {
+        const id = card.querySelector('.btn-detail')?.getAttribute('data-id');
+        if (id && !card.querySelector('.admin-actions')) {
+          const actionsDiv = document.createElement('div');
+          actionsDiv.className = 'admin-actions';
+          actionsDiv.innerHTML = `
+            <button class="btn-edit" data-id="${id}"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn-delete" data-id="${id}"><i class="fas fa-trash"></i> Hapus</button>
+          `;
+          card.appendChild(actionsDiv);
+        }
+      });
+      // Event hapus
+      document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.getAttribute('data-id');
+          if (confirm('Yakin hapus lowongan ini?')) {
+            let loker = JSON.parse(localStorage.getItem('lokerData') || '[]');
+            loker = loker.filter(job => job.id != id);
+            localStorage.setItem('lokerData', JSON.stringify(loker));
+            addLog(currentUser.id, currentUser.nama, 'DELETE_JOB', `Menghapus lowongan ID ${id}`);
+            renderJobs(); // refresh
+          }
+        });
+      });
+      // Event edit (sederhana, bisa diarahkan ke halaman edit)
+      document.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.getAttribute('data-id');
+          alert(`Fitur edit lowongan ID ${id} akan datang.`);
+        });
+      });
+    }
+  };
+
+  initJobsData();
+  renderCategories();
+  renderJobs();
+  bindSearchEvents();
+
+  const modal = document.getElementById('detailModal');
+  const closeModal = document.getElementById('closeModalBtn');
+  if (closeModal) closeModal.onclick = () => modal.classList.remove('active');
+  modal.onclick = (e) => { if(e.target === modal) modal.classList.remove('active'); };
+</script>
 </body>
 </html>
