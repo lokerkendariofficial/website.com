@@ -34,8 +34,8 @@ function ensureDefaultAccounts() {
   let users = getUsers();
   const defaults = [
     { id: 1, nama: 'Pemilik Utama', password: btoa('900900'), role: 'pemilik', isOwner: true, nomorTelepon: '900900', username: '900900' },
-    { id: 2, nama: 'Admin Sistem', password: btoa('0909'), role: 'admin', isOwner: false, nomorTelepon: '0909', username: '0909' },
-    { id: 3, nama: 'User Biasa', password: btoa('9090'), role: 'user', isOwner: false, nomorTelepon: '9090', username: '9090' }
+    { id: 2, nama: 'Admin Sistem', password: btoa('9090'), role: 'admin', isOwner: false, nomorTelepon: '9090', username: '9090' },
+    { id: 3, nama: 'User Biasa', password: btoa('9091'), role: 'user', isOwner: false, nomorTelepon: '9091', username: '9091' }
   ];
   let changed = false;
   defaults.forEach(def => {
@@ -93,8 +93,10 @@ function login(loginId, password) {
   return { success: true, role: user.role };
 }
 
+// Pastikan akun default ada
 ensureDefaultAccounts();
 
+// Ekspor ke global
 window.getUsers = getUsers;
 window.saveUsers = saveUsers;
 window.getCurrentUser = getCurrentUser;
