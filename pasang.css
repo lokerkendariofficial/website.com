@@ -1,0 +1,136 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #eef2f7 0%, #d9e2ec 100%);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.post-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.post-card {
+    background: white;
+    border-radius: 32px;
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.post-header {
+    background: #0a5b8c;
+    padding: 1.5rem 2rem;
+    text-align: center;
+}
+
+.post-header h2 {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.post-header p {
+    color: #cbd5e6;
+    margin-top: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.post-body {
+    padding: 2rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.form-group.full-width {
+    flex: 100%;
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: #1e293b;
+    font-size: 0.85rem;
+}
+
+label i {
+    width: 24px;
+    color: #0a5b8c;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 60px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: 0.2s;
+    background: white;
+}
+
+textarea {
+    border-radius: 20px;
+    resize: vertical;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #0a5b8c;
+    box-shadow: 0 0 0 3px rgba(10, 91, 140, 0.1);
+}
+
+button {
+    background: #0a5b8c;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 60px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.2s;
+    margin-top: 0.5rem;
+}
+
+button:hover {
+    background: #0a4b72;
+    transform: scale(0.98);
+}
+
+.subnote {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+@media (max-width: 640px) {
+    .post-body {
+        padding: 1.2rem;
+    }
+    .post-header h2 {
+        font-size: 1.4rem;
+    }
+}
