@@ -54,15 +54,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="text-gray-400 border-b border-slate-700">
-                        <tr>
-                            <th class="text-left py-2">ID</th>
-                            <th class="text-left py-2">Nama</th>
-                            <th class="text-left py-2">Username</th>
-                            <th class="text-left py-2">Nomor HP</th>
-                            <th class="text-left py-2">Role</th>
-                            <th class="text-left py-2">Aksi</th>
-                        </tr>
-                    </thead>
+                        <tr><th class="text-left py-2">ID</th><th class="text-left py-2">Nama</th><th class="text-left py-2">Username</th><th class="text-left py-2">Nomor HP</th><th class="text-left py-2">Role</th><th class="text-left py-2">Aksi</th></tr></thead>
                     <tbody id="userTableBody"><tr><td colspan="6" class="py-4 text-center text-gray-500">Memuat...<\/td><\/tr><\/tbody>
                 <\/table>
             </div>
@@ -73,7 +65,6 @@
 <script src="../auth.js"></script>
 <script src="script.js"></script>
 <script>
-    // Cek login dan role
     let current = getCurrentUser();
     if (!current || (current.role !== 'pemilik' && current.role !== 'admin')) {
         alert('Akses ditolak');
@@ -81,12 +72,11 @@
     }
     document.getElementById('userName').innerText = current.nama || 'Admin';
 
-    // Fungsi render user (menggunakan getAllUsers dari auth.js)
     function renderUsers() {
         const users = getAllUsers();
         const tbody = document.getElementById('userTableBody');
         if (!users.length) {
-            tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-500">Belum ada user</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-500">Belum ada user<\/td><\/tr>';
             return;
         }
         let html = '';
@@ -98,16 +88,12 @@
                 <td class="py-2">${u.nomorHp || '-'}<\/td>
                 <td class="py-2">${u.role}<\/td>
                 <td class="py-2">
-                    ${!u.isOwner ? `
-                        <button onclick="changeRole(${u.id})" class="bg-blue-600/80 hover:bg-blue-700 text-white text-xs px-2 py-1 rounded mr-1">Ubah Role</button>
-                        <button onclick="deleteUser(${u.id})" class="bg-red-600/80 hover:bg-red-700 text-white text-xs px-2 py-1 rounded">Hapus</button>
-                    ` : '<span class="text-gray-500 text-xs">Pemilik</span>'}
+                    ${!u.isOwner ? `<button onclick="changeRole(${u.id})" class="bg-blue-600/80 hover:bg-blue-700 text-white text-xs px-2 py-1 rounded mr-1">Ubah Role</button><button onclick="deleteUser(${u.id})" class="bg-red-600/80 hover:bg-red-700 text-white text-xs px-2 py-1 rounded">Hapus</button>` : '<span class="text-gray-500 text-xs">Pemilik</span>'}
                 <\/td>
-             <\/tr>`;
+            <\/tr>`;
         });
         tbody.innerHTML = html;
     }
-
     window.changeRole = (userId) => {
         const user = getAllUsers().find(u => u.id === userId);
         if (!user || user.isOwner) return;
@@ -118,21 +104,18 @@
         }
     };
     window.deleteUser = (userId) => {
-        if (confirm('Hapus user ini? Data terkait (lowongan, lamaran) tidak otomatis terhapus.')) {
+        if (confirm('Hapus user ini?')) {
             deleteUser(userId);
             renderUsers();
         }
     };
-
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
     }
-
     renderUsers();
     document.getElementById('refreshBtn').addEventListener('click', () => renderUsers());
     document.getElementById('logoutBtn').addEventListener('click', logout);
-    // Sidebar toggle sudah ditangani oleh script.js
 </script>
 </body>
 </html>
