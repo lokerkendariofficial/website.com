@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun - Loker Kendari</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(145deg, #0a5b8c 0%, #0e7490 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+        .card {
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem 1.8rem;
+        }
+        h2 {
+            color: #0a5b8c;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .sub {
+            text-align: center;
+            color: #4b5563;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+        }
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 1.2rem;
+            font-size: 1rem;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            background: #0a5b8c;
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #0a4b72;
+        }
+        .error-msg {
+            color: #dc2626;
+            background: #fee2e2;
+            padding: 0.6rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .info {
+            text-align: center;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            color: #4b5563;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>📝 Daftar Akun Baru</h2>
+    <div class="sub">Isi data di bawah, ID akan dibuat otomatis dari nomor HP</div>
+    <div class="input-group">
+        <label>Nama Lengkap</label>
+        <input type="text" id="nama" class="input-field" placeholder="Contoh: Febry" autocomplete="off">
+    </div>
+    <div class="input-group">
+        <label>Nomor Telepon</label>
+        <input type="text" id="nomorHp" class="input-field" placeholder="089531896628" autocomplete="off">
+    </div>
+    <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="password" class="input-field" placeholder="Buat password">
+    </div>
+    <button id="registerBtn">Daftar Sekarang</button>
+    <div id="errorMsg" class="error-msg" style="display:none;"></div>
+    <div class="info">Sudah punya akun? <a href="login.html" style="color:#0a5b8c;">Login</a></div>
+</div>
+<script src="auth.js"></script>
+<script>
+    document.getElementById('registerBtn').addEventListener('click', () => {
+        const nama = document.getElementById('nama').value.trim();
+        const nomorHp = document.getElementById('nomorHp').value.trim();
+        const password = document.getElementById('password').value;
+        const errorDiv = document.getElementById('errorMsg');
+        if (!nama || !nomorHp || !password) {
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = 'Harap isi semua field.';
+            return;
+        }
+        const result = registerWithPhone(nama, nomorHp, password);
+        if (result.success) {
+            alert(`Pendaftaran berhasil! ID Anda: ${result.userId}. Silakan login.`);
+            window.location.href = 'login.html';
+        } else {
+            errorDiv.style.display = 'block';
+            errorDiv.innerText = result.msg;
+        }
+    });
+</script>
+</body>
+</html>
