@@ -1,0 +1,62 @@
+/* fab.css */
+.fab-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1001;
+}
+.fab-main {
+  background: #25D366;
+  color: white;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.fab-main:hover {
+  transform: scale(1.05);
+  background: #128C7E;
+}
+.fab-submenu {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: 0.2s;
+}
+.fab-submenu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.fab-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #1e293b;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+.fab-option:last-child {
+  border-bottom: none;
+}
+.fab-option:hover {
+  background: #f1f5f9;
+}
