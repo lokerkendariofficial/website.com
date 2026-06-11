@@ -1,42 +1,11 @@
 /* owner/style.css */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-::-webkit-scrollbar-track {
-    background: #1e293b;
-}
-::-webkit-scrollbar-thumb {
-    background: #475569;
-    border-radius: 3px;
-}
-body {
-    background-color: #0f172a;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
-.sidebar-active {
-    background-color: #1e293b;
-    border-left: 4px solid #0a5b8c;
-}
-.stat-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-/* Sidebar collapsed state (lebar 0, padding 0, overflow hidden) */
-.sidebar.collapsed {
-    width: 0;
-    padding-left: 0;
-    padding-right: 0;
-    overflow-x: hidden;
-}
-.sidebar.collapsed nav,
-.sidebar.collapsed .p-3 {
-    display: none;
-}
-/* Transisi konten utama (main) saat sidebar collapse */
-.content-expanded {
-    margin-left: 0;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #1e293b; }
+::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+body { background-color: #0f172a; font-family: 'Inter', system-ui, sans-serif; }
+.sidebar-active { background-color: #1e293b; border-left: 4px solid #0a5b8c; }
+.stat-card { transition: transform 0.2s, box-shadow 0.2s; }
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+.sidebar.collapsed { width: 0; padding-left: 0; padding-right: 0; overflow-x: hidden; }
+.sidebar.collapsed nav, .sidebar.collapsed .p-3 { display: none; }
+.content-expanded { margin-left: 0; }
