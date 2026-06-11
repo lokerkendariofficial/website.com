@@ -25,7 +25,15 @@
 
 <div class="bg-slate-800/50 border-b border-slate-700 px-4 py-2 flex flex-wrap items-center justify-between text-xs sticky top-12 z-10">
     <div class="flex items-center space-x-2"><span class="font-semibold text-gray-300 uppercase tracking-wider">Manajemen User</span></div>
-    <div class="flex items-center space-x-2"><button id="refreshBtn" class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+    <div class="flex items-center space-x-2">
+        <select id="roleFilter" class="bg-slate-700 text-gray-300 px-2 py-1 rounded border border-slate-600">
+            <option value="all">Semua Role</option>
+            <option value="pemilik">Pemilik</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+        </select>
+        <button id="refreshBtn" class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-rotate"></i> Refresh</button>
+    </div>
 </div>
 
 <div class="flex flex-1 overflow-hidden relative">
@@ -50,11 +58,20 @@
         <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
             <div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-4">
                 <h3 class="font-semibold text-white"><i class="fa-solid fa-users mr-2 text-green-400"></i> Daftar User</h3>
+                <span class="text-xs text-gray-400" id="totalCount"></span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="text-gray-400 border-b border-slate-700">
-                        <tr><th class="text-left py-2">ID</th><th class="text-left py-2">Nama</th><th class="text-left py-2">Username</th><th class="text-left py-2">Nomor HP</th><th class="text-left py-2">Role</th><th class="text-left py-2">Aksi</th></tr></thead>
+                        <tr>
+                            <th class="text-left py-2">ID</th>
+                            <th class="text-left py-2">Nama</th>
+                            <th class="text-left py-2">Username</th>
+                            <th class="text-left py-2">Nomor HP</th>
+                            <th class="text-left py-2">Role</th>
+                            <th class="text-left py-2">Aksi</th>
+                        </tr>
+                    </thead>
                     <tbody id="userTableBody"><tr><td colspan="6" class="py-4 text-center text-gray-500">Memuat...<\/td><\/tr><\/tbody>
                 <\/table>
             </div>
@@ -72,15 +89,23 @@
     }
     document.getElementById('userName').innerText = current.nama || 'Admin';
 
+    let allUsers = [];
+
     function renderUsers() {
-        const users = getAllUsers();
+        const filterRole = document.getElementById('roleFilter').value;
+        let filtered = allUsers;
+        if (filterRole !== 'all') {
+            filtered = allUsers.filter(u => u.role === filterRole);
+        }
         const tbody = document.getElementById('userTableBody');
-        if (!users.length) {
-            tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-500">Belum ada user<\/td><\/tr>';
+        if (!filtered.length) {
+            tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-500">Tidak ada user dengan role ini<\/td><\/tr>';
+            document.getElementById('totalCount').innerText = '0 user';
             return;
         }
+        document.getElementById('totalCount').innerText = `${filtered.length} user (total ${allUsers.length})`;
         let html = '';
-        users.forEach(u => {
+        filtered.forEach(u => {
             html += `<tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
                 <td class="py-2">${u.id}<\/td>
                 <td class="py-2">${escapeHtml(u.nama)}<\/td>
@@ -94,18 +119,21 @@
         });
         tbody.innerHTML = html;
     }
+
     window.changeRole = (userId) => {
-        const user = getAllUsers().find(u => u.id === userId);
+        const user = allUsers.find(u => u.id === userId);
         if (!user || user.isOwner) return;
         const newRole = user.role === 'admin' ? 'user' : 'admin';
         if (confirm(`Ubah role user ini menjadi ${newRole}?`)) {
             updateUserRole(userId, newRole);
+            allUsers = getAllUsers();
             renderUsers();
         }
     };
     window.deleteUser = (userId) => {
-        if (confirm('Hapus user ini?')) {
+        if (confirm('Hapus user ini? Data terkait tidak otomatis terhapus.')) {
             deleteUser(userId);
+            allUsers = getAllUsers();
             renderUsers();
         }
     };
@@ -113,8 +141,15 @@
         if (!str) return '';
         return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
     }
-    renderUsers();
-    document.getElementById('refreshBtn').addEventListener('click', () => renderUsers());
+
+    function refreshData() {
+        allUsers = getAllUsers();
+        renderUsers();
+    }
+    refreshData();
+
+    document.getElementById('roleFilter').addEventListener('change', () => renderUsers());
+    document.getElementById('refreshBtn').addEventListener('click', refreshData);
     document.getElementById('logoutBtn').addEventListener('click', logout);
 </script>
 </body>
