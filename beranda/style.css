@@ -205,6 +205,7 @@ body {
   font-size: 0.75rem;
   color: #64748b;
 }
+
 /* Floating Action Button */
 .fab {
   position: fixed;
@@ -228,6 +229,7 @@ body {
   transform: scale(1.05);
   background: #128C7E;
 }
+
 @media (max-width: 640px) {
   .job-grid {
     grid-template-columns: 1fr;
