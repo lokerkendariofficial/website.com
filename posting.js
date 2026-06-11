@@ -29,8 +29,3 @@ document.getElementById('postForm').addEventListener('submit', (e) => {
   alert('Iklan terkirim! Menunggu konfirmasi admin.');
   e.target.reset();
 });
-
-document.getElementById('logoutBtn').addEventListener('click', (e) => {
-  e.preventDefault();
-  logout();
-});
