@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Backup & Restore - Loker Kendari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-900 text-gray-200">
+
+<header class="bg-slate-800 border-b border-slate-700 px-4 py-2 flex items-center justify-between sticky top-0 z-20">
+    <div class="flex items-center space-x-3">
+        <button id="sidebarToggleBtn" class="text-white text-xl"><i class="fa-solid fa-bars"></i></button>
+        <div class="flex items-center space-x-2"><i class="fa-solid fa-briefcase text-blue-400 text-xl"></i><span class="font-bold text-white text-lg">Loker Kendari</span><span class="text-xs text-blue-400 bg-blue-900/30 px-2 py-0.5 rounded">Official</span></div>
+    </div>
+    <div class="flex items-center space-x-4">
+        <div class="hidden md:block relative"><input type="text" placeholder="Cepat..." class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs w-40 text-white"><i class="fa-solid fa-magnifying-glass absolute right-2 top-2 text-gray-400 text-xs"></i></div>
+        <div class="flex items-center space-x-2 cursor-pointer hover:text-blue-300"><i class="fa-regular fa-bell"></i><span class="text-xs hidden sm:inline">Notifikasi</span></div>
+        <div class="flex items-center space-x-2 cursor-pointer hover:text-blue-300"><i class="fa-regular fa-user"></i><span class="text-xs" id="userName">Pemilik</span></div>
+        <button id="logoutBtn" class="bg-red-600/80 hover:bg-red-700 text-white text-xs px-3 py-1 rounded">Logout</button>
+    </div>
+</header>
+
+<div class="bg-slate-800/50 border-b border-slate-700 px-4 py-2 flex flex-wrap items-center justify-between text-xs sticky top-12 z-10">
+    <div class="flex items-center space-x-2"><span class="font-semibold text-gray-300 uppercase tracking-wider">Backup & Restore</span></div>
+    <div class="flex items-center space-x-2"><button id="refreshBtn" class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+</div>
+
+<div class="flex flex-1 overflow-hidden relative">
+    <aside id="sidebar" class="sidebar w-64 bg-slate-800 border-r border-slate-700 flex flex-col text-sm overflow-y-auto transition-all duration-300">
+        <div class="p-3"><input type="text" placeholder="Cari menu..." class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs"></div>
+        <nav class="flex-1">
+            <div class="px-3 py-2 text-gray-400 font-semibold text-xs uppercase">Utama</div>
+            <a href="utama.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-chart-line w-5"></i> Dashboard</a>
+            <a href="kelola-lowongan.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-regular fa-file-lines w-5"></i> Kelola Lowongan</a>
+            <a href="konfirmasi-iklan.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-regular fa-clock w-5"></i> Konfirmasi Iklan</a>
+            <a href="manajemen-user.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-users w-5"></i> Manajemen User</a>
+            <a href="laporan-statistik.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-chart-simple w-5"></i> Laporan & Statistik</a>
+            <div class="border-t border-slate-700 my-2"></div>
+            <div class="px-3 py-2 text-gray-400 font-semibold text-xs uppercase">Pengaturan</div>
+            <a href="pengaturan-sistem.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-gear w-5"></i> Pengaturan Sistem</a>
+            <a href="backup.html" class="sidebar-active flex items-center px-4 py-2 text-white bg-slate-700/30 border-l-4 border-blue-500"><i class="fa-solid fa-database w-5"></i> Backup/Restore</a>
+            <a href="log-aktivitas.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-list-check w-5"></i> Log Aktivitas</a>
+        </nav>
+    </aside>
+
+    <main id="mainContent" class="flex-1 p-4 overflow-y-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Backup Section -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+                <h3 class="font-semibold text-white mb-3"><i class="fa-solid fa-download mr-2"></i> Backup Data (Export)</h3>
+                <p class="text-sm text-gray-400 mb-3">Klik tombol di bawah untuk mengekspor semua data website ke file JSON.</p>
+                <button id="exportBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-download"></i> Export All Data</button>
+                <div class="mt-4 text-xs text-gray-500">Data yang diekspor: users, lokerData, pendingIklan, lamaranSaya, sistemConfig, pengaturanUmum, kategoriLowongan, logAktivitas, notifikasiSistem</div>
+            </div>
+
+            <!-- Restore Section -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+                <h3 class="font-semibold text-white mb-3"><i class="fa-solid fa-upload mr-2"></i> Restore Data (Import)</h3>
+                <p class="text-sm text-gray-400 mb-2">Pilih file JSON hasil backup untuk mengembalikan data.</p>
+                <input type="file" id="restoreFile" accept=".json" class="block w-full text-sm text-gray-400 file:mr-2 file:py-1 file:px-3 file:rounded file:bg-slate-600 file:text-white file:border-0">
+                <button id="importBtn" class="mt-3 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded flex items-center gap-2"><i class="fa-solid fa-upload"></i> Restore Data</button>
+                <div class="mt-3 text-xs text-red-400">⚠️ Perhatian: Restore akan menimpa data yang ada saat ini. Disarankan backup terlebih dahulu.</div>
+            </div>
+        </div>
+
+        <!-- Info Data Saat Ini -->
+        <div class="mt-6 bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+            <h3 class="font-semibold text-white mb-3"><i class="fa-solid fa-chart-simple mr-2"></i> Statistik Data Saat Ini</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+                <div><span class="text-gray-400">Users:</span> <span id="statUsers">0</span></div>
+                <div><span class="text-gray-400">Lowongan:</span> <span id="statLowongan">0</span></div>
+                <div><span class="text-gray-400">Pending:</span> <span id="statPending">0</span></div>
+                <div><span class="text-gray-400">Lamaran:</span> <span id="statLamaran">0</span></div>
+                <div><span class="text-gray-400">Kategori:</span> <span id="statKategori">0</span></div>
+                <div><span class="text-gray-400">Log:</span> <span id="statLog">0</span></div>
+            </div>
+        </div>
+
+        <!-- Tombol Reset Data -->
+        <div class="mt-6 bg-red-900/20 border border-red-700/50 rounded-lg p-4">
+            <h3 class="font-semibold text-red-300 mb-2"><i class="fa-solid fa-trash-can mr-2"></i> Reset Data (Berbahaya)</h3>
+            <p class="text-sm text-gray-300 mb-2">Menghapus semua data kecuali akun pemilik dan konfigurasi sistem.</p>
+            <button id="resetDataBtn" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded"><i class="fa-solid fa-trash"></i> Reset Data</button>
+        </div>
+    </main>
+</div>
+
+<script src="../auth.js"></script>
+<script src="script.js"></script>
+<script>
+    function updateStats() {
+        document.getElementById('statUsers').innerText = getUsers().length;
+        document.getElementById('statLowongan').innerText = JSON.parse(localStorage.getItem('lokerData') || '[]').length;
+        document.getElementById('statPending').innerText = JSON.parse(localStorage.getItem('pendingIklan') || '[]').length;
+        document.getElementById('statLamaran').innerText = JSON.parse(localStorage.getItem('lamaranSaya') || '[]').length;
+        document.getElementById('statKategori').innerText = JSON.parse(localStorage.getItem('kategoriLowongan') || '[]').length;
+        document.getElementById('statLog').innerText = JSON.parse(localStorage.getItem('logAktivitas') || '[]').length;
+    }
+    updateStats();
+
+    // Export data
+    document.getElementById('exportBtn').addEventListener('click', () => {
+        const exportData = {
+            users: getUsers(),
+            lokerData: JSON.parse(localStorage.getItem('lokerData') || '[]'),
+            pendingIklan: JSON.parse(localStorage.getItem('pendingIklan') || '[]'),
+            lamaranSaya: JSON.parse(localStorage.getItem('lamaranSaya') || '[]'),
+            sistemConfig: localStorage.getItem('sistemConfig'),
+            pengaturanUmum: localStorage.getItem('pengaturanUmum'),
+            kategoriLowongan: localStorage.getItem('kategoriLowongan'),
+            logAktivitas: localStorage.getItem('logAktivitas'),
+            notifikasiSistem: localStorage.getItem('notifikasiSistem')
+        };
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `lokerkendari_backup_${new Date().toISOString().slice(0,19)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        addLog(currentUser.id, currentUser.nama, 'BACKUP', 'Mengekspor data');
+    });
+
+    // Import data
+    document.getElementById('importBtn').addEventListener('click', () => {
+        const fileInput = document.getElementById('restoreFile');
+        if (!fileInput.files.length) {
+            alert('Pilih file JSON terlebih dahulu.');
+            return;
+        }
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (data.users) localStorage.setItem('users', JSON.stringify(data.users));
+                if (data.lokerData) localStorage.setItem('lokerData', JSON.stringify(data.lokerData));
+                if (data.pendingIklan) localStorage.setItem('pendingIklan', JSON.stringify(data.pendingIklan));
+                if (data.lamaranSaya) localStorage.setItem('lamaranSaya', JSON.stringify(data.lamaranSaya));
+                if (data.sistemConfig) localStorage.setItem('sistemConfig', data.sistemConfig);
+                if (data.pengaturanUmum) localStorage.setItem('pengaturanUmum', data.pengaturanUmum);
+                if (data.kategoriLowongan) localStorage.setItem('kategoriLowongan', data.kategoriLowongan);
+                if (data.logAktivitas) localStorage.setItem('logAktivitas', data.logAktivitas);
+                if (data.notifikasiSistem) localStorage.setItem('notifikasiSistem', data.notifikasiSistem);
+                addLog(currentUser.id, currentUser.nama, 'RESTORE', 'Mengimpor data dari backup');
+                alert('Restore berhasil! Halaman akan dimuat ulang.');
+                location.reload();
+            } catch(err) {
+                alert('File tidak valid: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+    });
+
+    // Reset data (demo)
+    document.getElementById('resetDataBtn').addEventListener('click', () => {
+        if (confirm('RESET DATA: Semua data lowongan, pending, lamaran, user (kecuali pemilik), log akan dihapus. Lanjutkan?')) {
+            const ownerUser = getUsers().find(u => u.role === 'pemilik');
+            const sistemConfig = localStorage.getItem('sistemConfig');
+            const pengaturanUmum = localStorage.getItem('pengaturanUmum');
+            localStorage.clear();
+            if (ownerUser) localStorage.setItem('users', JSON.stringify([ownerUser]));
+            if (sistemConfig) localStorage.setItem('sistemConfig', sistemConfig);
+            if (pengaturanUmum) localStorage.setItem('pengaturanUmum', pengaturanUmum);
+            // Set default kategori
+            localStorage.setItem('kategoriLowongan', JSON.stringify([
+                { id: 1, nama: 'IT' }, { id: 2, nama: 'Marketing' }, { id: 3, nama: 'Administrasi' },
+                { id: 4, nama: 'Pendidikan' }, { id: 5, nama: 'Lainnya' }
+            ]));
+            addLog(ownerUser.id, ownerUser.nama, 'RESET', 'Melakukan reset data (demo)');
+            alert('Data telah direset. Halaman akan dimuat ulang.');
+            location.reload();
+        }
+    });
+</script>
+</body>
+</html>
