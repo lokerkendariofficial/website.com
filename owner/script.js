@@ -16,8 +16,4 @@ if (toggleBtn && sidebar) {
     });
 }
 document.getElementById('logoutBtn')?.addEventListener('click', () => logout());
-
-// Fungsi global untuk refresh data (bisa dipanggil dari halaman masing-masing)
-window.refreshData = function() {
-    location.reload();
-};
+window.refreshData = function() { location.reload(); };
