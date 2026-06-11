@@ -73,7 +73,7 @@
 <script src="../auth.js"></script>
 <script src="script.js"></script>
 <script>
-    // Gunakan fungsi dari auth.js (getAllUsers, updateUserRole, deleteUser, getCurrentUser)
+    // Cek login dan role
     let current = getCurrentUser();
     if (!current || (current.role !== 'pemilik' && current.role !== 'admin')) {
         alert('Akses ditolak');
@@ -81,11 +81,12 @@
     }
     document.getElementById('userName').innerText = current.nama || 'Admin';
 
+    // Fungsi render user (menggunakan getAllUsers dari auth.js)
     function renderUsers() {
-        const users = getAllUsers(); // dari auth.js
+        const users = getAllUsers();
         const tbody = document.getElementById('userTableBody');
         if (!users.length) {
-            tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-500">Belum ada user<\/td><\/tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-500">Belum ada user</td></tr>';
             return;
         }
         let html = '';
@@ -107,16 +108,17 @@
         tbody.innerHTML = html;
     }
 
-    window.changeRole = async (userId) => {
-        if (confirm('Ubah role user ini? (admin ↔ user)')) {
-            const user = getAllUsers().find(u => u.id === userId);
-            const newRole = user.role === 'admin' ? 'user' : 'admin';
-            const success = updateUserRole(userId, newRole);
-            if (success) renderUsers();
+    window.changeRole = (userId) => {
+        const user = getAllUsers().find(u => u.id === userId);
+        if (!user || user.isOwner) return;
+        const newRole = user.role === 'admin' ? 'user' : 'admin';
+        if (confirm(`Ubah role user ini menjadi ${newRole}?`)) {
+            updateUserRole(userId, newRole);
+            renderUsers();
         }
     };
     window.deleteUser = (userId) => {
-        if (confirm('Hapus user ini?')) {
+        if (confirm('Hapus user ini? Data terkait (lowongan, lamaran) tidak otomatis terhapus.')) {
             deleteUser(userId);
             renderUsers();
         }
@@ -130,7 +132,7 @@
     renderUsers();
     document.getElementById('refreshBtn').addEventListener('click', () => renderUsers());
     document.getElementById('logoutBtn').addEventListener('click', logout);
-    // Sidebar toggle (asumsi sudah ada di script.js)
+    // Sidebar toggle sudah ditangani oleh script.js
 </script>
 </body>
 </html>
