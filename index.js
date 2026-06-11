@@ -1,4 +1,4 @@
-// index.js - halaman publik
+// index.js
 let jobsData = [];
 let currentCategory = "all";
 let searchKeyword = "";
@@ -8,18 +8,23 @@ function initJobsData() {
   if (stored && JSON.parse(stored).length > 0) {
     jobsData = JSON.parse(stored);
   } else {
+    // Data contoh jika kosong
     jobsData = [
       { id: 1, title: "Crew", company: "PT TRIPLEK", location: "Mandonga", type: "Remote", salary: "2.2 jt", category: "it", desc: "Sangat terampil", address: "Mandonga", qualification: "SMA/SMK", contact: "WA: 0812" },
-      { id: 2, title: "Mekanik", company: "Bengkel mobil", location: "Konawe", type: "Kontrak", salary: "4.5 jt", category: "lainnya", desc: "Perbaikan kendaraan", address: "Konawe", qualification: "SMK Otomotif", contact: "WA: 0852" }
+      { id: 2, title: "Mekanik", company: "Bengkel mobil", location: "Konawe", type: "Kontrak", salary: "4.5 jt", category: "lainnya", desc: "Perbaikan kendaraan", address: "Konawe", qualification: "SMK Otomotif", contact: "WA: 0852" },
+      { id: 3, title: "Barter", company: "PT kasino", location: "Konawe", type: "Kontrak", salary: "3.7", category: "admin", desc: "Disiplin", address: "Konawe", qualification: "Disiplin", contact: "-" }
     ];
     localStorage.setItem('lokerData', JSON.stringify(jobsData));
   }
-  jobsData = jobsData.map(j => { if (!j.category) j.category = "lainnya"; return j; });
+  jobsData = jobsData.map(job => {
+    if (!job.category) job.category = "lainnya";
+    return job;
+  });
 }
 
 function getUniqueCategories() {
   const cats = new Set();
-  jobsData.forEach(j => cats.add(j.category));
+  jobsData.forEach(job => cats.add(job.category));
   return Array.from(cats).sort();
 }
 
@@ -30,7 +35,7 @@ function renderCategories() {
   let html = `<div class="chip ${currentCategory === 'all' ? 'active' : ''}" data-cat="all">Semua</div>`;
   const displayMap = { it: "IT & Teknologi", marketing: "Pemasaran", admin: "Administrasi", education: "Pendidikan", lainnya: "Lainnya" };
   cats.forEach(c => {
-    let display = displayMap[c] || c;
+    let display = displayMap[c] || c.charAt(0).toUpperCase() + c.slice(1);
     html += `<div class="chip ${currentCategory === c ? 'active' : ''}" data-cat="${c}">${display}</div>`;
   });
   container.innerHTML = html;
@@ -45,10 +50,10 @@ function renderCategories() {
 
 function renderJobs() {
   let filtered = [...jobsData];
-  if (currentCategory !== "all") filtered = filtered.filter(j => j.category === currentCategory);
+  if (currentCategory !== "all") filtered = filtered.filter(job => job.category === currentCategory);
   if (searchKeyword.trim()) {
     const kw = searchKeyword.toLowerCase();
-    filtered = filtered.filter(j => j.title.toLowerCase().includes(kw) || j.company.toLowerCase().includes(kw));
+    filtered = filtered.filter(job => job.title.toLowerCase().includes(kw) || job.company.toLowerCase().includes(kw));
   }
   const container = document.getElementById('jobList');
   const countSpan = document.getElementById('jobCountDisplay');
@@ -69,29 +74,38 @@ function renderJobs() {
         <span><i class="fas fa-money-bill-wave"></i> ${escapeHtml(job.salary)}</span>
       </div>
       <div class="job-desc">${escapeHtml(job.desc.substring(0, 80))}${job.desc.length>80?'...':''}</div>
-      <div class="card-footer"><button class="btn-detail" data-id="${job.id}">Lihat Selengkapnya</button></div>
+      <div class="card-footer">
+        <button class="btn-detail" data-id="${job.id}">Lihat Selengkapnya</button>
+      </div>
     </div>
   `).join('');
   document.querySelectorAll('.btn-detail').forEach(btn => {
-    btn.addEventListener('click', () => showModal(jobsData.find(j => j.id == btn.dataset.id)));
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      const job = jobsData.find(j => j.id == id);
+      if (job) showModal(job);
+    });
   });
 }
 
-function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]); }
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]);
+}
 
 function showModal(job) {
   const modal = document.getElementById('detailModal');
   const body = document.getElementById('modalBody');
   if (!job) return;
   body.innerHTML = `
-    <div><strong>${escapeHtml(job.company)}</strong> - ${escapeHtml(job.title)}</div>
-    <div><strong>Lokasi:</strong> ${escapeHtml(job.location)}</div>
-    <div><strong>Tipe:</strong> ${escapeHtml(job.type)}</div>
-    <div><strong>Gaji:</strong> ${escapeHtml(job.salary)}</div>
-    <div><strong>Alamat:</strong> ${escapeHtml(job.address || 'Tidak tersedia')}</div>
-    <div><strong>Kualifikasi:</strong> ${escapeHtml(job.qualification || 'Tidak ada')}</div>
-    <div><strong>Deskripsi:</strong> ${escapeHtml(job.desc)}</div>
-    <div><strong>Kontak:</strong> ${escapeHtml(job.contact || 'Tidak tersedia')}</div>
+    <div class="detail-section"><strong>${escapeHtml(job.company)}</strong> - ${escapeHtml(job.title)}</div>
+    <div class="detail-section"><strong>Lokasi:</strong> ${escapeHtml(job.location)}</div>
+    <div class="detail-section"><strong>Tipe:</strong> ${escapeHtml(job.type)}</div>
+    <div class="detail-section"><strong>Gaji:</strong> ${escapeHtml(job.salary)}</div>
+    <div class="detail-section"><strong>Alamat:</strong> ${escapeHtml(job.address || 'Tidak tersedia')}</div>
+    <div class="detail-section"><strong>Kualifikasi:</strong> ${escapeHtml(job.qualification || 'Tidak ada')}</div>
+    <div class="detail-section"><strong>Deskripsi:</strong> ${escapeHtml(job.desc)}</div>
+    <div class="detail-section"><strong>Kontak:</strong> ${escapeHtml(job.contact || 'Tidak tersedia')}</div>
   `;
   modal.classList.add('active');
 }
@@ -101,14 +115,14 @@ function closeModal() {
   if (modal) modal.classList.remove('active');
 }
 document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
-document.getElementById('detailModal')?.addEventListener('click', e => { if(e.target === e.currentTarget) closeModal(); });
+document.getElementById('detailModal')?.addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
 
 function doSearch() {
   searchKeyword = document.getElementById('searchInput')?.value.trim() || '';
   renderJobs();
 }
 document.getElementById('searchBtn')?.addEventListener('click', doSearch);
-document.getElementById('searchInput')?.addEventListener('keypress', e => { if(e.key === 'Enter') doSearch(); });
+document.getElementById('searchInput')?.addEventListener('keypress', e => { if (e.key === 'Enter') doSearch(); });
 
 initJobsData();
 renderCategories();
