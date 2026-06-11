@@ -25,3 +25,18 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
+/* Sidebar collapsed state (lebar 0, padding 0, overflow hidden) */
+.sidebar.collapsed {
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    overflow-x: hidden;
+}
+.sidebar.collapsed nav,
+.sidebar.collapsed .p-3 {
+    display: none;
+}
+/* Transisi konten utama (main) saat sidebar collapse */
+.content-expanded {
+    margin-left: 0;
+}
