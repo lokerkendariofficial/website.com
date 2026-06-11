@@ -122,8 +122,22 @@
         }
     }
 
-    renderUsers();
-    document.getElementById('refreshBtn').addEventListener('click', () => { users = getUsers(); renderUsers(); });
-</script>
-</body>
-</html>
+function renderUsers() {
+    const users = getAllUsers(); // dari auth.js
+    let html = `</td>
+        <thead><tr><th>ID</th><th>Nama</th><th>Username</th><th>Nomor HP</th><th>Role</th><th>Aksi</th></tr></thead>
+        <tbody>
+    `;
+    users.forEach(u => {
+        html += `<tr>
+            <td>${u.id}</td>
+            <td>${escapeHtml(u.nama)}</td>
+            <td>${escapeHtml(u.username)}</td>
+            <td>${u.nomorHp || '-'}</td>
+            <td>${u.role}</td>
+            <td>${!u.isOwner ? `<button onclick="changeRole(${u.id})">Ubah Role</button> <button onclick="deleteUser(${u.id})">Hapus</button>` : 'Pemilik'}</td>
+        </tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('userTableBody').innerHTML = html;
+}
