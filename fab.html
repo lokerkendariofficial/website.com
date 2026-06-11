@@ -1,35 +1,14 @@
 <!-- fab.html -->
-<a href="login.html" class="fab" id="fabBtn" title="Pasang Iklan">
-  <i class="fas fa-plus"></i>
-</a>
 <div class="fab-container">
   <button class="fab-main" id="fabMainBtn">
     <i class="fas fa-plus"></i>
   </button>
   <div class="fab-submenu" id="fabSubmenu">
-    <a href="login.html" class="fab-option" id="fabLogin">
+    <a href="login.html" class="fab-option">
       <i class="fas fa-sign-in-alt"></i> Login
     </a>
-    <a href="posting.html" class="fab-option" id="fabPost">
+    <a href="posting.html" class="fab-option">
       <i class="fas fa-paper-plane"></i> Pasang Iklan
     </a>
   </div>
 </div>
-<script>
-  (function() {
-    const mainBtn = document.getElementById('fabMainBtn');
-    const submenu = document.getElementById('fabSubmenu');
-    if (mainBtn && submenu) {
-      mainBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        submenu.classList.toggle('show');
-      });
-      // Tutup submenu jika klik di luar
-      document.addEventListener('click', function(event) {
-        if (!mainBtn.contains(event.target) && !submenu.contains(event.target)) {
-          submenu.classList.remove('show');
-        }
-      });
-    }
-  })();
-</script>
