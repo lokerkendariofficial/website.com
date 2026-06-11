@@ -28,46 +28,49 @@
         .logo h1 { color: #0a5b8c; font-size: 1.8rem; }
         .form-group { margin-bottom: 1rem; }
         input { width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:40px; font-size:1rem; }
-        button { width:100%; padding:12px; background:#0a5b8c; color:white; border:none; border-radius:40px; font-weight:600; cursor:pointer; }
+        button { width:100%; padding:12px; background:#0a5b8c; color:white; border:none; border-radius:40px; font-weight:600; cursor:pointer; margin-top:8px; }
         .error { color:#dc2626; font-size:0.8rem; margin-top:0.5rem; text-align:center; }
         .info { text-align:center; font-size:0.7rem; margin-top:1rem; }
         .info a { color:#0a5b8c; text-decoration:none; }
+        .user-display { background:#e6f7e6; padding:8px; border-radius:40px; margin-top:10px; text-align:center; display:none; }
     </style>
 </head>
 <body>
 <div class="login-card">
-    <div class="logo"><h1>Loker Kendari</h1><p>Login untuk memasang iklan</p></div>
+    <div class="logo"><h1>Loker Kendari</h1><p>Masuk dengan ID / Nomor HP</p></div>
     <div class="form-group">
         <input type="text" id="loginId" placeholder="ID / Nomor HP / Username" autocomplete="off">
     </div>
-    <div class="form-group">
-        <input type="password" id="password" placeholder="Password">
-    </div>
     <button id="loginBtn">Masuk</button>
     <div id="loginError" class="error"></div>
+    <div class="user-display" id="userDisplay"></div>
     <div class="info">
         Belum punya akun? <a href="register.html">Daftar di sini</a><br>
-        Akun demo: 900900 / 900900 (pemilik)
+        Akun demo: 900900 (pemilik), 9090 (admin), 9091 (user)
     </div>
 </div>
 <script src="auth.js"></script>
 <script>
-    document.getElementById('loginBtn').onclick = () => {
-        const loginId = document.getElementById('loginId').value.trim();
-        const password = document.getElementById('password').value;
-        if (!loginId || !password) {
-            document.getElementById('loginError').innerText = 'Harap isi semua field.';
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        const identifier = document.getElementById('loginId').value.trim();
+        if (!identifier) {
+            document.getElementById('loginError').innerText = 'Harap masukkan ID / Nomor HP';
             return;
         }
-        const result = login(loginId, password);
+        const result = loginWithoutPassword(identifier);
         if (result.success) {
-            if (result.role === 'pemilik') window.location.href = 'owner/utama.html';
-            else if (result.role === 'admin') window.location.href = 'admin/index.html';
-            else window.location.href = 'posting.html';
+            const userDiv = document.getElementById('userDisplay');
+            userDiv.style.display = 'block';
+            userDiv.innerHTML = `Selamat datang, ${result.nama}! Mengalihkan...`;
+            setTimeout(() => {
+                if (result.role === 'pemilik') window.location.href = 'owner/utama.html';
+                else if (result.role === 'admin') window.location.href = 'admin/index.html';
+                else window.location.href = 'posting.html';
+            }, 1000);
         } else {
             document.getElementById('loginError').innerText = result.msg;
         }
-    };
+    });
 </script>
 </body>
 </html>
