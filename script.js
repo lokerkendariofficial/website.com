@@ -1,3 +1,4 @@
+// script.js - logika lowongan untuk beranda.html
 let jobsData = [];
 let currentCategory = "all";
 let searchKeyword = "";
@@ -10,7 +11,7 @@ function initJobsData() {
     jobsData = [
       { id: 1, title: "Crew", company: "PT TRIPLEK", location: "Mandonga", type: "Remote", salary: "2.2 jt", category: "it", desc: "Sangat terampil", address: "Mandonga", qualification: "SMA/SMK", contact: "WA: 0812" },
       { id: 2, title: "Mekanik", company: "Bengkel mobil", location: "Konawe", type: "Kontrak", salary: "4.5 jt", category: "lainnya", desc: "Perbaikan kendaraan", address: "Konawe", qualification: "SMK Otomotif", contact: "WA: 0852" },
-      { id: 3, title: "Barter", company: "PT kasino", location: "Wawotobi", type: "Kontrak", salary: "3.7", category: "admin", desc: "Disiplin", address: "Konawe", qualification: "Disiplin", contact: "-" }
+      { id: 3, title: "Barter", company: "PT kasino", location: "Wawotobi", type: "Kontrak", salary: "3.7", category: "admin", desc: "Disiplin", address: "Wawotobi", qualification: "Disiplin", contact: "-" }
     ];
     localStorage.setItem('lokerData', JSON.stringify(jobsData));
   }
