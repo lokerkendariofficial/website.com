@@ -1,93 +1,501 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loker Kendari - Portal Lowongan Kerja</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="menu.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: #ffffff;
-    }
-    .iframe-content {
-      margin-top: 70px;
-      width: 100%;
-      height: calc(100vh - 70px);
-      border: none;
-      background: white;
-      display: block;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Loker Kendari - Lowongan Kerja Terpercaya di Sultra</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #ffffff;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0a5b8c;
+        }
+        .logo i {
+            margin-right: 0.3rem;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #334155;
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            color: #0a5b8c;
+        }
+        .btn-login {
+            background: #0a5b8c;
+            color: white !important;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+        }
+        .btn-login:hover {
+            background: #0a4b72;
+        }
+        .hamburger {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #e6f0fa 0%, #ffffff 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            color: #0a5b8c;
+            margin-bottom: 0.5rem;
+        }
+        .hero p {
+            font-size: 1.1rem;
+            color: #334155;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: #0a5b8c;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #0a5b8c;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        /* Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        /* Search & Filter */
+        .search-wrapper {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        .search-box {
+            display: flex;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            background: white;
+            overflow: hidden;
+        }
+        .search-box input {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border: none;
+            outline: none;
+        }
+        .search-box button {
+            background: #0a5b8c;
+            border: none;
+            color: white;
+            padding: 0 1.5rem;
+            cursor: pointer;
+        }
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+            margin: 1rem 0 2rem;
+        }
+        .chip {
+            background: #e2e8f0;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .chip.active {
+            background: #0a5b8c;
+            color: white;
+        }
+        /* Job Grid */
+        .section-title {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .job-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .job-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: 0.2s;
+        }
+        .job-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+        .job-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0a5b8c;
+        }
+        .job-company {
+            font-weight: 500;
+            color: #334155;
+            margin: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .job-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 8px 0;
+            font-size: 0.8rem;
+            color: #475569;
+        }
+        .job-desc {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin: 10px 0;
+        }
+        .btn-detail {
+            background: #0a5b8c;
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .see-all {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        /* Testimonial */
+        .testimonial {
+            background: #f8fafc;
+            padding: 3rem 1rem;
+            margin-top: 2rem;
+        }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .testimonial-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .testimonial-card i {
+            font-size: 2rem;
+            color: #0a5b8c;
+            margin-bottom: 0.5rem;
+        }
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: #cbd5e1;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .social-icons a {
+            color: #cbd5e1;
+            font-size: 1.2rem;
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.8rem 1rem;
+            }
+            .nav-links {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
+<!-- Navbar -->
 <nav class="navbar">
-  <div class="nav-container">
-    <div class="logo" id="logo"><i class="fas fa-briefcase"></i> LokerKendari</div>
-    <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
+    <div class="logo"><i class="fas fa-briefcase"></i> LokerKendari</div>
+    <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
     <div class="nav-links" id="navLinks">
-      <a href="#" data-page="beranda">Beranda</a>
-      <a href="#" data-page="lowongan">Lowongan</a>
-      <a href="#" data-page="kontak">Kontak</a>
-      <a href="#" data-page="pasang">Pasang Iklan</a>
-      <a href="#" data-page="profil">Profil</a>
+        <a href="#">Beranda</a>
+        <a href="#">Lowongan</a>
+        <a href="#">Tentang Kami</a>
+        <a href="#">Kontak</a>
+        <a href="login.html" class="btn-login">Masuk / Daftar</a>
     </div>
-  </div>
 </nav>
 
-<iframe src="beranda.html" class="iframe-content" id="contentFrame" title="Konten Utama"></iframe>
+<!-- Hero Section -->
+<section class="hero">
+    <h1>Temukan Lowongan Kerja Terpercaya</h1>
+    <p>Ribuan perusahaan di Sulawesi Tenggara mempercayakan rekrutmen mereka kepada kami. Mulai karir impianmu sekarang.</p>
+    <div class="hero-buttons">
+        <a href="#jobs" class="btn-primary">Cari Lowongan</a>
+        <a href="login.html" class="btn-secondary">Pasang Iklan Gratis</a>
+    </div>
+</section>
 
-<script src="menu.js"></script>
+<div class="container" id="jobs">
+    <!-- Search & Filter -->
+    <div class="search-wrapper">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Cari judul atau perusahaan...">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+    <div class="categories" id="categoriesContainer"></div>
+    <h2 class="section-title">🔥 Lowongan Unggulan</h2>
+    <div class="job-grid" id="jobList"></div>
+    <div class="see-all">
+        <a href="#" class="btn-secondary" id="lihatSemuaBtn">Lihat Semua Lowongan</a>
+    </div>
+</div>
+
+<!-- Testimonial -->
+<section class="testimonial">
+    <h2 class="section-title">Apa Kata Mereka?</h2>
+    <div class="testimonial-grid">
+        <div class="testimonial-card">
+            <i class="fas fa-user-circle"></i>
+            <p>"Berkat Loker Kendari, saya langsung mendapat panggilan kerja dari perusahaan impian!"</p>
+            <strong>- Andi, Kendari</strong>
+        </div>
+        <div class="testimonial-card">
+            <i class="fas fa-building"></i>
+            <p>"Tim kami sangat terbantu dengan fitur pasang iklan yang mudah dan cepat."</p>
+            <strong>- PT Teknologi Nusantara</strong>
+        </div>
+        <div class="testimonial-card">
+            <i class="fas fa-handshake"></i>
+            <p>"Proses rekrutmen jadi lebih efisien, kandidat berkualitas banyak dari sini."</p>
+            <strong>- CV Berkah Abadi</strong>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-links">
+        <a href="#">Tentang Kami</a>
+        <a href="#">Kebijakan Privasi</a>
+        <a href="#">Syarat & Ketentuan</a>
+        <a href="#">Hubungi Kami</a>
+    </div>
+    <div class="social-icons">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+    <div>📧 info@lokerkendari.com | 📞 0895 3189 6628</div>
+    <div style="margin-top: 1rem;">© 2026 Loker Kendari Official - Portal Lowongan Kerja Sulawesi Tenggara</div>
+</footer>
+
 <script>
-  // Fungsi navigasi untuk mengganti iframe sesuai halaman yang dipilih
-  function navigateTo(page) {
-    let src = "";
-    if (page === "beranda") src = "beranda.html";
-    else if (page === "lowongan") src = "lowongan.html";
-    else if (page === "kontak") src = "kontak.html";
-    else if (page === "pasang") src = "pasang.html";
-    else if (page === "profil") src = "profil.html";
-    if (src) {
-      document.getElementById("contentFrame").src = src;
-    }
-  }
+    // Data lowongan dari localStorage
+    let allJobs = [];
+    let currentCategory = "all";
+    let searchKeyword = "";
 
-  // Event listener untuk menu di navbar
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const page = link.getAttribute('data-page');
-      navigateTo(page);
+    // Load data
+    function loadJobs() {
+        const stored = localStorage.getItem('lokerData');
+        if (stored && JSON.parse(stored).length > 0) {
+            allJobs = JSON.parse(stored);
+        } else {
+            allJobs = [
+                { id: 1, title: "Crew", company: "PT TRIPLEK", location: "Mandonga", type: "Remote", salary: "2.2 jt", category: "it", desc: "Sangat terampil", address: "Mandonga", qualification: "SMA/SMK" },
+                { id: 2, title: "Mekanik", company: "Bengkel mobil", location: "Konawe", type: "Kontrak", salary: "4.5 jt", category: "lainnya", desc: "Perbaikan kendaraan" },
+                { id: 3, title: "Frontend Developer", company: "PT Teknologi", location: "Kendari", type: "Fulltime", salary: "5jt - 8jt", category: "it", desc: "React, Tailwind" },
+                { id: 4, title: "Staff Admin", company: "CV Berkah", location: "Kendari", type: "Kontrak", salary: "3jt", category: "admin", desc: "Administrasi" },
+                { id: 5, title: "Guru", company: "SMA 5 Kendari", location: "Kendari", type: "Fulltime", salary: "Nego", category: "education", desc: "Bahasa Inggris" },
+                { id: 6, title: "Marketing", company: "Kreatif Agency", location: "Kendari", type: "Fulltime", salary: "5jt", category: "marketing", desc: "Sosial media" }
+            ];
+            localStorage.setItem('lokerData', JSON.stringify(allJobs));
+        }
+        allJobs = allJobs.map(j => { if (!j.category) j.category = "lainnya"; return j; });
+        renderCategories();
+        renderJobs(true); // true = hanya 6 lowongan (unggulan)
+    }
+
+    function getUniqueCategories() {
+        const cats = new Set();
+        allJobs.forEach(j => cats.add(j.category));
+        return Array.from(cats).sort();
+    }
+
+    function renderCategories() {
+        const container = document.getElementById('categoriesContainer');
+        if (!container) return;
+        const cats = getUniqueCategories();
+        let html = `<div class="chip ${currentCategory === 'all' ? 'active' : ''}" data-cat="all">Semua</div>`;
+        const display = { it: "IT", marketing: "Pemasaran", admin: "Administrasi", education: "Pendidikan", lainnya: "Lainnya" };
+        cats.forEach(c => {
+            let name = display[c] || c;
+            html += `<div class="chip ${currentCategory === c ? 'active' : ''}" data-cat="${c}">${name}</div>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                currentCategory = chip.dataset.cat;
+                renderCategories();
+                renderJobs(true);
+            });
+        });
+    }
+
+    function renderJobs(limit = true) {
+        let filtered = [...allJobs];
+        if (currentCategory !== "all") filtered = filtered.filter(j => j.category === currentCategory);
+        if (searchKeyword.trim()) {
+            const kw = searchKeyword.toLowerCase();
+            filtered = filtered.filter(j => j.title.toLowerCase().includes(kw) || j.company.toLowerCase().includes(kw));
+        }
+        // Batasi hanya 6 untuk unggulan
+        let displayJobs = limit ? filtered.slice(0, 6) : filtered;
+        const container = document.getElementById('jobList');
+        if (displayJobs.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:2rem;">Tidak ada lowongan yang cocok.</div>';
+            return;
+        }
+        container.innerHTML = displayJobs.map(job => `
+            <div class="job-card">
+                <div class="job-title">${escapeHtml(job.title)}</div>
+                <div class="job-company"><i class="fas fa-building"></i> ${escapeHtml(job.company)}</div>
+                <div class="job-details">
+                    <span><i class="fas fa-map-marker-alt"></i> ${escapeHtml(job.location)}</span>
+                    <span><i class="fas fa-clock"></i> ${escapeHtml(job.type)}</span>
+                    <span><i class="fas fa-money-bill-wave"></i> ${escapeHtml(job.salary)}</span>
+                </div>
+                <div class="job-desc">${escapeHtml(job.desc.substring(0, 80))}${job.desc.length>80?'...':''}</div>
+                <button class="btn-detail" data-id="${job.id}">Lihat Selengkapnya</button>
+            </div>
+        `).join('');
+        document.querySelectorAll('.btn-detail').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                const job = allJobs.find(j => j.id == id);
+                alert(`Detail lowongan: ${job.title}\nPerusahaan: ${job.company}\nLokasi: ${job.location}\nGaji: ${job.salary}\nDeskripsi: ${job.desc}\n\nHubungi: ${job.contact || 'lihat kontak di deskripsi'}`);
+            });
+        });
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]);
+    }
+
+    // Search event
+    document.getElementById('searchBtn').addEventListener('click', () => {
+        searchKeyword = document.getElementById('searchInput').value.trim();
+        renderJobs(true);
     });
-  });
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('searchBtn').click();
+    });
+    // Lihat semua lowongan
+    document.getElementById('lihatSemuaBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        renderJobs(false);
+        // Ubah teks tombol menjadi "Tampilkan Sedikit"
+        const btn = document.getElementById('lihatSemuaBtn');
+        if (btn.innerText === 'Lihat Semua Lowongan') {
+            btn.innerText = 'Tampilkan Sedikit';
+        } else {
+            renderJobs(true);
+            btn.innerText = 'Lihat Semua Lowongan';
+        }
+    });
 
-  // Event listener untuk logo (kembali ke beranda)
-  document.getElementById('logo').addEventListener('click', () => {
-    navigateTo('beranda');
-  });
+    loadJobs();
 
-  // Meneruskan pesan refreshLowongan ke iframe konten
-  window.addEventListener("message", function(event) {
-    if (event.data && event.data.type === "refreshLowongan") {
-      const frame = document.getElementById("contentFrame");
-      if (frame && frame.contentWindow) {
-        frame.contentWindow.postMessage({ type: "refreshLowongan" }, "*");
-      }
+    // Responsive menu (sederhana)
+    const hamburger = document.getElementById('hamburgerBtn');
+    const navLinks = document.getElementById('navLinks');
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            if (navLinks.style.display === 'flex') navLinks.style.display = 'none';
+            else navLinks.style.display = 'flex';
+        });
     }
-    if (event.data && event.data.type === "refreshProfil") {
-      const frame = document.getElementById("contentFrame");
-      if (frame && frame.contentWindow && frame.src.includes("profil.html")) {
-        frame.contentWindow.postMessage({ type: "refreshProfil" }, "*");
-      }
-    }
-  });
 </script>
 </body>
 </html>
