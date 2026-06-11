@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Manajemen User - Loker Kendari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .iframe-container {
+            margin-top: 1rem;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: calc(100vh - 180px);
+            border: none;
+            background: #0f172a;
+        }
+        .dropdown-select {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-gray-200">
+
+<header class="bg-slate-800 border-b border-slate-700 px-4 py-2 flex items-center justify-between sticky top-0 z-20">
+    <div class="flex items-center space-x-3">
+        <button id="sidebarToggleBtn" class="text-white text-xl"><i class="fa-solid fa-bars"></i></button>
+        <div class="flex items-center space-x-2"><i class="fa-solid fa-briefcase text-blue-400 text-xl"></i><span class="font-bold text-white text-lg">Loker Kendari</span><span class="text-xs text-blue-400 bg-blue-900/30 px-2 py-0.5 rounded">Official</span></div>
+    </div>
+    <div class="flex items-center space-x-4">
+        <div class="hidden md:block relative"><input type="text" placeholder="Cepat..." class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs w-40 text-white"><i class="fa-solid fa-magnifying-glass absolute right-2 top-2 text-gray-400 text-xs"></i></div>
+        <div class="flex items-center space-x-2 cursor-pointer hover:text-blue-300"><i class="fa-regular fa-bell"></i><span class="text-xs hidden sm:inline">Notifikasi</span></div>
+        <div class="flex items-center space-x-2 cursor-pointer hover:text-blue-300"><i class="fa-regular fa-user"></i><span class="text-xs" id="userName">Pemilik</span></div>
+        <button id="logoutBtn" class="bg-red-600/80 hover:bg-red-700 text-white text-xs px-3 py-1 rounded">Logout</button>
+    </div>
+</header>
+
+<div class="bg-slate-800/50 border-b border-slate-700 px-4 py-2 flex flex-wrap items-center justify-between text-xs sticky top-12 z-10">
+    <div class="flex items-center space-x-2">
+        <span class="font-semibold text-gray-300 uppercase tracking-wider">Manajemen User</span>
+        <select id="roleSelect" class="dropdown-select">
+            <option value="id-owner.html">👑 Pemilik</option>
+            <option value="id-admin.html">🔧 Admin</option>
+            <option value="id-user.html">👤 User</option>
+        </select>
+        <button id="refreshBtn" class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-rotate"></i> Refresh</button>
+    </div>
+</div>
+
+<div class="iframe-container">
+    <iframe id="userFrame" src="id-owner.html"></iframe>
+</div>
+
+<script src="../../auth.js"></script>
+<script>
+    const current = getCurrentUser();
+    if (!current || (current.role !== 'pemilik' && current.role !== 'admin')) {
+        alert('Akses ditolak');
+        window.location.href = '../../index.html';
+    }
+    document.getElementById('userName').innerText = current.nama || 'Admin';
+
+    const select = document.getElementById('roleSelect');
+    const iframe = document.getElementById('userFrame');
+    const refreshBtn = document.getElementById('refreshBtn');
+
+    select.addEventListener('change', () => {
+        iframe.src = select.value;
+    });
+
+    refreshBtn.addEventListener('click', () => {
+        iframe.src = iframe.src;
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => logout());
+</script>
+</body>
+</html>
