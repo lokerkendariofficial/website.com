@@ -1,3 +1,4 @@
+// script.js - halaman publik
 let jobsData = [];
 let currentCategory = "all";
 let searchKeyword = "";
@@ -26,15 +27,11 @@ function renderCategories() {
   const container = document.getElementById('categoriesContainer');
   if (!container) return;
   const cats = getUniqueCategories();
-  let html = `<div class="chip ${currentCategory === 'all' ? 'active' : ''}" data-cat="all"><i class="fas fa-list"></i> Semua</div>`;
+  let html = `<div class="chip ${currentCategory === 'all' ? 'active' : ''}" data-cat="all">Semua</div>`;
+  const displayMap = { it: "IT & Teknologi", marketing: "Pemasaran", admin: "Administrasi", education: "Pendidikan", lainnya: "Lainnya" };
   cats.forEach(c => {
-    let display = c;
-    if (c === "it") display = "IT";
-    if (c === "marketing") display = "Pemasaran";
-    if (c === "admin") display = "Administrasi";
-    if (c === "education") display = "Pendidikan";
-    if (c === "lainnya") display = "Lainnya";
-    html += `<div class="chip ${currentCategory === c ? 'active' : ''}" data-cat="${c}"><i class="fas fa-tag"></i> ${display}</div>`;
+    let display = displayMap[c] || c.charAt(0).toUpperCase() + c.slice(1);
+    html += `<div class="chip ${currentCategory === c ? 'active' : ''}" data-cat="${c}">${display}</div>`;
   });
   container.innerHTML = html;
   document.querySelectorAll('.chip').forEach(chip => {
@@ -57,11 +54,11 @@ function renderJobs() {
   const countSpan = document.getElementById('jobCountDisplay');
   if (!container) return;
   if (filtered.length === 0) {
-    container.innerHTML = '<div class="empty-msg">Tidak ada lowongan.</div>';
-    if (countSpan) countSpan.innerText = '0 lowongan';
+    container.innerHTML = '<div style="text-align:center; padding:2rem;">Tidak ada lowongan yang cocok.</div>';
+    countSpan.innerText = '0 lowongan';
     return;
   }
-  if (countSpan) countSpan.innerText = `${filtered.length} lowongan ditemukan`;
+  countSpan.innerText = `${filtered.length} lowongan ditemukan`;
   container.innerHTML = filtered.map(job => `
     <div class="job-card">
       <div class="job-title">${escapeHtml(job.title)}</div>
@@ -72,27 +69,38 @@ function renderJobs() {
         <span><i class="fas fa-money-bill-wave"></i> ${escapeHtml(job.salary)}</span>
       </div>
       <div class="job-desc">${escapeHtml(job.desc.substring(0, 80))}${job.desc.length>80?'...':''}</div>
-      <div class="card-footer"><button class="btn-detail" data-id="${job.id}">Lihat Selengkapnya</button></div>
+      <div class="card-footer">
+        <button class="btn-detail" data-id="${job.id}">Lihat Selengkapnya</button>
+      </div>
     </div>
   `).join('');
   document.querySelectorAll('.btn-detail').forEach(btn => {
-    btn.addEventListener('click', () => showModal(jobsData.find(j => j.id == btn.dataset.id)));
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      const job = jobsData.find(j => j.id == id);
+      if (job) showModal(job);
+    });
   });
 }
 
-function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]); }
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]);
+}
 
 function showModal(job) {
   const modal = document.getElementById('detailModal');
   const body = document.getElementById('modalBody');
   if (!job) return;
   body.innerHTML = `
-    <div class="detail-section"><strong>${escapeHtml(job.company)}</strong><h3>${escapeHtml(job.title)}</h3></div>
-    <div class="detail-section"><div><strong>Lokasi:</strong> ${escapeHtml(job.location)}</div><div><strong>Tipe:</strong> ${escapeHtml(job.type)}</div><div><strong>Gaji:</strong> ${escapeHtml(job.salary)}</div></div>
-    <div class="detail-section"><div><strong>Alamat:</strong> ${escapeHtml(job.address||'Tidak tersedia')}</div></div>
-    <div class="detail-section"><div><strong>Kualifikasi:</strong> ${escapeHtml(job.qualification||'Tidak ada')}</div></div>
-    <div class="detail-section"><div><strong>Deskripsi:</strong> ${escapeHtml(job.desc)}</div></div>
-    <div class="detail-section"><div><strong>Kontak:</strong> ${escapeHtml(job.contact||'Tidak tersedia')}</div></div>
+    <div class="detail-section"><strong>${escapeHtml(job.company)}</strong> - ${escapeHtml(job.title)}</div>
+    <div class="detail-section"><strong>Lokasi:</strong> ${escapeHtml(job.location)}</div>
+    <div class="detail-section"><strong>Tipe:</strong> ${escapeHtml(job.type)}</div>
+    <div class="detail-section"><strong>Gaji:</strong> ${escapeHtml(job.salary)}</div>
+    <div class="detail-section"><strong>Alamat:</strong> ${escapeHtml(job.address || 'Tidak tersedia')}</div>
+    <div class="detail-section"><strong>Kualifikasi:</strong> ${escapeHtml(job.qualification || 'Tidak ada')}</div>
+    <div class="detail-section"><strong>Deskripsi:</strong> ${escapeHtml(job.desc)}</div>
+    <div class="detail-section"><strong>Kontak:</strong> ${escapeHtml(job.contact || 'Tidak tersedia')}</div>
   `;
   modal.classList.add('active');
 }
@@ -102,14 +110,14 @@ function closeModal() {
   if (modal) modal.classList.remove('active');
 }
 document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
-document.getElementById('detailModal')?.addEventListener('click', e => { if(e.target === e.currentTarget) closeModal(); });
+document.getElementById('detailModal')?.addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
 
 function doSearch() {
   searchKeyword = document.getElementById('searchInput')?.value.trim() || '';
   renderJobs();
 }
 document.getElementById('searchBtn')?.addEventListener('click', doSearch);
-document.getElementById('searchInput')?.addEventListener('keypress', e => { if(e.key === 'Enter') doSearch(); });
+document.getElementById('searchInput')?.addEventListener('keypress', e => { if (e.key === 'Enter') doSearch(); });
 
 initJobsData();
 renderCategories();
