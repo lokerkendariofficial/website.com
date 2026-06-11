@@ -1,51 +1,60 @@
 // owner/script.js
-const user = getCurrentUser();
-if (!user || user.role !== 'pemilik') {
-  alert('Anda tidak memiliki akses ke halaman ini.');
-  window.location.href = '../index.html';
+const currentUser = getCurrentUser();
+if (!currentUser || currentUser.role !== 'pemilik') {
+    alert('Akses ditolak. Anda bukan pemilik.');
+    window.location.href = '../index.html';
 }
+document.getElementById('userName').innerText = currentUser.nama || 'Pemilik';
 
 let lowongan = JSON.parse(localStorage.getItem('lokerData') || '[]');
 let pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
 let users = getUsers();
 let lamaran = JSON.parse(localStorage.getItem('lamaranSaya') || '[]');
 
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]);
+}
+
 function updateStats() {
-  document.getElementById('totalLowongan').innerText = lowongan.length;
-  document.getElementById('totalPending').innerText = pending.length;
-  document.getElementById('totalUser').innerText = users.length;
-  document.getElementById('totalLamaran').innerText = lamaran.length;
+    document.getElementById('totalLowongan').innerText = lowongan.length;
+    document.getElementById('totalPending').innerText = pending.length;
+    document.getElementById('totalUser').innerText = users.length;
+    document.getElementById('totalLamaran').innerText = lamaran.length;
+    document.getElementById('pendingCountBadge').innerText = pending.length;
+    document.getElementById('lowonganCountBadge').innerText = lowongan.length;
+    document.getElementById('userCountBadge').innerText = users.length;
 }
 
 function renderPending() {
-  const container = document.getElementById('pendingList');
-  if (pending.length === 0) {
-    container.innerHTML = '<p>Tidak ada iklan menunggu konfirmasi.</p>';
-    return;
-  }
-  let html = `能<thead><tr><th>Judul</th><th>Perusahaan</th><th>Lokasi</th><th>Pengirim</th><th>Aksi</th></tr></thead><tbody>`;
-  pending.forEach(job => {
-    html += `
-      <tr>
-        <td>${escapeHtml(job.title)}</td>
-        <td>${escapeHtml(job.company)}</td>
-        <td>${escapeHtml(job.location)}</td>
-        <td>${escapeHtml(job.userName || 'Tidak diketahui')}</td>
-        <td>
-          <button class="approve" data-id="${job.id}">Setujui</button>
-          <button class="reject" data-id="${job.id}">Tolak</button>
-        </td>
-      </tr>
-    `;
-  });
-  html += '</tbody></table>';
-  container.innerHTML = html;
+    const tbody = document.getElementById('pendingTableBody');
+    if (pending.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Tidak ada iklan pending</td></tr>';
+        return;
+    }
+    let html = '';
+    pending.forEach(job => {
+        html += `
+            <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
+                <td class="py-2">${escapeHtml(job.title)}</td>
+                <td class="py-2">${escapeHtml(job.company)}</td>
+                <td class="py-2">${escapeHtml(job.location)}</td>
+                <td class="py-2">${escapeHtml(job.userName || 'Tidak diketahui')}</td>
+                <td class="py-2">
+                    <button class="approve-btn bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1 rounded mr-1" data-id="${job.id}">Setujui</button>
+                    <button class="reject-btn bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded" data-id="${job.id}">Tolak</button>
+                </td>
+            </tr>
+        `;
+    });
+    tbody.innerHTML = html;
+    document.querySelectorAll('.approve-btn').forEach(btn => btn.addEventListener('click', () => approvePending(parseInt(btn.dataset.id))));
+    document.querySelectorAll('.reject-btn').forEach(btn => btn.addEventListener('click', () => rejectPending(parseInt(btn.dataset.id))));
+}
 
-  document.querySelectorAll('.approve').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = parseInt(btn.dataset.id);
-      const job = pending.find(j => j.id === id);
-      if (job) {
+function approvePending(id) {
+    const job = pending.find(j => j.id === id);
+    if (job) {
         lowongan.unshift({ ...job, uploadedAt: Date.now() });
         localStorage.setItem('lokerData', JSON.stringify(lowongan));
         pending = pending.filter(j => j.id !== id);
@@ -53,111 +62,73 @@ function renderPending() {
         renderPending();
         renderLowongan();
         updateStats();
-      }
-    });
-  });
-  document.querySelectorAll('.reject').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = parseInt(btn.dataset.id);
-      pending = pending.filter(j => j.id !== id);
-      localStorage.setItem('pendingIklan', JSON.stringify(pending));
-      renderPending();
-      updateStats();
-    });
-  });
+    }
+}
+
+function rejectPending(id) {
+    pending = pending.filter(j => j.id !== id);
+    localStorage.setItem('pendingIklan', JSON.stringify(pending));
+    renderPending();
+    updateStats();
 }
 
 function renderLowongan() {
-  const container = document.getElementById('lowonganList');
-  if (lowongan.length === 0) {
-    container.innerHTML = '<p>Belum ada lowongan.</p>';
-    return;
-  }
-  let html = `能<thead><tr><th>Judul</th><th>Perusahaan</th><th>Lokasi</th><th>Status</th><th>Aksi</th></tr></thead><tbody>`;
-  lowongan.forEach(job => {
-    html += `
-      <tr>
-        <td>${escapeHtml(job.title)}</td>
-        <td>${escapeHtml(job.company)}</td>
-        <td>${escapeHtml(job.location)}</td>
-        <td>Aktif</td>
-        <td><button class="delete" data-id="${job.id}" data-type="lowongan">Hapus</button></td>
-      </tr>
-    `;
-  });
-  html += '</tbody></table>';
-  container.innerHTML = html;
-  document.querySelectorAll('.delete[data-type="lowongan"]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = parseInt(btn.dataset.id);
-      if (confirm('Hapus lowongan ini?')) {
-        lowongan = lowongan.filter(j => j.id !== id);
-        localStorage.setItem('lokerData', JSON.stringify(lowongan));
-        renderLowongan();
-        updateStats();
-      }
+    const tbody = document.getElementById('lowonganTableBody');
+    if (lowongan.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-gray-500">Belum ada lowongan</td></tr>';
+        return;
+    }
+    let html = '';
+    lowongan.forEach(job => {
+        html += `
+            <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
+                <td class="py-2">${escapeHtml(job.title)}</td>
+                <td class="py-2">${escapeHtml(job.company)}</td>
+                <td class="py-2">${escapeHtml(job.location)}</td>
+                <td class="py-2"><button class="delete-job bg-red-600/80 hover:bg-red-700 text-white text-xs px-2 py-1 rounded" data-id="${job.id}">Hapus</button></td>
+            </tr>
+        `;
     });
-  });
+    tbody.innerHTML = html;
+    document.querySelectorAll('.delete-job').forEach(btn => btn.addEventListener('click', () => {
+        const id = parseInt(btn.dataset.id);
+        if (confirm('Hapus lowongan ini?')) {
+            lowongan = lowongan.filter(j => j.id !== id);
+            localStorage.setItem('lokerData', JSON.stringify(lowongan));
+            renderLowongan();
+            updateStats();
+        }
+    }));
 }
 
 function renderUsers() {
-  const container = document.getElementById('userList');
-  if (users.length === 0) {
-    container.innerHTML = '<p>Belum ada user.</p>';
-    return;
-  }
-  let html = `能<thead><tr><th>ID</th><th>Nama</th><th>Username</th><th>Role</th><th>Aksi</th></tr></thead><tbody>`;
-  users.forEach(u => {
-    html += `
-      <tr>
-        <td>${u.id}</td>
-        <td>${escapeHtml(u.nama)}</td>
-        <td>${escapeHtml(u.username)}</td>
-        <td>${u.role}</td>
-        <td>${u.role !== 'pemilik' ? `<button class="delete" data-id="${u.id}" data-type="user">Hapus</button>` : '-'}</td>
-      </tr>
-    `;
-  });
-  html += '</tbody></table>';
-  container.innerHTML = html;
-  document.querySelectorAll('.delete[data-type="user"]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = parseInt(btn.dataset.id);
-      if (confirm('Hapus user ini?')) {
-        users = users.filter(u => u.id !== id);
-        saveUsers(users);
-        renderUsers();
-        updateStats();
-      }
+    const tbody = document.getElementById('userTableBody');
+    if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Belum ada user</td></tr>';
+        return;
+    }
+    let html = '';
+    users.forEach(u => {
+        html += `
+            <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
+                <td class="py-2">${u.id}</td>
+                <td class="py-2">${escapeHtml(u.nama)}</td>
+                <td class="py-2">${escapeHtml(u.username)}</td>
+                <td class="py-2">${u.role}</td>
+                <td class="py-2">${u.role !== 'pemilik' ? `<button class="delete-user bg-red-600/80 hover:bg-red-700 text-white text-xs px-2 py-1 rounded" data-id="${u.id}">Hapus</button>` : '-'}</td>
+            </tr>
+        `;
     });
-  });
-}
-
-function renderLamaran() {
-  const container = document.getElementById('lamaranList');
-  if (lamaran.length === 0) {
-    container.innerHTML = '<p>Belum ada lamaran.</p>';
-    return;
-  }
-  let html = `能<thead><tr><th>Nama</th><th>Email</th><th>Posisi</th><th>Pesan</th><th>Tanggal</th></tr></thead><tbody>`;
-  lamaran.forEach(l => {
-    html += `
-      <tr>
-        <td>${escapeHtml(l.nama || l.namaPelamar)}</td>
-        <td>${escapeHtml(l.email)}</td>
-        <td>${escapeHtml(l.posisi)}</td>
-        <td>${escapeHtml(l.pesan)}</td>
-        <td>${l.tanggal}</td>
-      </tr>
-    `;
-  });
-  html += '</tbody></table>';
-  container.innerHTML = html;
-}
-
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    tbody.innerHTML = html;
+    document.querySelectorAll('.delete-user').forEach(btn => btn.addEventListener('click', () => {
+        const id = parseInt(btn.dataset.id);
+        if (confirm('Hapus user ini?')) {
+            users = users.filter(u => u.id !== id);
+            saveUsers(users);
+            renderUsers();
+            updateStats();
+        }
+    }));
 }
 
 document.getElementById('logoutBtn').addEventListener('click', () => logout());
@@ -165,5 +136,4 @@ document.getElementById('logoutBtn').addEventListener('click', () => logout());
 renderPending();
 renderLowongan();
 renderUsers();
-renderLamaran();
 updateStats();
