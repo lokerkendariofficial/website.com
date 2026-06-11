@@ -1,40 +1,52 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pasang Iklan - Loker Kendari</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="posting.css">
+    <meta charset="UTF-8">
+    <title>Pasang Iklan Lowongan</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="auth.js"></script>
 </head>
 <body>
-<div class="post-card">
-  <h2><i class="fas fa-paper-plane"></i> Pasang Iklan Lowongan</h2>
-  <p class="sub">Iklan Anda akan ditampilkan setelah diverifikasi admin.</p>
-  <form id="postForm">
-    <div class="form-row">
-      <div class="form-group"><label>Judul Lowongan</label><input type="text" id="title" required></div>
-      <div class="form-group"><label>Nama Perusahaan</label><input type="text" id="company" required></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Lokasi</label><input type="text" id="location" required></div>
-      <div class="form-group"><label>Tipe</label><select id="type"><option>Fulltime</option><option>Parttime</option><option>Kontrak</option><option>Remote</option></select></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Kategori</label><select id="category"><option value="it">IT</option><option value="marketing">Marketing</option><option value="admin">Administrasi</option><option value="education">Pendidikan</option><option value="lainnya">Lainnya</option></select></div>
-      <div class="form-group"><label>Gaji</label><input type="text" id="salary" placeholder="Nego"></div>
-    </div>
-    <div class="form-group full-width"><label>Deskripsi</label><textarea id="desc" rows="4" required></textarea></div>
-    <div class="form-row">
-      <div class="form-group"><label>Alamat (opsional)</label><input type="text" id="address"></div>
-      <div class="form-group"><label>Kualifikasi (opsional)</label><input type="text" id="qualification"></div>
-    </div>
-    <div class="form-group full-width"><label>Kontak (opsional)</label><input type="text" id="contact"></div>
-    <button type="submit">Kirim Iklan</button>
-  </form>
-  <div class="logout-link"><a href="#" id="logoutBtn">🚪 Logout</a></div>
+<div class="container">
+    <h2>Pasang Iklan Lowongan</h2>
+    <form id="postForm">
+        <input type="text" id="title" placeholder="Judul Lowongan" required>
+        <input type="text" id="company" placeholder="Perusahaan" required>
+        <input type="text" id="location" placeholder="Lokasi" required>
+        <select id="type"><option>Fulltime</option><option>Parttime</option><option>Kontrak</option><option>Remote</option></select>
+        <select id="category"><option value="it">IT</option><option value="marketing">Marketing</option><option value="admin">Administrasi</option><option value="education">Pendidikan</option><option value="lainnya">Lainnya</option></select>
+        <input type="text" id="salary" placeholder="Gaji">
+        <textarea id="desc" placeholder="Deskripsi" rows="4"></textarea>
+        <button type="submit">Kirim Iklan</button>
+    </form>
 </div>
-<script src="auth.js"></script>
-<script src="posting.js"></script>
+<script>
+    const user = getCurrentUser();
+    if (!user) {
+        alert('Anda harus login terlebih dahulu.');
+        window.location.href = 'login.html';
+    }
+    document.getElementById('postForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const newJob = {
+            id: Date.now(),
+            title: document.getElementById('title').value,
+            company: document.getElementById('company').value,
+            location: document.getElementById('location').value,
+            type: document.getElementById('type').value,
+            category: document.getElementById('category').value,
+            salary: document.getElementById('salary').value || 'Nego',
+            desc: document.getElementById('desc').value,
+            userId: user.id,
+            userName: user.nama,
+            status: 'pending'
+        };
+        let pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
+        pending.unshift(newJob);
+        localStorage.setItem('pendingIklan', JSON.stringify(pending));
+        alert('Iklan terkirim! Menunggu konfirmasi admin.');
+        e.target.reset();
+    });
+</script>
 </body>
 </html>
