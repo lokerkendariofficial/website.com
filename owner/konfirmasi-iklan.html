@@ -36,7 +36,7 @@
             <a href="utama.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-chart-line w-5"></i> Dashboard</a>
             <a href="kelola-lowongan.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-regular fa-file-lines w-5"></i> Kelola Lowongan</a>
             <a href="konfirmasi-iklan.html" class="sidebar-active flex items-center px-4 py-2 text-white bg-slate-700/30 border-l-4 border-blue-500"><i class="fa-regular fa-clock w-5"></i> Konfirmasi Iklan</a>
-            <a href="manajemen-user.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-users w-5"></i> Manajemen User</a>
+            <a href="#" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-users w-5"></i> Manajemen User</a>
             <a href="laporan-statistik.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-chart-simple w-5"></i> Laporan & Statistik</a>
             <div class="border-t border-slate-700 my-2"></div>
             <div class="px-3 py-2 text-gray-400 font-semibold text-xs uppercase">Pengaturan</div>
@@ -48,8 +48,9 @@
 
     <main id="mainContent" class="flex-1 p-4 overflow-y-auto">
         <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
-            <div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-4">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-3">
                 <h3 class="font-semibold text-white"><i class="fa-regular fa-clock mr-2 text-yellow-400"></i> Iklan Menunggu Konfirmasi</h3>
+                <span id="pendingCountBadge" class="text-xs text-gray-400">0</span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
@@ -59,12 +60,11 @@
                             <th class="text-left py-2">Perusahaan</th>
                             <th class="text-left py-2">Lokasi</th>
                             <th class="text-left py-2">Pengirim</th>
-                            <th class="text-left py-2">Tanggal</th>
                             <th class="text-left py-2">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="pendingTableBody"><tr><td colspan="6" class="py-4 text-center text-gray-500">Memuat...</td></tr></tbody>
-                </table>
+                    <tbody id="pendingTableBody"><tr><td colspan="5" class="py-4 text-center text-gray-500">Memuat...<\/td><\/tr><\/tbody>
+                <\/table>
             </div>
         </div>
     </main>
@@ -76,59 +76,81 @@
     let pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
     let lowongan = JSON.parse(localStorage.getItem('lokerData') || '[]');
 
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]);
+    }
+
     function renderPending() {
         const tbody = document.getElementById('pendingTableBody');
         if (!pending.length) {
-            tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-500">Tidak ada iklan pending</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Tidak ada iklan pending<\/td><\/tr>';
+            document.getElementById('pendingCountBadge').innerText = '0';
             return;
         }
+        document.getElementById('pendingCountBadge').innerText = pending.length;
         let html = '';
         pending.forEach(job => {
             html += `<tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
-                <td class="py-2">${escapeHtml(job.title)}</td>
-                <td class="py-2">${escapeHtml(job.company)}</td>
-                <td class="py-2">${escapeHtml(job.location)}</td>
-                <td class="py-2">${escapeHtml(job.userName || 'Tidak diketahui')}</td>
-                <td class="py-2">${job.createdAt ? new Date(job.createdAt).toLocaleDateString() : '-'}</td>
+                <td class="py-2">${escapeHtml(job.title)}<\/td>
+                <td class="py-2">${escapeHtml(job.company)}<\/td>
+                <td class="py-2">${escapeHtml(job.location)}<\/td>
+                <td class="py-2">${escapeHtml(job.userName || 'Tidak diketahui')}<\/td>
                 <td class="py-2">
-                    <button class="approve-btn bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1 rounded mr-1" data-id="${job.id}">Setujui</button>
-                    <button class="reject-btn bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded" data-id="${job.id}">Tolak</button>
-                </td>
-            </tr>`;
+                    <button class="approve-btn bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1 rounded mr-1" data-id="${job.id}">Setujui<\/button>
+                    <button class="reject-btn bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded" data-id="${job.id}">Tolak<\/button>
+                <\/td>
+            <\/tr>`;
         });
         tbody.innerHTML = html;
-        document.querySelectorAll('.approve-btn').forEach(btn => btn.addEventListener('click', () => approvePending(parseInt(btn.dataset.id))));
-        document.querySelectorAll('.reject-btn').forEach(btn => btn.addEventListener('click', () => rejectPending(parseInt(btn.dataset.id))));
+
+        document.querySelectorAll('.approve-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = parseInt(btn.dataset.id);
+                approvePending(id);
+            });
+        });
+        document.querySelectorAll('.reject-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = parseInt(btn.dataset.id);
+                rejectPending(id);
+            });
+        });
     }
 
     function approvePending(id) {
         const job = pending.find(j => j.id === id);
-        if (job) {
-            lowongan.unshift({ ...job, uploadedAt: Date.now() });
-            localStorage.setItem('lokerData', JSON.stringify(lowongan));
-            pending = pending.filter(j => j.id !== id);
-            localStorage.setItem('pendingIklan', JSON.stringify(pending));
-            addLog(currentUser.id, currentUser.nama, 'APPROVE_JOB', `Menyetujui iklan "${job.title}" dari ${job.company}`);
-            renderPending();
+        if (!job) return;
+        lowongan.unshift({ ...job, uploadedAt: Date.now() });
+        localStorage.setItem('lokerData', JSON.stringify(lowongan));
+        pending = pending.filter(j => j.id !== id);
+        localStorage.setItem('pendingIklan', JSON.stringify(pending));
+        addLog(getCurrentUser().id, getCurrentUser().nama, 'APPROVE_JOB', `Menyetujui iklan "${job.title}"`);
+        alert('Iklan disetujui!');
+        renderPending();
+        // Refresh halaman utama jika perlu
+        const iframe = window.parent.document.getElementById('mainFrame');
+        if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ type: 'refreshLowongan' }, '*');
         }
     }
 
     function rejectPending(id) {
         const job = pending.find(j => j.id === id);
-        if (job) {
-            pending = pending.filter(j => j.id !== id);
-            localStorage.setItem('pendingIklan', JSON.stringify(pending));
-            addLog(currentUser.id, currentUser.nama, 'REJECT_JOB', `Menolak iklan "${job.title}" dari ${job.company}`);
-            renderPending();
-        }
+        if (!job) return;
+        pending = pending.filter(j => j.id !== id);
+        localStorage.setItem('pendingIklan', JSON.stringify(pending));
+        addLog(getCurrentUser().id, getCurrentUser().nama, 'REJECT_JOB', `Menolak iklan "${job.title}"`);
+        alert('Iklan ditolak.');
+        renderPending();
     }
 
     renderPending();
     document.getElementById('refreshBtn').addEventListener('click', () => {
         pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
-        lowongan = JSON.parse(localStorage.getItem('lokerData') || '[]');
         renderPending();
     });
+    document.getElementById('logoutBtn').addEventListener('click', logout);
 </script>
 </body>
 </html>
