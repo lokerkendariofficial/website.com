@@ -1,4 +1,4 @@
-// script.js - halaman publik
+// beranda/script.js
 let jobsData = [];
 let currentCategory = "all";
 let searchKeyword = "";
