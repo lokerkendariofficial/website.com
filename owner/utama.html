@@ -3,92 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Dashboard - Loker Kendari</title>
+    <title>Dashboard Pemilik - Loker Kendari</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-slate-900 text-gray-200">
-    <header class="bg-slate-800 border-b border-slate-700 px-4 py-2 flex items-center justify-between sticky top-0 z-20">
-        <div class="flex items-center space-x-3"><button id="sidebarToggleBtn" class="text-white text-xl"><i class="fa-solid fa-bars"></i></button><div class="flex items-center space-x-2"><i class="fa-solid fa-briefcase text-blue-400 text-xl"></i><span class="font-bold text-white text-lg">Loker Kendari</span><span class="text-xs text-blue-400 bg-blue-900/30 px-2 py-0.5 rounded">Official</span></div></div>
-        <div class="flex items-center space-x-4"><div class="hidden md:block relative"><input type="text" placeholder="Cepat..." class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs w-40 text-white"><i class="fa-solid fa-magnifying-glass absolute right-2 top-2 text-gray-400 text-xs"></i></div><div class="flex items-center space-x-2 cursor-pointer hover:text-blue-300"><i class="fa-regular fa-bell"></i><span class="text-xs hidden sm:inline">Notifikasi</span></div><div class="flex items-center space-x-2 cursor-pointer hover:text-blue-300"><i class="fa-regular fa-user"></i><span class="text-xs" id="userName">Pemilik</span></div><button id="logoutBtn" class="bg-red-600/80 hover:bg-red-700 text-white text-xs px-3 py-1 rounded">Logout</button></div>
-    </header>
-    <div class="bg-slate-800/50 border-b border-slate-700 px-4 py-2 flex flex-wrap items-center justify-between text-xs sticky top-12 z-10">
-        <div class="flex items-center space-x-2"><span class="font-semibold text-gray-300 uppercase tracking-wider">Dashboard Pemilik</span><button class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded"><i class="fa-solid fa-plus text-[10px]"></i> Buat Iklan</button><select class="bg-slate-700 text-gray-300 px-2 py-1 rounded"><option>Semua Lokasi</option><option>Kendari</option><option>Konawe</option></select></div>
-        <div class="flex items-center space-x-2"><button id="refreshBtn" class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-rotate"></i> Refresh</button><button class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-print"></i> Print</button></div>
-    </div>
-    <div class="flex flex-1 overflow-hidden relative">
-        <aside id="sidebar" class="sidebar w-64 bg-slate-800 border-r border-slate-700 flex flex-col text-sm overflow-y-auto transition-all duration-300">
-            <div class="p-3"><input type="text" placeholder="Cari menu..." class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs"></div>
-            <nav class="flex-1">
-                <div class="px-3 py-2 text-gray-400 font-semibold text-xs uppercase">Utama</div>
-                <a href="utama.html" class="sidebar-active flex items-center px-4 py-2 text-white bg-slate-700/30 border-l-4 border-blue-500"><i class="fa-solid fa-chart-line w-5"></i> Dashboard</a>
-                <a href="kelola-lowongan.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-regular fa-file-lines w-5"></i> Kelola Lowongan</a>
-                <a href="konfirmasi-iklan.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-regular fa-clock w-5"></i> Konfirmasi Iklan</a>
-                <a href="manajemen-user.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-users w-5"></i> Manajemen User</a>
-                <a href="laporan-statistik.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-chart-simple w-5"></i> Laporan & Statistik</a>
-                <div class="border-t border-slate-700 my-2"></div>
-                <div class="px-3 py-2 text-gray-400 font-semibold text-xs uppercase">Pengaturan</div>
-                <a href="pengaturan-sistem.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-gear w-5"></i> Pengaturan Sistem</a>
-                <a href="backup.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-database w-5"></i> Backup/Restore</a>
-                <a href="log-aktivitas.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-list-check w-5"></i> Log Aktivitas</a>
-            </nav>
-        </aside>
-        <main id="mainContent" class="flex-1 p-4 overflow-y-auto">
-            <!-- Stats cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div class="stat-card bg-slate-800/80 border border-slate-700 rounded-lg p-4 flex items-center justify-between"><div><p class="text-gray-400 text-xs">Total Lowongan</p><h2 id="totalLowongan" class="text-2xl font-bold text-white">0</h2></div><i class="fa-solid fa-briefcase text-3xl text-blue-400"></i></div>
-                <div class="stat-card bg-slate-800/80 border border-slate-700 rounded-lg p-4 flex items-center justify-between"><div><p class="text-gray-400 text-xs">Iklan Pending</p><h2 id="totalPending" class="text-2xl font-bold text-yellow-400">0</h2></div><i class="fa-regular fa-clock text-3xl text-yellow-500"></i></div>
-                <div class="stat-card bg-slate-800/80 border border-slate-700 rounded-lg p-4 flex items-center justify-between"><div><p class="text-gray-400 text-xs">Total User</p><h2 id="totalUser" class="text-2xl font-bold text-white">0</h2></div><i class="fa-solid fa-users text-3xl text-green-400"></i></div>
-                <div class="stat-card bg-slate-800/80 border border-slate-700 rounded-lg p-4 flex items-center justify-between"><div><p class="text-gray-400 text-xs">Lamaran Masuk</p><h2 id="totalLamaran" class="text-2xl font-bold text-white">0</h2></div><i class="fa-solid fa-paper-plane text-3xl text-purple-400"></i></div>
-            </div>
-            <!-- Pending Iklan Table -->
-            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-6"><div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-3"><h3 class="font-semibold text-white"><i class="fa-regular fa-clock mr-2 text-yellow-400"></i> Iklan Menunggu Konfirmasi</h3><span id="pendingCountBadge" class="text-xs text-gray-400">0</span></div><div class="overflow-x-auto"><table class="w-full text-sm"><thead class="text-gray-400 border-b border-slate-700"><tr><th class="text-left py-2">Judul</th><th class="text-left py-2">Perusahaan</th><th class="text-left py-2">Lokasi</th><th class="text-left py-2">Pengirim</th><th class="text-left py-2">Aksi</th></tr></thead><tbody id="pendingTableBody"></tbody></table></div></div>
-            <!-- Lowongan Aktif Table -->
-            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-6"><div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-3"><h3 class="font-semibold text-white"><i class="fa-solid fa-briefcase mr-2 text-blue-400"></i> Daftar Lowongan Aktif</h3><span id="lowonganCountBadge" class="text-xs text-gray-400">0</span></div><div class="overflow-x-auto"><table class="w-full text-sm"><thead class="text-gray-400 border-b border-slate-700"><tr><th class="text-left py-2">Judul</th><th class="text-left py-2">Perusahaan</th><th class="text-left py-2">Lokasi</th><th class="text-left py-2">Aksi</th></tr></thead><tbody id="lowonganTableBody"></tbody></table></div></div>
-            <!-- User Table -->
-            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4"><div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-3"><h3 class="font-semibold text-white"><i class="fa-solid fa-users mr-2 text-green-400"></i> Daftar User</h3><span id="userCountBadge" class="text-xs text-gray-400">0</span></div><div class="overflow-x-auto"><table class="w-full text-sm"><thead class="text-gray-400 border-b border-slate-700"><tr><th class="text-left py-2">ID</th><th class="text-left py-2">Nama</th><th class="text-left py-2">Username</th><th class="text-left py-2">Role</th><th class="text-left py-2">Aksi</th></tr></thead><tbody id="userTableBody"></tbody></tr></div></div>
-        </main>
-    </div>
-    <script src="../auth.js"></script>
-    <script src="script.js"></script>
-    <script>
-        let lowongan = JSON.parse(localStorage.getItem('lokerData') || '[]');
-        let pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
-        let users = getUsers();
-        let lamaran = JSON.parse(localStorage.getItem('lamaranSaya') || '[]');
 
-        function updateStats() {
-            document.getElementById('totalLowongan').innerText = lowongan.length;
-            document.getElementById('totalPending').innerText = pending.length;
-            document.getElementById('totalUser').innerText = users.length;
-            document.getElementById('totalLamaran').innerText = lamaran.length;
-            document.getElementById('pendingCountBadge').innerText = pending.length;
-            document.getElementById('lowonganCountBadge').innerText = lowongan.length;
-            document.getElementById('userCountBadge').innerText = users.length;
+<header class="bg-slate-800 border-b border-slate-700 px-4 py-2 flex items-center justify-between sticky top-0 z-20">
+    <div class="flex items-center space-x-3">
+        <button id="sidebarToggleBtn" class="text-white text-xl"><i class="fa-solid fa-bars"></i></button>
+        <div class="flex items-center space-x-2"><i class="fa-solid fa-briefcase text-blue-400 text-xl"></i><span class="font-bold text-white text-lg">Loker Kendari</span><span class="text-xs text-blue-400 bg-blue-900/30 px-2 py-0.5 rounded">Official</span></div>
+    </div>
+    <div class="flex items-center space-x-4">
+        <div class="hidden md:block relative"><input type="text" placeholder="Cepat..." class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs w-40 text-white"><i class="fa-solid fa-magnifying-glass absolute right-2 top-2 text-gray-400 text-xs"></i></div>
+        <div class="flex items-center space-x-2 cursor-pointer hover:text-blue-300"><i class="fa-regular fa-bell"></i><span class="text-xs hidden sm:inline">Notifikasi</span></div>
+        <div class="flex items-center space-x-2 cursor-pointer hover:text-blue-300"><i class="fa-regular fa-user"></i><span class="text-xs" id="userName">Pemilik</span></div>
+        <button id="logoutBtn" class="bg-red-600/80 hover:bg-red-700 text-white text-xs px-3 py-1 rounded">Logout</button>
+    </div>
+</header>
+
+<div class="bg-slate-800/50 border-b border-slate-700 px-4 py-2 flex flex-wrap items-center justify-between text-xs sticky top-12 z-10">
+    <div class="flex items-center space-x-2"><span class="font-semibold text-gray-300 uppercase tracking-wider">Dashboard Pemilik</span><button class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded"><i class="fa-solid fa-plus text-[10px]"></i> Buat Iklan</button><select class="bg-slate-700 text-gray-300 px-2 py-1 rounded"><option>Semua Lokasi</option><option>Kendari</option><option>Konawe</option></select></div>
+    <div class="flex items-center space-x-2"><button id="refreshBtn" class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-rotate"></i> Refresh</button><button class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-print"></i> Print</button></div>
+</div>
+
+<div class="flex flex-1 overflow-hidden relative">
+    <aside id="sidebar" class="sidebar w-64 bg-slate-800 border-r border-slate-700 flex flex-col text-sm overflow-y-auto transition-all duration-300">
+        <div class="p-3"><input type="text" placeholder="Cari menu..." class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs"></div>
+        <nav class="flex-1">
+            <div class="px-3 py-2 text-gray-400 font-semibold text-xs uppercase">Utama</div>
+            <a href="utama.html" class="sidebar-active flex items-center px-4 py-2 text-white bg-slate-700/30 border-l-4 border-blue-500"><i class="fa-solid fa-chart-line w-5"></i> Dashboard</a>
+            <a href="kelola-lowongan.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-regular fa-file-lines w-5"></i> Kelola Lowongan</a>
+            <a href="konfirmasi-iklan.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-regular fa-clock w-5"></i> Konfirmasi Iklan</a>
+            <a href="manajemen-user.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-users w-5"></i> Manajemen User</a>
+            <a href="laporan-statistik.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-chart-simple w-5"></i> Laporan & Statistik</a>
+            <div class="border-t border-slate-700 my-2"></div>
+            <div class="px-3 py-2 text-gray-400 font-semibold text-xs uppercase">Pengaturan</div>
+            <a href="pengaturan-sistem.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-gear w-5"></i> Pengaturan Sistem</a>
+            <a href="backup.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-database w-5"></i> Backup/Restore</a>
+            <a href="log-aktivitas.html" class="flex items-center px-4 py-2 text-gray-300 hover:bg-slate-700/50"><i class="fa-solid fa-list-check w-5"></i> Log Aktivitas</a>
+        </nav>
+    </aside>
+
+    <main id="mainContent" class="flex-1 p-4 overflow-y-auto">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="stat-card bg-slate-800/80 border border-slate-700 rounded-lg p-4 flex items-center justify-between"><div><p class="text-gray-400 text-xs">Total Lowongan</p><h2 id="totalLowongan" class="text-2xl font-bold text-white">0</h2></div><i class="fa-solid fa-briefcase text-3xl text-blue-400"></i></div>
+            <div class="stat-card bg-slate-800/80 border border-slate-700 rounded-lg p-4 flex items-center justify-between"><div><p class="text-gray-400 text-xs">Iklan Pending</p><h2 id="totalPending" class="text-2xl font-bold text-yellow-400">0</h2></div><i class="fa-regular fa-clock text-3xl text-yellow-500"></i></div>
+            <div class="stat-card bg-slate-800/80 border border-slate-700 rounded-lg p-4 flex items-center justify-between"><div><p class="text-gray-400 text-xs">Total User</p><h2 id="totalUser" class="text-2xl font-bold text-white">0</h2></div><i class="fa-solid fa-users text-3xl text-green-400"></i></div>
+            <div class="stat-card bg-slate-800/80 border border-slate-700 rounded-lg p-4 flex items-center justify-between"><div><p class="text-gray-400 text-xs">Lamaran Masuk</p><h2 id="totalLamaran" class="text-2xl font-bold text-white">0</h2></div><i class="fa-solid fa-paper-plane text-3xl text-purple-400"></i></div>
+        </div>
+
+        <!-- Iklan Pending Table -->
+        <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-6">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-3">
+                <h3 class="font-semibold text-white"><i class="fa-regular fa-clock mr-2 text-yellow-400"></i> Iklan Menunggu Konfirmasi</h3>
+                <span id="pendingCountBadge" class="text-xs text-gray-400">0</span>
+            </div>
+            <div class="overflow-x-auto"><table class="w-full text-sm"><thead class="text-gray-400 border-b border-slate-700"><tr><th class="text-left py-2">Judul</th><th class="text-left py-2">Perusahaan</th><th class="text-left py-2">Lokasi</th><th class="text-left py-2">Pengirim</th><th class="text-left py-2">Aksi</th></tr></thead><tbody id="pendingTableBody"></tbody>}</div>
+        </div>
+
+        <!-- Lowongan Aktif Table -->
+        <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4 mb-6">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-3">
+                <h3 class="font-semibold text-white"><i class="fa-solid fa-briefcase mr-2 text-blue-400"></i> Daftar Lowongan Aktif</h3>
+                <span id="lowonganCountBadge" class="text-xs text-gray-400">0</span>
+            </div>
+            <div class="overflow-x-auto"><table class="w-full text-sm"><thead class="text-gray-400 border-b border-slate-700"><tr><th class="text-left py-2">Judul</th><th class="text-left py-2">Perusahaan</th><th class="text-left py-2">Lokasi</th><th class="text-left py-2">Aksi</th></tr></thead><tbody id="lowonganTableBody"></tbody>}</div>
+        </div>
+
+        <!-- User Table -->
+        <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-3">
+                <h3 class="font-semibold text-white"><i class="fa-solid fa-users mr-2 text-green-400"></i> Daftar User</h3>
+                <span id="userCountBadge" class="text-xs text-gray-400">0</span>
+            </div>
+            <div class="overflow-x-auto"><table class="w-full text-sm"><thead class="text-gray-400 border-b border-slate-700"><tr><th class="text-left py-2">ID</th><th class="text-left py-2">Nama</th><th class="text-left py-2">Username</th><th class="text-left py-2">Role</th><th class="text-left py-2">Aksi</th></tr></thead><tbody id="userTableBody"></tbody>}</div>
+        </div>
+    </main>
+</div>
+
+<script src="../auth.js"></script>
+<script src="script.js"></script>
+<script>
+    let lowongan = JSON.parse(localStorage.getItem('lokerData') || '[]');
+    let pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
+    let users = getUsers();
+    let lamaran = JSON.parse(localStorage.getItem('lamaranSaya') || '[]');
+
+    function updateStats() {
+        document.getElementById('totalLowongan').innerText = lowongan.length;
+        document.getElementById('totalPending').innerText = pending.length;
+        document.getElementById('totalUser').innerText = users.length;
+        document.getElementById('totalLamaran').innerText = lamaran.length;
+        document.getElementById('pendingCountBadge').innerText = pending.length;
+        document.getElementById('lowonganCountBadge').innerText = lowongan.length;
+        document.getElementById('userCountBadge').innerText = users.length;
+    }
+
+    function renderPending() {
+        const tbody = document.getElementById('pendingTableBody');
+        if (!pending.length) { tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Tidak ada iklan pending</td></tr>'; return; }
+        let html = '';
+        pending.forEach(job => {
+            html += `<tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
+                <td class="py-2">${escapeHtml(job.title)}</td>
+                <td class="py-2">${escapeHtml(job.company)}</td>
+                <td class="py-2">${escapeHtml(job.location)}</td>
+                <td class="py-2">${escapeHtml(job.userName || 'Tidak diketahui')}</td>
+                <td class="py-2">
+                    <button class="approve-btn bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1 rounded mr-1" data-id="${job.id}">Setujui</button>
+                    <button class="reject-btn bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded" data-id="${job.id}">Tolak</button>
+                </td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+        document.querySelectorAll('.approve-btn').forEach(btn => btn.addEventListener('click', () => approvePending(parseInt(btn.dataset.id))));
+        document.querySelectorAll('.reject-btn').forEach(btn => btn.addEventListener('click', () => rejectPending(parseInt(btn.dataset.id))));
+    }
+
+    function approvePending(id) {
+        const job = pending.find(j => j.id === id);
+        if (job) {
+            lowongan.unshift({ ...job, uploadedAt: Date.now() });
+            localStorage.setItem('lokerData', JSON.stringify(lowongan));
+            pending = pending.filter(j => j.id !== id);
+            localStorage.setItem('pendingIklan', JSON.stringify(pending));
+            renderPending();
+            renderLowongan();
+            updateStats();
         }
-        function renderPending() {
-            const tbody = document.getElementById('pendingTableBody');
-            if (!pending.length) { tbody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Tidak ada iklan pending</td></tr>'; return; }
-            tbody.innerHTML = pending.map(job => `
-                <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
-                    <td class="py-2">${escapeHtml(job.title)}</td><td class="py-2">${escapeHtml(job.company)}</td>
-                    <td class="py-2">${escapeHtml(job.location)}</td><td class="py-2">${escapeHtml(job.userName || 'Tidak diketahui')}</td>
-                    <td class="py-2"><button class="approve-btn bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1 rounded mr-1" data-id="${job.id}">Setujui</button><button class="reject-btn bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded" data-id="${job.id}">Tolak</button></td>
-                </tr>
-            `).join('');
-            document.querySelectorAll('.approve-btn').forEach(btn => btn.addEventListener('click', () => approvePending(parseInt(btn.dataset.id))));
-            document.querySelectorAll('.reject-btn').forEach(btn => btn.addEventListener('click', () => rejectPending(parseInt(btn.dataset.id))));
-        }
-        function approvePending(id) { const job = pending.find(j => j.id === id); if (job) { lowongan.unshift({ ...job, uploadedAt: Date.now() }); localStorage.setItem('lokerData', JSON.stringify(lowongan)); pending = pending.filter(j => j.id !== id); localStorage.setItem('pendingIklan', JSON.stringify(pending)); renderPending(); renderLowongan(); updateStats(); } }
-        function rejectPending(id) { pending = pending.filter(j => j.id !== id); localStorage.setItem('pendingIklan', JSON.stringify(pending)); renderPending(); updateStats(); }
-        function renderLowongan() { /* sama seperti sebelumnya */ }
-        function renderUsers() { /* sama seperti sebelumnya */ }
-        // ... lengkapi fungsi renderLowongan dan renderUsers
-        // (karena panjang, kita lanjutkan di file terpisah jika perlu, tapi untuk contoh ini cukup)
-        // Saya asumsikan Anda bisa meniru dari kode sebelumnya.
-        renderPending(); renderLowongan(); renderUsers(); updateStats();
-        document.getElementById('refreshBtn')?.addEventListener('click', () => location.reload());
-    </script>
+    }
+
+    function rejectPending(id) {
+        pending = pending.filter(j => j.id !== id);
+        localStorage.setItem('pendingIklan', JSON.stringify(pending));
+        renderPending();
+        updateStats();
+    }
+
+    function renderLowongan() {
+        const tbody = document.getElementById('lowonganTableBody');
+        if (!lowongan.length) { tbody.innerHTML = '<tr><td colspan="4" class="py-4 text-center text-gray-500">Belum ada lowongan</td></tr>'; return; }
+        let html = '';
+        lowongan.forEach(job => {
+            html += `<tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
+                <td class="py-2">${escapeHtml(job.title)}</td>
+                <td class="py-2">${escapeHtml(job.company)}</td>
+                <td class="py-2">${escapeHtml(job.location)}</td>
+                <td class="py-2"><button class="delete-job bg-red-600/80 hover:bg-red-700 text-white text-xs px-2 py-1 rounded" data-id="${job.id}">Hapus</button></td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+        document.querySelectorAll('.delete-job').forEach(btn => btn.addEventListener('click', () => {
+            const id = parseInt(btn.dataset.id);
+            if (confirm('Hapus lowongan ini?')) {
+                lowongan = lowongan.filter(j => j.id !== id);
+                localStorage.setItem('lokerData', JSON.stringify(lowongan));
+                renderLowongan();
+                updateStats();
+            }
+        }));
+    }
+
+    function renderUsers() {
+        const tbody = document.getElementById('userTableBody');
+        if (!users.length) { tbody.innerHTML = '<td><td colspan="5" class="py-4 text-center text-gray-500">Belum ada user</td></tr>'; return; }
+        let html = '';
+        users.forEach(u => {
+            html += `<tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
+                <td class="py-2">${u.id}</td>
+                <td class="py-2">${escapeHtml(u.nama)}</td>
+                <td class="py-2">${escapeHtml(u.username)}</td>
+                <td class="py-2">${u.role}</td>
+                <td class="py-2">${u.role !== 'pemilik' ? `<button class="delete-user bg-red-600/80 hover:bg-red-700 text-white text-xs px-2 py-1 rounded" data-id="${u.id}">Hapus</button>` : '-'}</td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+        document.querySelectorAll('.delete-user').forEach(btn => btn.addEventListener('click', () => {
+            const id = parseInt(btn.dataset.id);
+            if (confirm('Hapus user ini?')) {
+                users = users.filter(u => u.id !== id);
+                saveUsers(users);
+                renderUsers();
+                updateStats();
+            }
+        }));
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]);
+    }
+
+    renderPending();
+    renderLowongan();
+    renderUsers();
+    updateStats();
+
+    document.getElementById('refreshBtn')?.addEventListener('click', () => location.reload());
+    document.getElementById('logoutBtn')?.addEventListener('click', logout);
+</script>
 </body>
 </html>
