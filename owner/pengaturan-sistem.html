@@ -7,6 +7,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .toast-notif {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .toast-notif.error {
+            background: #dc2626;
+        }
+    </style>
 </head>
 <body class="bg-slate-900 text-gray-200">
 
@@ -48,7 +65,6 @@
 
     <main id="mainContent" class="flex-1 p-4 overflow-y-auto">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Pengaturan Metode Login -->
             <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
                 <h3 class="font-semibold text-white mb-3"><i class="fa-solid fa-key mr-2"></i> Metode Login</h3>
                 <div class="mb-3">
@@ -59,10 +75,9 @@
                     </select>
                 </div>
                 <button id="saveMetodeBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1 rounded">Simpan</button>
-                <p class="text-xs text-gray-400 mt-2">Perubahan akan berlaku untuk registrasi user baru.</p>
+                <p class="text-xs text-gray-400 mt-2">Perubahan berlaku untuk registrasi user baru.</p>
             </div>
 
-            <!-- Pengaturan Umum Website -->
             <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-4">
                 <h3 class="font-semibold text-white mb-3"><i class="fa-solid fa-globe mr-2"></i> Pengaturan Umum</h3>
                 <div class="mb-3"><label class="block text-xs text-gray-400 mb-1">Nama Website</label><input type="text" id="namaWebsite" class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white"></div>
@@ -72,14 +87,22 @@
             </div>
         </div>
 
-        <!-- Tampilkan Informasi Sistem -->
         <div class="mt-6 bg-slate-800/50 border border-slate-700 rounded-lg p-4">
             <h3 class="font-semibold text-white mb-2"><i class="fa-solid fa-circle-info mr-2"></i> Informasi Sistem</h3>
             <p class="text-sm text-gray-300">Versi Aplikasi: <strong>v.0.2 (Loker Kendari Official)</strong></p>
             <p class="text-sm text-gray-300">Total Data Lowongan: <span id="infoTotalLowongan">0</span></p>
             <p class="text-sm text-gray-300">Total User: <span id="infoTotalUser">0</span></p>
             <p class="text-sm text-gray-300">Storage Terpakai (estimasi): <span id="infoStorage">0</span> KB</p>
-            <button id="clearCacheBtn" class="mt-3 bg-red-600/80 hover:bg-red-700 text-white text-xs px-3 py-1 rounded">Hapus Cache (Reset Data Demo)</button>
+            <div class="mt-3 p-2 bg-slate-700/30 rounded-lg">
+                <p class="text-xs text-gray-400 font-semibold mb-1">📋 Log Aktivitas Terbaru</p>
+                <div id="recentLogs" class="text-xs text-gray-400 space-y-1"></div>
+            </div>
+            <div class="flex flex-wrap gap-2 mt-3">
+                <button id="backupQuickBtn" class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1 rounded"><i class="fa-solid fa-download"></i> Backup Cepat</button>
+                <button id="restoreQuickBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white text-xs px-3 py-1 rounded"><i class="fa-solid fa-upload"></i> Restore</button>
+                <input type="file" id="restoreFileInput" class="hidden" accept=".json">
+                <button id="clearCacheBtn" class="bg-red-600/80 hover:bg-red-700 text-white text-xs px-3 py-1 rounded"><i class="fa-solid fa-trash"></i> Reset Data Demo</button>
+            </div>
         </div>
     </main>
 </div>
@@ -87,7 +110,21 @@
 <script src="../auth.js"></script>
 <script src="script.js"></script>
 <script>
-    // Load konfigurasi
+    function showToast(msg, isError = false) {
+        const toast = document.createElement('div');
+        toast.className = 'toast-notif' + (isError ? ' error' : '');
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    const current = getCurrentUser();
+    if (!current || (current.role !== 'pemilik' && current.role !== 'admin')) {
+        alert('Akses ditolak');
+        window.location.href = '../index.html';
+    }
+    document.getElementById('userName').innerText = current.nama || 'Pemilik';
+
     let sistemConfig = JSON.parse(localStorage.getItem('sistemConfig') || '{"metodeLogin":"username_email"}');
     let pengaturanUmum = JSON.parse(localStorage.getItem('pengaturanUmum') || '{"namaWebsite":"Loker Kendari Official","footer":"© 2026 Loker Kendari Official","kontakAdmin":"admin@lokerkendari.com"}');
 
@@ -96,27 +133,22 @@
     document.getElementById('footerText').value = pengaturanUmum.footer;
     document.getElementById('kontakAdmin').value = pengaturanUmum.kontakAdmin;
 
-    function saveMetodeLogin() {
-        const metode = document.getElementById('metodeLogin').value;
-        sistemConfig.metodeLogin = metode;
+    document.getElementById('saveMetodeBtn').addEventListener('click', () => {
+        sistemConfig.metodeLogin = document.getElementById('metodeLogin').value;
         localStorage.setItem('sistemConfig', JSON.stringify(sistemConfig));
-        addLog(currentUser.id, currentUser.nama, 'SET_SYSTEM', `Mengubah metode login menjadi ${metode}`);
-        alert('Metode login berhasil disimpan.');
-    }
+        addLog(current.id, current.nama, 'SET_SYSTEM', `Metode login menjadi ${sistemConfig.metodeLogin}`);
+        showToast('Metode login disimpan');
+    });
 
-    function savePengaturanUmum() {
+    document.getElementById('saveUmumBtn').addEventListener('click', () => {
         pengaturanUmum.namaWebsite = document.getElementById('namaWebsite').value;
         pengaturanUmum.footer = document.getElementById('footerText').value;
         pengaturanUmum.kontakAdmin = document.getElementById('kontakAdmin').value;
         localStorage.setItem('pengaturanUmum', JSON.stringify(pengaturanUmum));
-        addLog(currentUser.id, currentUser.nama, 'SET_UMUM', `Mengubah pengaturan umum`);
-        alert('Pengaturan umum berhasil disimpan.');
-    }
+        addLog(current.id, current.nama, 'SET_UMUM', 'Pengaturan umum diubah');
+        showToast('Pengaturan umum disimpan');
+    });
 
-    document.getElementById('saveMetodeBtn').addEventListener('click', saveMetodeLogin);
-    document.getElementById('saveUmumBtn').addEventListener('click', savePengaturanUmum);
-
-    // Informasi sistem
     let lowongan = JSON.parse(localStorage.getItem('lokerData') || '[]');
     let users = getUsers();
     document.getElementById('infoTotalLowongan').innerText = lowongan.length;
@@ -126,21 +158,86 @@
     for (let i = 0; i < localStorage.length; i++) {
         let key = localStorage.key(i);
         let val = localStorage.getItem(key);
-        totalSize += (val.length + key.length) * 2; // perkiraan
+        totalSize += (val.length + key.length) * 2;
     }
     document.getElementById('infoStorage').innerText = (totalSize / 1024).toFixed(2);
 
+    function renderRecentLogs() {
+        const logs = JSON.parse(localStorage.getItem('logAktivitas') || '[]');
+        const container = document.getElementById('recentLogs');
+        if (!logs.length) { container.innerHTML = '<p class="text-gray-500">Belum ada log.</p>'; return; }
+        container.innerHTML = logs.slice(0,5).map(l => `<div>${new Date(l.timestamp).toLocaleString()} - ${escapeHtml(l.aksi)}</div>`).join('');
+    }
+    function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]); }
+    renderRecentLogs();
+
+    document.getElementById('backupQuickBtn').addEventListener('click', () => {
+        const exportData = {
+            users: getUsers(),
+            lokerData: JSON.parse(localStorage.getItem('lokerData') || '[]'),
+            pendingIklan: JSON.parse(localStorage.getItem('pendingIklan') || '[]'),
+            lamaranSaya: JSON.parse(localStorage.getItem('lamaranSaya') || '[]'),
+            sistemConfig: localStorage.getItem('sistemConfig'),
+            pengaturanUmum: localStorage.getItem('pengaturanUmum'),
+            kategoriLowongan: localStorage.getItem('kategoriLowongan'),
+            logAktivitas: localStorage.getItem('logAktivitas')
+        };
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(exportData,null,2)], {type:'application/json'}));
+        a.download = `backup_${new Date().toISOString().slice(0,19)}.json`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showToast('Backup berhasil diunduh');
+    });
+
+    document.getElementById('restoreQuickBtn').addEventListener('click', () => document.getElementById('restoreFileInput').click());
+    document.getElementById('restoreFileInput').addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (data.users) localStorage.setItem('users', JSON.stringify(data.users));
+                if (data.lokerData) localStorage.setItem('lokerData', JSON.stringify(data.lokerData));
+                if (data.pendingIklan) localStorage.setItem('pendingIklan', JSON.stringify(data.pendingIklan));
+                if (data.lamaranSaya) localStorage.setItem('lamaranSaya', JSON.stringify(data.lamaranSaya));
+                if (data.sistemConfig) localStorage.setItem('sistemConfig', data.sistemConfig);
+                if (data.pengaturanUmum) localStorage.setItem('pengaturanUmum', data.pengaturanUmum);
+                if (data.kategoriLowongan) localStorage.setItem('kategoriLowongan', data.kategoriLowongan);
+                if (data.logAktivitas) localStorage.setItem('logAktivitas', data.logAktivitas);
+                showToast('Restore berhasil, reload halaman');
+                setTimeout(() => location.reload(), 1500);
+            } catch(e) { showToast('File tidak valid', true); }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+    });
+
     document.getElementById('clearCacheBtn').addEventListener('click', () => {
-        if (confirm('Hapus semua data demo? (User pemilik dan akun default tidak akan dihapus)')) {
-            const ownerUser = users.find(u => u.role === 'pemilik');
+        const confirmTxt = prompt('Ketik "RESET" untuk menghapus semua data demo (lowongan, pending, lamaran, log, user non-pemilik):');
+        if (confirmTxt === 'RESET') {
+            const ownerUser = getUsers().find(u => u.role === 'pemilik');
+            const sistemConfigSaved = localStorage.getItem('sistemConfig');
+            const pengaturanUmumSaved = localStorage.getItem('pengaturanUmum');
             localStorage.clear();
             if (ownerUser) localStorage.setItem('users', JSON.stringify([ownerUser]));
-            localStorage.setItem('sistemConfig', JSON.stringify({metodeLogin:'username_email'}));
-            localStorage.setItem('pengaturanUmum', JSON.stringify(pengaturanUmum));
-            alert('Data demo dihapus. Refresh halaman.');
-            location.reload();
-        }
+            if (sistemConfigSaved) localStorage.setItem('sistemConfig', sistemConfigSaved);
+            if (pengaturanUmumSaved) localStorage.setItem('pengaturanUmum', pengaturanUmumSaved);
+            localStorage.setItem('kategoriLowongan', JSON.stringify([
+                { id:1, nama:'IT' }, { id:2, nama:'Marketing' }, { id:3, nama:'Administrasi' },
+                { id:4, nama:'Pendidikan' }, { id:5, nama:'Lainnya' }
+            ]));
+            showToast('Data demo direset, halaman akan dimuat ulang');
+            setTimeout(() => location.reload(), 1500);
+        } else showToast('Reset dibatalkan', true);
     });
+
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebarToggleBtn');
+    if (toggleBtn && sidebar) toggleBtn.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('refreshBtn').addEventListener('click', () => location.reload());
 </script>
 </body>
 </html>
