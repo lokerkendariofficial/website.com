@@ -58,13 +58,13 @@
                             <th class="text-left py-2">ID</th>
                             <th class="text-left py-2">Nama</th>
                             <th class="text-left py-2">Username</th>
+                            <th class="text-left py-2">Nomor HP</th>
                             <th class="text-left py-2">Role</th>
-                            <th class="text-left py-2">Tanggal Daftar</th>
                             <th class="text-left py-2">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="userTableBody"><tr><td colspan="6" class="py-4 text-center text-gray-500">Memuat...</td></tr></tbody>
-                </table>
+                    <tbody id="userTableBody"><tr><td colspan="6" class="py-4 text-center text-gray-500">Memuat...<\/td><\/tr><\/tbody>
+                <\/table>
             </div>
         </div>
     </main>
@@ -73,71 +73,64 @@
 <script src="../auth.js"></script>
 <script src="script.js"></script>
 <script>
-    let users = getUsers();
+    // Gunakan fungsi dari auth.js (getAllUsers, updateUserRole, deleteUser, getCurrentUser)
+    let current = getCurrentUser();
+    if (!current || (current.role !== 'pemilik' && current.role !== 'admin')) {
+        alert('Akses ditolak');
+        window.location.href = '../index.html';
+    }
+    document.getElementById('userName').innerText = current.nama || 'Admin';
 
     function renderUsers() {
+        const users = getAllUsers(); // dari auth.js
         const tbody = document.getElementById('userTableBody');
         if (!users.length) {
-            tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-500">Belum ada user</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-500">Belum ada user<\/td><\/tr>';
             return;
         }
         let html = '';
         users.forEach(u => {
             html += `<tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
-                <td class="py-2">${u.id}</td>
-                <td class="py-2">${escapeHtml(u.nama)}</td>
-                <td class="py-2">${escapeHtml(u.username)}</td>
-                <td class="py-2">${u.role}</td>
-                <td class="py-2">${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-'}</td>
+                <td class="py-2">${u.id}<\/td>
+                <td class="py-2">${escapeHtml(u.nama)}<\/td>
+                <td class="py-2">${escapeHtml(u.username)}<\/td>
+                <td class="py-2">${u.nomorHp || '-'}<\/td>
+                <td class="py-2">${u.role}<\/td>
                 <td class="py-2">
-                    ${u.role !== 'pemilik' ? `
-                        <button class="change-role bg-blue-600/80 hover:bg-blue-700 text-white text-xs px-2 py-1 rounded mr-1" data-id="${u.id}" data-role="${u.role}">Ubah Role</button>
-                        <button class="delete-user bg-red-600/80 hover:bg-red-700 text-white text-xs px-2 py-1 rounded" data-id="${u.id}">Hapus</button>
+                    ${!u.isOwner ? `
+                        <button onclick="changeRole(${u.id})" class="bg-blue-600/80 hover:bg-blue-700 text-white text-xs px-2 py-1 rounded mr-1">Ubah Role</button>
+                        <button onclick="deleteUser(${u.id})" class="bg-red-600/80 hover:bg-red-700 text-white text-xs px-2 py-1 rounded">Hapus</button>
                     ` : '<span class="text-gray-500 text-xs">Pemilik</span>'}
-                </td>
-            </tr>`;
+                <\/td>
+             <\/tr>`;
         });
         tbody.innerHTML = html;
-
-        document.querySelectorAll('.change-role').forEach(btn => btn.addEventListener('click', () => changeRole(parseInt(btn.dataset.id), btn.dataset.role)));
-        document.querySelectorAll('.delete-user').forEach(btn => btn.addEventListener('click', () => deleteUser(parseInt(btn.dataset.id))));
     }
 
-    function changeRole(id, currentRole) {
-        const newRole = currentRole === 'admin' ? 'user' : 'admin';
-        if (confirm(`Ubah role user ini menjadi ${newRole}?`)) {
-            users = users.map(u => u.id === id ? { ...u, role: newRole } : u);
-            saveUsers(users);
-            addLog(currentUser.id, currentUser.nama, 'CHANGE_ROLE', `Mengubah role user ID ${id} menjadi ${newRole}`);
+    window.changeRole = async (userId) => {
+        if (confirm('Ubah role user ini? (admin ↔ user)')) {
+            const user = getAllUsers().find(u => u.id === userId);
+            const newRole = user.role === 'admin' ? 'user' : 'admin';
+            const success = updateUserRole(userId, newRole);
+            if (success) renderUsers();
+        }
+    };
+    window.deleteUser = (userId) => {
+        if (confirm('Hapus user ini?')) {
+            deleteUser(userId);
             renderUsers();
         }
+    };
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
     }
 
-    function deleteUser(id) {
-        if (confirm('Hapus user ini? Data terkait (lowongan, lamaran) tidak otomatis terhapus.')) {
-            users = users.filter(u => u.id !== id);
-            saveUsers(users);
-            addLog(currentUser.id, currentUser.nama, 'DELETE_USER', `Menghapus user ID ${id}`);
-            renderUsers();
-        }
-    }
-
-function renderUsers() {
-    const users = getAllUsers(); // dari auth.js
-    let html = `</td>
-        <thead><tr><th>ID</th><th>Nama</th><th>Username</th><th>Nomor HP</th><th>Role</th><th>Aksi</th></tr></thead>
-        <tbody>
-    `;
-    users.forEach(u => {
-        html += `<tr>
-            <td>${u.id}</td>
-            <td>${escapeHtml(u.nama)}</td>
-            <td>${escapeHtml(u.username)}</td>
-            <td>${u.nomorHp || '-'}</td>
-            <td>${u.role}</td>
-            <td>${!u.isOwner ? `<button onclick="changeRole(${u.id})">Ubah Role</button> <button onclick="deleteUser(${u.id})">Hapus</button>` : 'Pemilik'}</td>
-        </tr>`;
-    });
-    html += '</tbody></table>';
-    document.getElementById('userTableBody').innerHTML = html;
-}
+    renderUsers();
+    document.getElementById('refreshBtn').addEventListener('click', () => renderUsers());
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    // Sidebar toggle (asumsi sudah ada di script.js)
+</script>
+</body>
+</html>
