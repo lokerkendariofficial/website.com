@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Buat Iklan - Dashboard Pemilik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fb;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        .card-header {
+            background: #0a5b8c;
+            padding: 1.5rem 2rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .close-btn:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.05);
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 180px;
+        }
+        .form-group.full-width {
+            flex: 100%;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: #1e293b;
+            font-size: 0.85rem;
+        }
+        label i {
+            width: 24px;
+            color: #0a5b8c;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: white;
+        }
+        textarea {
+            border-radius: 20px;
+            resize: vertical;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #0a5b8c;
+            box-shadow: 0 0 0 3px rgba(10,91,140,0.1);
+        }
+        button[type="submit"] {
+            background: #0a5b8c;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+        button[type="submit"]:hover {
+            background: #0a4b72;
+            transform: scale(0.98);
+        }
+        .subnote {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 1rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        @media (max-width: 640px) {
+            .card-body { padding: 1.2rem; }
+            .card-header h2 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2><i class="fas fa-plus-circle"></i> Buat Iklan Lowongan</h2>
+            <button class="close-btn" id="closeBtn" aria-label="Tutup">&times;</button>
+        </div>
+        <div class="card-body">
+            <form id="postForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-briefcase"></i> Judul Lowongan</label>
+                        <input type="text" id="title" placeholder="Contoh: Frontend Developer" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-building"></i> Nama Perusahaan</label>
+                        <input type="text" id="company" placeholder="PT Teknologi Nusantara" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Lokasi</label>
+                        <input type="text" id="location" placeholder="Kendari, Sulawesi Tenggara" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-clock"></i> Tipe Pekerjaan</label>
+                        <select id="type">
+                            <option value="Fulltime">Fulltime</option>
+                            <option value="Parttime">Parttime</option>
+                            <option value="Kontrak">Kontrak</option>
+                            <option value="Remote">Remote / WFH</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-tags"></i> Kategori</label>
+                        <select id="category">
+                            <option value="it">IT & Teknologi</option>
+                            <option value="marketing">Pemasaran</option>
+                            <option value="admin">Administrasi</option>
+                            <option value="education">Pendidikan</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill-wave"></i> Estimasi Gaji</label>
+                        <input type="text" id="salary" placeholder="4jt - 7jt atau Nego">
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label><i class="fas fa-align-left"></i> Deskripsi Pekerjaan & Kualifikasi</label>
+                    <textarea id="desc" rows="5" placeholder="Tuliskan tanggung jawab, kualifikasi, keahlian, dll..." required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email Kontak</label>
+                        <input type="email" id="emailKontak" placeholder="hrd@perusahaan.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone-alt"></i> Telepon (opsional)</label>
+                        <input type="tel" id="telepon" placeholder="0812xxxx">
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label><i class="fas fa-instagram"></i> Instagram (opsional)</label>
+                    <input type="text" id="instagram" placeholder="@perusahaan">
+                </div>
+                <button type="submit"><i class="fas fa-paper-plane"></i> Terbitkan Iklan</button>
+                <div class="subnote">* Iklan akan langsung tampil di halaman publik tanpa perlu konfirmasi.</div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="../auth.js"></script>
+<script>
+    (function() {
+        // Cek apakah user login sebagai pemilik
+        const user = getCurrentUser();
+        if (!user || user.role !== 'pemilik') {
+            alert('Akses ditolak. Halaman ini hanya untuk pemilik.');
+            window.location.href = '../index.html';
+            return;
+        }
+
+        const form = document.getElementById('postForm');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newJob = {
+                id: Date.now(),
+                title: document.getElementById('title').value.trim(),
+                company: document.getElementById('company').value.trim(),
+                location: document.getElementById('location').value.trim(),
+                type: document.getElementById('type').value,
+                category: document.getElementById('category').value,
+                salary: document.getElementById('salary').value.trim() || 'Nego',
+                desc: document.getElementById('desc').value.trim(),
+                email: document.getElementById('emailKontak').value.trim(),
+                wa: document.getElementById('telepon').value.trim(),
+                ig: document.getElementById('instagram').value.trim(),
+                uploadedAt: Date.now(),
+                userId: user.id,
+                userName: user.nama
+            };
+            let loker = JSON.parse(localStorage.getItem('lokerData') || '[]');
+            loker.unshift(newJob);
+            localStorage.setItem('lokerData', JSON.stringify(loker));
+            addLog(user.id, user.nama, 'CREATE_JOB', `Menambah lowongan: ${newJob.title}`);
+            alert('Iklan berhasil diterbitkan!');
+            form.reset();
+        });
+
+        // Tombol close: kembali ke dashboard utama pemilik
+        const closeBtn = document.getElementById('closeBtn');
+        closeBtn.addEventListener('click', function() {
+            window.location.href = 'utama.html';
+        });
+    })();
+</script>
+</body>
+</html>
