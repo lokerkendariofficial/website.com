@@ -11,6 +11,35 @@ let pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
 let users = getUsers();
 let lamaran = JSON.parse(localStorage.getItem('lamaranSaya') || '[]');
 
+// Toggle sidebar
+const sidebar = document.getElementById('sidebar');
+const toggleBtn = document.getElementById('sidebarToggleBtn');
+if (toggleBtn && sidebar) {
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        const main = document.getElementById('mainContent');
+        if (main) {
+            if (sidebar.classList.contains('collapsed')) {
+                main.classList.add('content-expanded');
+            } else {
+                main.classList.remove('content-expanded');
+            }
+        }
+    });
+}
+
+// Refresh button: reload all data
+document.getElementById('refreshBtn')?.addEventListener('click', () => {
+    lowongan = JSON.parse(localStorage.getItem('lokerData') || '[]');
+    pending = JSON.parse(localStorage.getItem('pendingIklan') || '[]');
+    users = getUsers();
+    lamaran = JSON.parse(localStorage.getItem('lamaranSaya') || '[]');
+    renderPending();
+    renderLowongan();
+    renderUsers();
+    updateStats();
+});
+
 function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' })[m]);
