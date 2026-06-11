@@ -2,54 +2,50 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Dashboard Pemilik - Loker Kendari Official</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="flex flex-col h-screen overflow-hidden bg-slate-900 text-gray-200">
+<body class="bg-slate-900 text-gray-200">
 
-    <header class="bg-slate-800 border-b border-slate-700 px-4 py-2 flex items-center justify-between text-sm">
-        <div class="flex items-center space-x-4">
+    <!-- Header dengan tombol hamburger -->
+    <header class="bg-slate-800 border-b border-slate-700 px-4 py-2 flex items-center justify-between sticky top-0 z-20">
+        <div class="flex items-center space-x-3">
+            <button id="sidebarToggleBtn" class="text-white text-xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-briefcase text-blue-400 text-xl"></i>
                 <span class="font-bold text-white text-lg">Loker Kendari</span>
                 <span class="text-xs text-blue-400 bg-blue-900/30 px-2 py-0.5 rounded">Official</span>
             </div>
-            <nav class="hidden md:flex space-x-4 text-gray-300">
-                <a href="#" class="text-blue-400 border-b-2 border-blue-400 pb-1">Dashboard</a>
-                <a href="#" class="hover:text-white">Lowongan</a>
-                <a href="#" class="hover:text-white">Iklan Pending</a>
-                <a href="#" class="hover:text-white">User</a>
-                <a href="#" class="hover:text-white">Laporan</a>
-            </nav>
         </div>
         <div class="flex items-center space-x-4">
-            <div class="relative">
+            <div class="relative hidden md:block">
                 <input type="text" placeholder="Cepat..." class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs w-40 text-white focus:outline-none focus:border-blue-500">
                 <i class="fa-solid fa-magnifying-glass absolute right-2 top-2 text-gray-400 text-xs"></i>
             </div>
             <div class="flex items-center space-x-2 cursor-pointer hover:text-blue-300">
                 <i class="fa-regular fa-bell"></i>
-                <span class="text-xs">Notifikasi</span>
+                <span class="text-xs hidden sm:inline">Notifikasi</span>
             </div>
             <div class="flex items-center space-x-2 cursor-pointer hover:text-blue-300">
                 <i class="fa-regular fa-user"></i>
                 <span class="text-xs" id="userName">Pemilik</span>
-                <i class="fa-solid fa-chevron-down text-[10px]"></i>
             </div>
             <button id="logoutBtn" class="bg-red-600/80 hover:bg-red-700 text-white text-xs px-3 py-1 rounded transition">Logout</button>
         </div>
     </header>
 
-    <div class="bg-slate-800/50 border-b border-slate-700 px-4 py-2 flex flex-wrap items-center justify-between text-xs">
+    <!-- Sub-header action bar -->
+    <div class="bg-slate-800/50 border-b border-slate-700 px-4 py-2 flex flex-wrap items-center justify-between text-xs sticky top-12 z-10">
         <div class="flex items-center space-x-2">
             <span class="font-semibold text-gray-300 uppercase tracking-wider">Dashboard Pemilik</span>
             <button class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded flex items-center space-x-1">
                 <i class="fa-solid fa-plus text-[10px]"></i> <span>Buat Iklan</span>
             </button>
-            <button class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded border border-slate-600">Kelola Data</button>
             <select class="bg-slate-700 text-gray-300 px-2 py-1 rounded border border-slate-600 focus:outline-none">
                 <option>Semua Lokasi</option>
                 <option>Kendari</option>
@@ -57,13 +53,14 @@
             </select>
         </div>
         <div class="flex items-center space-x-2 mt-1 sm:mt-0">
-            <button class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-rotate"></i> Refresh</button>
+            <button id="refreshBtn" class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-rotate"></i> Refresh</button>
             <button class="bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded"><i class="fa-solid fa-print"></i> Print</button>
         </div>
     </div>
 
-    <div class="flex flex-1 overflow-hidden">
-        <aside class="w-56 bg-slate-800 border-r border-slate-700 flex flex-col text-sm overflow-y-auto">
+    <div class="flex flex-1 overflow-hidden relative">
+        <!-- Sidebar (Navigation Drawer) -->
+        <aside id="sidebar" class="sidebar w-64 bg-slate-800 border-r border-slate-700 flex flex-col text-sm overflow-y-auto transition-all duration-300 ease-in-out">
             <div class="p-3">
                 <input type="text" placeholder="Cari menu..." class="w-full bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-blue-500">
             </div>
@@ -98,7 +95,8 @@
             </nav>
         </aside>
 
-        <main class="flex-1 p-4 overflow-y-auto">
+        <!-- Main content area -->
+        <main id="mainContent" class="flex-1 p-4 overflow-y-auto transition-all duration-300">
             <!-- Stats Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div class="stat-card bg-slate-800/80 border border-slate-700 rounded-lg p-4 flex items-center justify-between">
@@ -125,7 +123,14 @@
                     <h3 class="font-semibold text-white"><i class="fa-regular fa-clock mr-2 text-yellow-400"></i> Iklan Menunggu Konfirmasi</h3>
                     <span class="text-xs text-gray-400" id="pendingCountBadge">0</span>
                 </div>
-                <div class="overflow-x-auto"><table class="w-full text-sm"><thead class="text-gray-400 border-b border-slate-700"><tr><th class="text-left py-2">Judul</th><th class="text-left py-2">Perusahaan</th><th class="text-left py-2">Lokasi</th><th class="text-left py-2">Pengirim</th><th class="text-left py-2">Aksi</th></tr></thead><tbody id="pendingTableBody"><tr><td colspan="5" class="py-4 text-center text-gray-500">Memuat...</td></tr></tbody></table></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-gray-400 border-b border-slate-700">
+                            <tr><th class="text-left py-2">Judul</th><th class="text-left py-2">Perusahaan</th><th class="text-left py-2">Lokasi</th><th class="text-left py-2">Pengirim</th><th class="text-left py-2">Aksi</th></tr>
+                        </thead>
+                        <tbody id="pendingTableBody"><tr><td colspan="5" class="py-4 text-center text-gray-500">Memuat...</td></tr></tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Lowongan Aktif -->
@@ -134,7 +139,14 @@
                     <h3 class="font-semibold text-white"><i class="fa-solid fa-briefcase mr-2 text-blue-400"></i> Daftar Lowongan Aktif</h3>
                     <span class="text-xs text-gray-400" id="lowonganCountBadge">0</span>
                 </div>
-                <div class="overflow-x-auto"><table class="w-full text-sm"><thead class="text-gray-400 border-b border-slate-700"><tr><th class="text-left py-2">Judul</th><th class="text-left py-2">Perusahaan</th><th class="text-left py-2">Lokasi</th><th class="text-left py-2">Aksi</th></tr></thead><tbody id="lowonganTableBody"><tr><td colspan="4" class="py-4 text-center text-gray-500">Memuat...</td></tr></tbody></table></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-gray-400 border-b border-slate-700">
+                            <tr><th class="text-left py-2">Judul</th><th class="text-left py-2">Perusahaan</th><th class="text-left py-2">Lokasi</th><th class="text-left py-2">Aksi</th></tr>
+                        </thead>
+                        <tbody id="lowonganTableBody"><tr><td colspan="4" class="py-4 text-center text-gray-500">Memuat...</td></tr></tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- User Table -->
@@ -143,7 +155,14 @@
                     <h3 class="font-semibold text-white"><i class="fa-solid fa-users mr-2 text-green-400"></i> Daftar User</h3>
                     <span class="text-xs text-gray-400" id="userCountBadge">0</span>
                 </div>
-                <div class="overflow-x-auto"><table class="w-full text-sm"><thead class="text-gray-400 border-b border-slate-700"><tr><th class="text-left py-2">ID</th><th class="text-left py-2">Nama</th><th class="text-left py-2">Username</th><th class="text-left py-2">Role</th><th class="text-left py-2">Aksi</th></tr></thead><tbody id="userTableBody"><tr><td colspan="5" class="py-4 text-center text-gray-500">Memuat...</td></tr></tbody></table></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-gray-400 border-b border-slate-700">
+                            <tr><th class="text-left py-2">ID</th><th class="text-left py-2">Nama</th><th class="text-left py-2">Username</th><th class="text-left py-2">Role</th><th class="text-left py-2">Aksi</th></tr>
+                        </thead>
+                        <tbody id="userTableBody"><tr><td colspan="5" class="py-4 text-center text-gray-500">Memuat...</td></tr></tbody>
+                    </table>
+                </div>
             </div>
         </main>
     </div>
