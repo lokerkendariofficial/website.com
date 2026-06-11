@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Pasang Iklan Lowongan - Loker Kendari</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="pasang.css">
+</head>
+<body>
+<div class="post-container">
+    <div class="post-card">
+        <div class="post-header">
+            <h2><i class="fas fa-paper-plane"></i> Pasang Iklan Lowongan</h2>
+            <p>Isi form di bawah dengan lengkap. Iklan akan tampil setelah diverifikasi admin.</p>
+        </div>
+        <div class="post-body">
+            <form id="postForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-briefcase"></i> Judul Lowongan</label>
+                        <input type="text" id="title" placeholder="Contoh: Frontend Developer" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-building"></i> Nama Perusahaan</label>
+                        <input type="text" id="company" placeholder="PT Teknologi Nusantara" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Lokasi</label>
+                        <input type="text" id="location" placeholder="Kendari, Sulawesi Tenggara" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-clock"></i> Tipe Pekerjaan</label>
+                        <select id="type">
+                            <option value="Fulltime">Fulltime</option>
+                            <option value="Parttime">Parttime</option>
+                            <option value="Kontrak">Kontrak</option>
+                            <option value="Remote">Remote / WFH</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-tags"></i> Kategori</label>
+                        <select id="category">
+                            <option value="it">IT & Teknologi</option>
+                            <option value="marketing">Pemasaran</option>
+                            <option value="admin">Administrasi</option>
+                            <option value="education">Pendidikan</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill-wave"></i> Estimasi Gaji</label>
+                        <input type="text" id="salary" placeholder="4jt - 7jt atau Nego">
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label><i class="fas fa-align-left"></i> Deskripsi Pekerjaan & Kualifikasi</label>
+                    <textarea id="desc" rows="5" placeholder="Tuliskan tanggung jawab, kualifikasi, keahlian, dll..." required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email Kontak</label>
+                        <input type="email" id="emailKontak" placeholder="hrd@perusahaan.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone-alt"></i> Telepon (opsional)</label>
+                        <input type="tel" id="telepon" placeholder="0812xxxx">
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label><i class="fas fa-instagram"></i> Instagram (opsional)</label>
+                    <input type="text" id="instagram" placeholder="@perusahaan">
+                </div>
+                <button type="submit"><i class="fas fa-paper-plane"></i> Kirim Iklan</button>
+                <div class="subnote">* Iklan akan ditinjau terlebih dahulu sebelum ditampilkan di publik.</div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="auth.js"></script>
+<script src="pasang.js"></script>
+</body>
+</html>
