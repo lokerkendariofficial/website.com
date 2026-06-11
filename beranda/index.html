@@ -39,11 +39,18 @@
   </div>
 </div>
 
-<!-- Floating Action Button (FAB) untuk pasang iklan -->
-<a href="../login.html" class="fab" id="fabBtn">
-  <i class="fas fa-plus"></i>
-</a>
+<!-- Tempat menyisipkan FAB -->
+<div id="fabContainer"></div>
 
 <script src="script.js"></script>
+<script>
+  // Muat tombol FAB dari file terpisah
+  fetch('fab.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('fabContainer').innerHTML = html;
+    })
+    .catch(err => console.error('Gagal memuat FAB:', err));
+</script>
 </body>
 </html>
