@@ -35,4 +35,16 @@
         alert('Iklan terkirim! Menunggu konfirmasi admin.');
         form.reset();
     });
+
+    // Tombol close: kembali ke halaman sebelumnya atau beranda
+    const closeBtn = document.getElementById('closeBtn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            if (document.referrer && document.referrer !== '') {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+    }
 })();
