@@ -1,3 +1,4 @@
+// script.js untuk form di a/fb/
 const form = document.getElementById('lokerForm');
 const statusMessage = document.getElementById('statusMessage');
 const btnKirim = document.getElementById('btnKirim');
@@ -8,7 +9,7 @@ const jenisKebutuhanManual = document.getElementById('jenis_kebutuhan_manual');
 const gajiSelect = document.getElementById('gaji_select');
 const gajiDetail = document.getElementById('gaji_detail');
 
-// Event untuk pilihan jenis kerja
+// Event listener untuk pilihan jenis kerja
 jenisKebutuhanSelect.addEventListener('change', function() {
     if (this.value === 'manual') {
         jenisKebutuhanManual.style.display = 'block';
@@ -20,17 +21,17 @@ jenisKebutuhanSelect.addEventListener('change', function() {
     }
 });
 
-// Event untuk pilihan gaji
+// Event listener untuk pilihan gaji
 gajiSelect.addEventListener('change', function() {
     if (this.value !== '' && this.value !== 'Gaji Tidak Di Sebutkan') {
         gajiDetail.style.display = 'block';
         gajiDetail.required = true;
         if (this.value === 'Gaji persen') {
-            gajiDetail.placeholder = 'Contoh: 10% dari penjualan';
+            gajiDetail.placeholder = "Contoh: 10% dari penjualan";
         } else if (this.value === 'Gaji isi manual') {
-            gajiDetail.placeholder = 'Ketik keterangan gaji di sini...';
+            gajiDetail.placeholder = "Ketik keterangan gaji di sini...";
         } else {
-            gajiDetail.placeholder = 'Contoh: 3.500.000';
+            gajiDetail.placeholder = "Contoh: 3.500.000";
         }
     } else {
         gajiDetail.style.display = 'none';
@@ -39,27 +40,43 @@ gajiSelect.addEventListener('change', function() {
     }
 });
 
+// Fungsi menyimpan data lowongan ke localStorage
+function saveToLocalStorage(formDataObj) {
+    let lowonganList = localStorage.getItem('lowonganList');
+    if (lowonganList) {
+        lowonganList = JSON.parse(lowonganList);
+    } else {
+        lowonganList = [];
+    }
+    lowonganList.unshift(formDataObj); // tambah di awal
+    localStorage.setItem('lowonganList', JSON.stringify(lowonganList));
+}
+
 // Submit form
 form.addEventListener('submit', function(e) {
     e.preventDefault();
     
     btnKirim.disabled = true;
-    btnKirim.innerText = 'Sedang Mengirim...';
+    btnKirim.innerText = "Sedang Mengirim...";
 
     const formData = new FormData(form);
+    let formDataObj = {};
+    for (let [key, value] of formData.entries()) {
+        formDataObj[key] = value;
+    }
     
     // Proses jenis kerja manual
     if (jenisKebutuhanSelect.value === 'manual') {
-        formData.set('Jenis Kebutuhan', '(Manual) ' + jenisKebutuhanManual.value);
+        formDataObj['Jenis Kebutuhan'] = '(Manual) ' + jenisKebutuhanManual.value;
     }
-    
     // Proses detail gaji
     if (gajiSelect.value !== 'Gaji Tidak Di Sebutkan') {
-        formData.set('Estimasi Gaji', gajiSelect.value + ': ' + gajiDetail.value);
+        formDataObj['Estimasi Gaji'] = gajiSelect.value + ': ' + gajiDetail.value;
     } else {
-        formData.set('Estimasi Gaji', 'Gaji Tidak Di Sebutkan');
+        formDataObj['Estimasi Gaji'] = 'Gaji Tidak Di Sebutkan';
     }
     
+    // Kirim ke Web3Forms
     fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         body: formData
@@ -67,34 +84,35 @@ form.addEventListener('submit', function(e) {
     .then(async (response) => {
         let json = await response.json();
         if (response.status == 200) {
-            statusMessage.className = 'status-box success';
-            statusMessage.innerHTML = '✅ Sukses! Informasi lowongan kerja telah berhasil dikirim ke Admin.';
-            successButtons.style.display = 'flex';
-            // Reset form
+            // Setelah berhasil kirim ke email, simpan ke localStorage
+            saveToLocalStorage(formDataObj);
+            
+            statusMessage.className = "status-box success";
+            statusMessage.innerHTML = "✅ Sukses! Info lowongan telah dikirim dan disimpan.";
+            successButtons.style.display = "flex";
             form.reset();
             jenisKebutuhanManual.style.display = 'none';
             gajiDetail.style.display = 'none';
             jenisKebutuhanSelect.value = '';
             gajiSelect.value = '';
         } else {
-            statusMessage.className = 'status-box error';
-            statusMessage.innerHTML = '❌ Gagal: ' + json.message;
+            statusMessage.className = "status-box error";
+            statusMessage.innerHTML = "❌ Gagal: " + json.message;
         }
     })
     .catch(error => {
-        console.error(error);
-        statusMessage.className = 'status-box error';
-        statusMessage.innerHTML = '❌ Terjadi kesalahan jaringan. Silakan periksa koneksi internet Anda.';
+        console.log(error);
+        statusMessage.className = "status-box error";
+        statusMessage.innerHTML = "❌ Terjadi kesalahan jaringan. Silakan periksa koneksi internet Anda.";
     })
     .finally(() => {
         btnKirim.disabled = false;
-        btnKirim.innerText = 'Kirim Info Loker';
+        btnKirim.innerText = "Kirim Info Loker";
     });
 });
 
-// Optional: atur link tombol "Lihat Lebih Banyak Lowongan"
+// Arahkan tombol lihat lowongan ke data center
 document.getElementById('btnMoreLowongan').addEventListener('click', function(e) {
     e.preventDefault();
-    // Ganti dengan URL halaman lowongan Anda
-    window.location.href = 'https://lokerkendariofficial.github.io/lokerkendariofficial.com/lowongan.html';
+    window.location.href = '../data-center/';
 });
