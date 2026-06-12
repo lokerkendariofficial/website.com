@@ -1,1 +1,265 @@
-o
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Lowongan Kerja - Loker Kendari</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e66;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            background: #2c3e66;
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .card-header h3 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .card-header .company {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .info-row {
+            margin-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: #2c3e66;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .info-value ul {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            color: #495057;
+            margin-right: 8px;
+            margin-top: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 16px;
+            color: #888;
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 30px;
+            background: #2c3e66;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #1e2b48;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📋 Data Lowongan Kerja</h1>
+    <p class="subtitle">Berikut daftar lowongan yang telah terkirim (contoh statis)</p>
+
+    <div class="card-grid" id="cardGrid">
+        <!-- Kartu akan dimuat di sini -->
+    </div>
+
+    <div style="text-align: center;">
+        <a href="https://lokerkendariofficial.github.io/lokerkendariofficial.com/a/fb/" class="btn-back">+ Pasang Lowongan Baru</a>
+    </div>
+    <footer>
+        Loker Kendari Official - Informasi lowongan kerja terpercaya
+    </footer>
+</div>
+
+<script>
+    // Contoh data lowongan (statis). Anda bisa mengganti dengan data dari form jika menggunakan backend.
+    // Untuk sementara, ini adalah contoh kartu berisi teks.
+    // Jika ingin data dinamis dari localStorage atau API, bisa ditambahkan nanti.
+    
+    const lowonganData = [
+        {
+            perusahaan: "PT Sumber Alfaria Trijaya",
+            posisi: "Staff Administrasi Toko",
+            jenis: "Full-Time (Penuh Waktu)",
+            gaji: "Gaji bulanan: 3.500.000",
+            kualifikasi: "- Pria/Wanita, maks. 25 tahun\n- Min. SMA/SMK\n- Bisa komputer",
+            alamat: "Jl. Ahmad Yani No. 45, Kendari"
+        },
+        {
+            perusahaan: "CV. Teknindo Morowali",
+            posisi: "Teknisi Lapangan",
+            jenis: "Kontrak / Freelance",
+            gaji: "Gaji harian: 150.000",
+            kualifikasi: "- Lulusan SMK teknik\n- Bersedia ditempatkan di Morowali\n- Memiliki SIM C",
+            alamat: "Kawasan Industri Morowali, Morowali"
+        },
+        {
+            perusahaan: "PT Sukses Selalu",
+            posisi: "Staff Pemasaran",
+            jenis: "Full-Time (Penuh Waktu)",
+            gaji: "Gaji bulanan: 4.000.000 + komisi",
+            kualifikasi: "- Komunikatif\n- Target oriented\n- Fresh graduate dipersilakan",
+            alamat: "Jl. Halu Oleo No. 88, Kendari"
+        },
+        {
+            perusahaan: "Kantor Desa Maju",
+            posisi: "Administrasi Desa",
+            jenis: "Part-Time (Paruh Waktu)",
+            gaji: "Gaji Tidak Di Sebutkan",
+            kualifikasi: "- Menguasai Microsoft Office\n- Jujur dan teliti",
+            alamat: "Desa Maju, Kec. Kendari"
+        }
+    ];
+
+    function renderCards() {
+        const grid = document.getElementById('cardGrid');
+        if (!grid) return;
+
+        if (lowonganData.length === 0) {
+            grid.innerHTML = '<div class="empty-state">Belum ada lowongan terbaru. Silakan pasang lowongan terlebih dahulu.</div>';
+            return;
+        }
+
+        let cardsHTML = '';
+        for (let job of lowonganData) {
+            // ubah kualifikasi dari teks ke bullet list jika ada newline
+            let kualifikasiHTML = job.kualifikasi.replace(/\n/g, '<br>');
+            if (job.kualifikasi.includes('-')) {
+                kualifikasiHTML = job.kualifikasi.split('\n').map(line => line.trim()).filter(l => l).map(l => `• ${l.replace(/^-\s*/, '')}`).join('<br>');
+            }
+
+            cardsHTML += `
+                <div class="card">
+                    <div class="card-header">
+                        <h3>${escapeHtml(job.posisi)}</h3>
+                        <div class="company">🏢 ${escapeHtml(job.perusahaan)}</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-row">
+                            <div class="info-label">🛠️ Jenis Pekerjaan</div>
+                            <div class="info-value">${escapeHtml(job.jenis)}</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">💰 Estimasi Gaji</div>
+                            <div class="info-value">${escapeHtml(job.gaji)}</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">📑 Kualifikasi</div>
+                            <div class="info-value">${kualifikasiHTML}</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">📍 Alamat</div>
+                            <div class="info-value">${escapeHtml(job.alamat)}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        grid.innerHTML = cardsHTML;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    renderCards();
+</script>
+</body>
+</html>
