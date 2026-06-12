@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Lowongan Kerja - Loker Kendari</title>
+    <title>Data Center - Loker Kendari</title>
     <style>
         * {
             margin: 0;
@@ -12,118 +12,224 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background: #f0f2f5;
+            background: #f5f7fa;
             padding: 30px 20px;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         h1 {
-            text-align: center;
+            font-size: 24px;
             color: #2c3e66;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-        }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-        }
-        .card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: transform 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
-        }
-        .card-header {
-            background: #2c3e66;
-            color: white;
-            padding: 15px 20px;
-        }
-        .card-header h3 {
-            font-size: 1.2em;
             margin-bottom: 5px;
         }
-        .company {
-            font-size: 0.85em;
-            opacity: 0.9;
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
         }
-        .card-body {
-            padding: 20px;
+        /* Daftar lowongan seperti screenshot */
+        .lowongan-list {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .info-row {
-            margin-bottom: 12px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
+        .lowongan-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e9ecef;
+            transition: background 0.2s;
         }
-        .info-label {
-            font-weight: 700;
-            color: #2c3e66;
-            font-size: 0.75em;
-            text-transform: uppercase;
-            margin-bottom: 4px;
+        .lowongan-item:hover {
+            background: #f8f9fc;
         }
-        .info-value {
+        .item-email {
+            flex: 2;
+            min-width: 180px;
+            font-weight: 600;
+            color: #007bff;
+            font-size: 14px;
+            word-break: break-all;
+        }
+        .item-perusahaan {
+            flex: 3;
+            min-width: 200px;
+            font-size: 15px;
+            font-weight: 500;
             color: #333;
-            font-size: 0.9em;
-            line-height: 1.4;
-            white-space: pre-wrap;
+        }
+        .item-lokasi {
+            flex: 2;
+            min-width: 150px;
+            font-size: 13px;
+            color: #6c757d;
+        }
+        .item-tanggal {
+            flex: 1.5;
+            min-width: 100px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .btn-detail {
+            background: none;
+            border: 1px solid #007bff;
+            color: #007bff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-detail:hover {
+            background: #007bff;
+            color: white;
+        }
+        .detail-panel {
+            background: #fef7e0;
+            border-left: 5px solid #ffc107;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+        }
+        .detail-panel h3 {
+            margin-bottom: 12px;
+            color: #856404;
+        }
+        .detail-row {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .detail-label {
+            font-weight: 700;
+            width: 120px;
+            display: inline-block;
+            color: #555;
+        }
+        .detail-value {
+            color: #333;
         }
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
+            padding: 60px;
             background: white;
             border-radius: 16px;
             color: #888;
         }
-        .btn-back, .btn-clear {
+        .btn-back {
             display: inline-block;
-            margin-top: 30px;
+            margin-top: 20px;
             background: #2c3e66;
             color: white;
             padding: 10px 20px;
             border-radius: 30px;
             text-decoration: none;
             font-weight: bold;
-            margin-right: 10px;
-        }
-        .btn-clear {
-            background: #dc3545;
-        }
-        .btn-clear:hover {
-            background: #c82333;
         }
         footer {
             text-align: center;
-            margin-top: 40px;
-            font-size: 0.8em;
+            margin-top: 30px;
+            font-size: 12px;
             color: #888;
+        }
+        @media (max-width: 700px) {
+            .lowongan-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .btn-detail {
+                align-self: flex-start;
+                margin-top: 5px;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>📋 Data Lowongan Kerja</h1>
-    <p class="subtitle">Berikut daftar lowongan yang telah dikirim (tersimpan di browser ini)</p>
-    <div class="card-grid" id="cardGrid"></div>
+    <h1>📋 Data Center Lowongan</h1>
+    <p class="subtitle">Daftar lowongan yang telah dipasang (maksimal 200 terbaru)</p>
+
+    <div id="lowonganContainer" class="lowongan-list"></div>
+    <div id="detailPanel" class="detail-panel"></div>
+
     <div style="text-align: center;">
         <a href="../fb/" class="btn-back">+ Pasang Lowongan Baru</a>
-        <button id="clearDataBtn" class="btn-clear">🗑️ Hapus Semua Data</button>
     </div>
-    <footer>Loker Kendari Official - Data disimpan secara lokal di browser Anda</footer>
+    <footer>Loker Kendari Official - Data tersimpan di browser ini</footer>
 </div>
 
 <script>
+    // Ambil data dari localStorage
+    let lowonganData = [];
+
+    function loadData() {
+        const stored = localStorage.getItem('lowonganList');
+        if (stored) {
+            lowonganData = JSON.parse(stored);
+        } else {
+            lowonganData = [];
+        }
+        renderList();
+    }
+
+    function renderList() {
+        const container = document.getElementById('lowonganContainer');
+        if (!lowonganData.length) {
+            container.innerHTML = '<div class="empty-state">Belum ada lowongan. Silakan pasang lowongan terlebih dahulu.</div>';
+            document.getElementById('detailPanel').style.display = 'none';
+            return;
+        }
+
+        let html = '';
+        lowonganData.forEach((item, index) => {
+            // Ambil email (jika kosong, isi dengan '-')
+            let email = item['Email Perusahaan'] || '-';
+            // Nama perusahaan + posisi (seperti screenshot: "PT Tungsten Crew Morowali")
+            let perusahaanPosisi = `${item['Nama Perusahaan'] || '-'} - ${item['Judul Pekerjaan'] || '-'}`;
+            let lokasi = item['Alamat Perusahaan'] || '-';
+            let tanggal = item['Tanggal Submit'] || '-';
+            
+            html += `
+                <div class="lowongan-item" data-index="${index}">
+                    <div class="item-email">${escapeHtml(email)}</div>
+                    <div class="item-perusahaan">${escapeHtml(perusahaanPosisi)}</div>
+                    <div class="item-lokasi">📍 ${escapeHtml(lokasi)}</div>
+                    <div class="item-tanggal">📅 ${escapeHtml(tanggal.split(' ')[0])}</div>
+                    <button class="btn-detail" onclick="showDetail(${index})">Konfirmasi Detail</button>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    function showDetail(index) {
+        const item = lowonganData[index];
+        if (!item) return;
+
+        const detailPanel = document.getElementById('detailPanel');
+        detailPanel.style.display = 'block';
+        detailPanel.innerHTML = `
+            <h3>🔍 Detail Lowongan</h3>
+            <div class="detail-row"><span class="detail-label">Perusahaan:</span> <span class="detail-value">${escapeHtml(item['Nama Perusahaan'] || '-')}</span></div>
+            <div class="detail-row"><span class="detail-label">Posisi:</span> <span class="detail-value">${escapeHtml(item['Judul Pekerjaan'] || '-')}</span></div>
+            <div class="detail-row"><span class="detail-label">Lokasi:</span> <span class="detail-value">${escapeHtml(item['Alamat Perusahaan'] || '-')}</span></div>
+            <div class="detail-row"><span class="detail-label">Deskripsi/Kualifikasi:</span> <span class="detail-value">${escapeHtml(item['Kualifikasi'] || '-').replace(/\n/g, '<br>')}</span></div>
+            <div class="detail-row"><span class="detail-label">Email:</span> <span class="detail-value">${escapeHtml(item['Email Perusahaan'] || '-')}</span></div>
+            <div class="detail-row"><span class="detail-label">Deadline:</span> <span class="detail-value">- (tidak ada)</span></div>
+            <div class="detail-row"><span class="detail-label">Tanggal Pasang:</span> <span class="detail-value">${escapeHtml(item['Tanggal Submit'] || '-')}</span></div>
+            <div class="detail-row"><span class="detail-label">Jenis Kerja:</span> <span class="detail-value">${escapeHtml(item['Jenis Kebutuhan'] || '-')}</span></div>
+            <div class="detail-row"><span class="detail-label">Estimasi Gaji:</span> <span class="detail-value">${escapeHtml(item['Estimasi Gaji'] || '-')}</span></div>
+        `;
+        // Scroll ke detail panel
+        detailPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -134,74 +240,7 @@
         });
     }
 
-    function formatKualifikasi(text) {
-        if (!text) return '-';
-        // ubah newline menjadi <br> dan bullet jika ada
-        let lines = text.split('\n');
-        let html = '';
-        for (let line of lines) {
-            line = line.trim();
-            if (line.startsWith('-')) {
-                html += '• ' + escapeHtml(line.substring(1).trim()) + '<br>';
-            } else if (line) {
-                html += escapeHtml(line) + '<br>';
-            }
-        }
-        return html || escapeHtml(text);
-    }
-
-    function renderCards() {
-        const grid = document.getElementById('cardGrid');
-        let lowonganList = localStorage.getItem('lowonganList');
-        if (!lowonganList) {
-            grid.innerHTML = '<div class="empty-state">Belum ada lowongan terkirim. Silakan pasang lowongan terlebih dahulu.</div>';
-            return;
-        }
-        lowonganList = JSON.parse(lowonganList);
-        if (lowonganList.length === 0) {
-            grid.innerHTML = '<div class="empty-state">Belum ada lowongan. Klik "Pasang Lowongan Baru" untuk menambah.</div>';
-            return;
-        }
-        let cards = '';
-        for (let job of lowonganList) {
-            cards += `
-                <div class="card">
-                    <div class="card-header">
-                        <h3>${escapeHtml(job['Judul Pekerjaan'] || '-')}</h3>
-                        <div class="company">🏢 ${escapeHtml(job['Nama Perusahaan'] || '-')}</div>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-row">
-                            <div class="info-label">🛠️ Jenis Pekerjaan</div>
-                            <div class="info-value">${escapeHtml(job['Jenis Kebutuhan'] || '-')}</div>
-                        </div>
-                        <div class="info-row">
-                            <div class="info-label">💰 Estimasi Gaji</div>
-                            <div class="info-value">${escapeHtml(job['Estimasi Gaji'] || '-')}</div>
-                        </div>
-                        <div class="info-row">
-                            <div class="info-label">📑 Kualifikasi</div>
-                            <div class="info-value">${formatKualifikasi(job['Kualifikasi'] || '-')}</div>
-                        </div>
-                        <div class="info-row">
-                            <div class="info-label">📍 Alamat</div>
-                            <div class="info-value">${escapeHtml(job['Alamat Perusahaan'] || '-')}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        grid.innerHTML = cards;
-    }
-
-    document.getElementById('clearDataBtn').addEventListener('click', function() {
-        if (confirm('Hapus semua data lowongan yang tersimpan di browser ini?')) {
-            localStorage.removeItem('lowonganList');
-            renderCards();
-        }
-    });
-
-    renderCards();
+    loadData();
 </script>
 </body>
 </html>
