@@ -3,82 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pasang Lowongan Kerja - Loker Kendari</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Pasang Lowongan - Loker Kendari</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f0f2f5; padding: 30px 20px; display: flex; justify-content: center; }
+        .form-container { background: white; max-width: 550px; width: 100%; padding: 30px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e66; margin-bottom: 8px; }
+        .sub-title { text-align: center; color: #666; font-size: 14px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; color: #333; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 10px; font-size: 14px; background: #fafafa; }
+        input:focus, select:focus, textarea:focus { border-color: #007bff; outline: none; background: white; }
+        .hidden-input { display: none; margin-top: 8px; }
+        button { width: 100%; padding: 14px; background: #2c3e66; color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #1e2b48; }
+        .status-box { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; display: none; }
+        .success { display: block; background: #d4edda; color: #155724; }
+        .error { display: block; background: #f8d7da; color: #721c24; }
+        .success-buttons { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .btn-wa, .btn-more { display: block; text-align: center; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; }
+        .btn-wa { background: #25D366; color: white; }
+        .btn-more { background: #6c757d; color: white; }
+    </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2>📢 Pasang Lowongan Kerja</h2>
-        <p class="sub-title">Isi data di bawah ini dengan lengkap untuk menerbitkan info loker.</p>
-        
-        <form id="lokerForm">
-            <!-- GANTI access_key dengan key milik Anda dari web3forms.com -->
-            <input type="hidden" name="access_key" value="63f5b331-5975-4740-b8c3-300e8fca2012">
-            <input type="hidden" name="subject" value="Info Loker Baru Terkirim">
-            <input type="hidden" name="from_name" value="Sistem Portal Loker">
+<div class="form-container">
+    <h2>📢 Pasang Lowongan Kerja</h2>
+    <p class="sub-title">Isi data dengan lengkap (otak pengirim data)</p>
 
-            <div class="form-group">
-                <label>Nama Perusahaan 🏢</label>
-                <input type="text" name="Nama Perusahaan" placeholder="Contoh: PT Sumber Alfaria Trijaya" required>
-            </div>
-
-            <div class="form-group">
-                <label>Judul / Posisi Pekerjaan 💼</label>
-                <input type="text" name="Judul Pekerjaan" placeholder="Contoh: Staff Administrasi Toko" required>
-            </div>
-
-            <div class="form-group">
-                <label>Jenis / Kebutuhan Kerja 🛠️</label>
-                <select id="jenis_kebutuhan" name="Jenis Kebutuhan" required>
-                    <option value="" disabled selected>-- Pilih Jenis Kerja --</option>
-                    <option value="Full-Time (Penuh Waktu)">Full-Time (Penuh Waktu)</option>
-                    <option value="Part-Time (Paruh Waktu)">Part-Time (Paruh Waktu)</option>
-                    <option value="Kontrak / Freelance">Kontrak / Freelance</option>
-                    <option value="Magang (Internship)">Magang (Internship)</option>
-                    <option value="manual">-- (Isi Manual) --</option>
-                </select>
-                <input type="text" id="jenis_kebutuhan_manual" name="Jenis Kebutuhan (Manual)" class="hidden-input" placeholder="Ketik jenis kerja di sini...">
-            </div>
-
-            <div class="form-group">
-                <label>Estimasi Gaji 💰</label>
-                <select id="gaji_select" name="Kategori Gaji" required>
-                    <option value="" disabled selected>-- Pilih Kategori Gaji --</option>
-                    <option value="Gaji Tidak Di Sebutkan">Gaji Tidak Di Sebutkan</option>
-                    <option value="Gaji bulanan">Gaji bulanan</option>
-                    <option value="Gaji mingguan">Gaji mingguan</option>
-                    <option value="Gaji harian">Gaji harian</option>
-                    <option value="Gaji persen">Gaji persen</option>
-                    <option value="Gaji isi manual">Gaji isi manual</option>
-                </select>
-                <input type="text" id="gaji_detail" name="Detail Gaji" class="hidden-input" placeholder="Masukkan jumlah atau keterangan gaji...">
-            </div>
-
-            <div class="form-group">
-                <label>Kualifikasi / Persyaratan 📑</label>
-                <textarea name="Kualifikasi" rows="5" placeholder="Contoh:&#10;- Pria/Wanita, maks. 25 tahun&#10;- Min. SMA/SMK" required></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Alamat / Penempatan 📍</label>
-                <input type="text" name="Alamat Perusahaan" placeholder="Contoh: Jl. Ahmad Yani No. 45, Kendari" required>
-            </div>
-
-            <button type="submit" id="btnKirim">Kirim Info Loker</button>
-        </form>
-        
-        <div id="statusMessage" class="status-box"></div>
-
-        <div id="successButtons" class="success-buttons" style="display: none;">
-            <a href="https://whatsapp.com/channel/0029VajH5Wu3QxRx0NTwWm0V" target="_blank" class="btn-action btn-wa">
-                🟢 Gabung Saluran WhatsApp
-            </a>
-            <a href="#" class="btn-action btn-more" id="btnMoreLowongan">
-                🔍 Lihat Lebih Banyak Lowongan
-            </a>
+    <form id="lokerForm">
+        <div class="form-group">
+            <label>📧 Email Perusahaan</label>
+            <input type="email" name="email" placeholder="contoh: hrd@perusahaan.com" required>
         </div>
+        <div class="form-group">
+            <label>🏢 Nama Perusahaan</label>
+            <input type="text" name="perusahaan" placeholder="PT Maju Jaya" required>
+        </div>
+        <div class="form-group">
+            <label>💼 Posisi / Judul Pekerjaan</label>
+            <input type="text" name="posisi" placeholder="Staff Administrasi" required>
+        </div>
+        <div class="form-group">
+            <label>📍 Lokasi / Penempatan</label>
+            <input type="text" name="lokasi" placeholder="Jl. Sudirman No. 10, Kendari" required>
+        </div>
+        <div class="form-group">
+            <label>🛠️ Jenis Pekerjaan</label>
+            <select id="jenisSelect">
+                <option value="Full-Time">Full-Time</option>
+                <option value="Part-Time">Part-Time</option>
+                <option value="Kontrak">Kontrak</option>
+                <option value="Magang">Magang</option>
+                <option value="manual">-- Isi Manual --</option>
+            </select>
+            <input type="text" id="jenisManual" class="hidden-input" placeholder="Tulis jenis pekerjaan">
+        </div>
+        <div class="form-group">
+            <label>💰 Estimasi Gaji</label>
+            <select id="gajiSelect">
+                <option value="Tidak disebutkan">Tidak disebutkan</option>
+                <option value="Bulanan">Gaji bulanan</option>
+                <option value="Mingguan">Gaji mingguan</option>
+                <option value="Harian">Gaji harian</option>
+                <option value="Prosenti">Persentase</option>
+            </select>
+            <input type="text" id="gajiDetail" class="hidden-input" placeholder="Contoh: 3.500.000">
+        </div>
+        <div class="form-group">
+            <label>📑 Kualifikasi / Deskripsi</label>
+            <textarea name="deskripsi" rows="4" placeholder="- Minimal SMA/SMK&#10;- Pengalaman 1 tahun" required></textarea>
+        </div>
+        <button type="submit">Kirim Lowongan</button>
+    </form>
+    <div id="statusBox" class="status-box"></div>
+    <div id="successButtons" class="success-buttons" style="display: none;">
+        <a href="../data-center/" class="btn-more">🔍 Lihat Data Center (Penampung)</a>
+        <a href="https://whatsapp.com/channel/0029VajH5Wu3QxRx0NTwWm0V" target="_blank" class="btn-wa">🟢 Gabung WA Channel</a>
     </div>
+</div>
 
-    <script src="script.js"></script>
+<script>
+    const form = document.getElementById('lokerForm');
+    const statusBox = document.getElementById('statusBox');
+    const successDiv = document.getElementById('successButtons');
+    const jenisSelect = document.getElementById('jenisSelect');
+    const jenisManual = document.getElementById('jenisManual');
+    const gajiSelect = document.getElementById('gajiSelect');
+    const gajiDetail = document.getElementById('gajiDetail');
+
+    jenisSelect.addEventListener('change', () => {
+        if (jenisSelect.value === 'manual') {
+            jenisManual.style.display = 'block';
+            jenisManual.required = true;
+        } else {
+            jenisManual.style.display = 'none';
+            jenisManual.required = false;
+        }
+    });
+    gajiSelect.addEventListener('change', () => {
+        if (gajiSelect.value !== 'Tidak disebutkan') {
+            gajiDetail.style.display = 'block';
+            gajiDetail.required = true;
+        } else {
+            gajiDetail.style.display = 'none';
+            gajiDetail.required = false;
+        }
+    });
+
+    function saveToLocalStorage(data) {
+        let list = localStorage.getItem('lowonganList');
+        list = list ? JSON.parse(list) : [];
+        list.unshift(data);
+        if (list.length > 200) list = list.slice(0, 200);
+        localStorage.setItem('lowonganList', JSON.stringify(list));
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let jenis = jenisSelect.value;
+        if (jenis === 'manual') jenis = jenisManual.value.trim();
+        let gaji = gajiSelect.value;
+        if (gaji !== 'Tidak disebutkan') gaji = gaji + ': ' + gajiDetail.value.trim();
+
+        const lowongan = {
+            email: form.email.value.trim(),
+            perusahaan: form.perusahaan.value.trim(),
+            posisi: form.posisi.value.trim(),
+            lokasi: form.lokasi.value.trim(),
+            jenis: jenis,
+            gaji: gaji,
+            deskripsi: form.deskripsi.value.trim(),
+            tanggal: new Date().toLocaleString('id-ID')
+        };
+        // Validasi sederhana
+        if (!lowongan.email || !lowongan.perusahaan || !lowongan.posisi) {
+            statusBox.className = 'status-box error';
+            statusBox.innerText = '❌ Email, Perusahaan, dan Posisi wajib diisi';
+            return;
+        }
+        saveToLocalStorage(lowongan);
+        statusBox.className = 'status-box success';
+        statusBox.innerText = '✅ Lowongan tersimpan (maks 200 data)';
+        successDiv.style.display = 'flex';
+        form.reset();
+        jenisManual.style.display = 'none';
+        gajiDetail.style.display = 'none';
+        jenisSelect.value = 'Full-Time';
+        gajiSelect.value = 'Tidak disebutkan';
+    });
+</script>
 </body>
 </html>
