@@ -1,12 +1,12 @@
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 body {
-    background-color: #f0f2f5;
+    background: #f0f2f5;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,152 +14,94 @@ body {
     padding: 20px;
 }
 
-.form-container {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+.container {
+    background: white;
+    max-width: 550px;
     width: 100%;
-    max-width: 500px;
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-    color: #1a1a1a;
-    margin-bottom: 8px;
+    color: #2c3e66;
     text-align: center;
-    font-size: 24px;
+    margin-bottom: 8px;
 }
 
-.sub-title {
+.sub {
     color: #666;
-    font-size: 14px;
     text-align: center;
+    font-size: 14px;
     margin-bottom: 25px;
-    line-height: 1.4;
 }
 
 .form-group {
     margin-bottom: 18px;
 }
 
-.form-group label {
+label {
     display: block;
-    font-size: 14px;
     font-weight: 600;
-    color: #333;
     margin-bottom: 6px;
+    font-size: 14px;
 }
 
-.form-group input, 
-.form-group select,
-.form-group textarea {
+input,
+select,
+textarea {
     width: 100%;
     padding: 12px;
-    border: 1px solid #cccccc;
-    border-radius: 8px;
-    background-color: #fafafa;
-    font-size: 15px;
-    color: #333;
-    transition: all 0.3s ease;
-}
-
-.form-group input:focus, 
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: #007bff;
-    outline: none;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-}
-
-textarea {
-    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 14px;
+    background: #fafafa;
 }
 
 .hidden-input {
     display: none;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 button {
     width: 100%;
     padding: 14px;
-    background-color: #007bff;
+    background: #2c3e66;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 40px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.2s ease;
     margin-top: 10px;
 }
 
-button:hover {
-    background-color: #0056b3;
-}
-
-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-.status-box {
+.alert {
     margin-top: 15px;
     padding: 12px;
-    border-radius: 8px;
-    font-size: 14px;
+    border-radius: 12px;
     text-align: center;
     display: none;
-    line-height: 1.4;
 }
 
-.status-box.success {
+.success {
     display: block;
-    background-color: #d4edda;
+    background: #d4edda;
     color: #155724;
-    border: 1px solid #c3e6cb;
 }
 
-.status-box.error {
-    display: block;
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-
-.success-buttons {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.btn-action {
-    display: block;
-    text-align: center;
-    padding: 12px;
-    text-decoration: none;
-    font-weight: bold;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: background 0.2s ease;
-}
-
-.btn-wa {
-    background-color: #25D366;
-    color: white;
-}
-
-.btn-wa:hover {
-    background-color: #20ba56;
-}
-
-.btn-more {
-    background-color: #6c757d;
-    color: white;
-}
-
-.btn-more:hover {
-    background-color: #5a6268;
+/* Responsif untuk ponsel */
+@media (max-width: 480px) {
+    .container {
+        padding: 20px;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+    input,
+    select,
+    textarea,
+    button {
+        font-size: 16px; /* mencegah zoom otomatis di iOS */
+    }
 }
