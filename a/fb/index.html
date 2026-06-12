@@ -2,51 +2,45 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pasang Lowongan - Loker Kendari</title>
+    <title>Pasang Lowongan - Organ 🧩</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: #f0f2f5; padding: 30px 20px; display: flex; justify-content: center; }
-        .form-container { background: white; max-width: 550px; width: 100%; padding: 30px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e66; margin-bottom: 8px; }
-        .sub-title { text-align: center; color: #666; font-size: 14px; margin-bottom: 25px; }
+        body { background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background: white; max-width: 550px; width: 100%; padding: 30px; border-radius: 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e66; text-align: center; margin-bottom: 8px; }
+        .sub { color: #666; text-align: center; font-size: 14px; margin-bottom: 25px; }
         .form-group { margin-bottom: 18px; }
-        label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; color: #333; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 10px; font-size: 14px; background: #fafafa; }
+        label { display: block; font-weight: 600; margin-bottom: 6px; color: #333; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 12px; font-size: 14px; background: #fafafa; }
         input:focus, select:focus, textarea:focus { border-color: #007bff; outline: none; background: white; }
         .hidden-input { display: none; margin-top: 8px; }
-        button { width: 100%; padding: 14px; background: #2c3e66; color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button { width: 100%; padding: 14px; background: #2c3e66; color: white; border: none; border-radius: 40px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         button:hover { background: #1e2b48; }
-        .status-box { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: center; display: none; }
+        .alert { margin-top: 15px; padding: 12px; border-radius: 12px; text-align: center; display: none; }
         .success { display: block; background: #d4edda; color: #155724; }
-        .error { display: block; background: #f8d7da; color: #721c24; }
-        .success-buttons { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .btn-wa, .btn-more { display: block; text-align: center; padding: 12px; border-radius: 30px; text-decoration: none; font-weight: bold; }
-        .btn-wa { background: #25D366; color: white; }
-        .btn-more { background: #6c757d; color: white; }
+        .link-btn { display: inline-block; text-align: center; margin-top: 20px; color: #007bff; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
-<div class="form-container">
-    <h2>📢 Pasang Lowongan Kerja</h2>
-    <p class="sub-title">Isi data dengan lengkap (otak pengirim data)</p>
-
+<div class="container">
+    <h2>📢 Pasang Lowongan Baru</h2>
+    <p class="sub">Organ Pengirim Sinyal (BroadcastChannel)</p>
     <form id="lokerForm">
         <div class="form-group">
             <label>📧 Email Perusahaan</label>
-            <input type="email" name="email" placeholder="contoh: hrd@perusahaan.com" required>
+            <input type="email" name="email" required>
         </div>
         <div class="form-group">
             <label>🏢 Nama Perusahaan</label>
-            <input type="text" name="perusahaan" placeholder="PT Maju Jaya" required>
+            <input type="text" name="perusahaan" required>
         </div>
         <div class="form-group">
-            <label>💼 Posisi / Judul Pekerjaan</label>
-            <input type="text" name="posisi" placeholder="Staff Administrasi" required>
+            <label>💼 Posisi</label>
+            <input type="text" name="posisi" required>
         </div>
         <div class="form-group">
-            <label>📍 Lokasi / Penempatan</label>
-            <input type="text" name="lokasi" placeholder="Jl. Sudirman No. 10, Kendari" required>
+            <label>📍 Lokasi</label>
+            <input type="text" name="lokasi" required>
         </div>
         <div class="form-group">
             <label>🛠️ Jenis Pekerjaan</label>
@@ -57,36 +51,34 @@
                 <option value="Magang">Magang</option>
                 <option value="manual">-- Isi Manual --</option>
             </select>
-            <input type="text" id="jenisManual" class="hidden-input" placeholder="Tulis jenis pekerjaan">
+            <input type="text" id="jenisManual" class="hidden-input" placeholder="Tulis jenis">
         </div>
         <div class="form-group">
             <label>💰 Estimasi Gaji</label>
             <select id="gajiSelect">
                 <option value="Tidak disebutkan">Tidak disebutkan</option>
-                <option value="Bulanan">Gaji bulanan</option>
-                <option value="Mingguan">Gaji mingguan</option>
-                <option value="Harian">Gaji harian</option>
-                <option value="Prosenti">Persentase</option>
+                <option value="Bulanan">Bulanan</option>
+                <option value="Mingguan">Mingguan</option>
+                <option value="Harian">Harian</option>
+                <option value="Persen">Persentase</option>
             </select>
-            <input type="text" id="gajiDetail" class="hidden-input" placeholder="Contoh: 3.500.000">
+            <input type="text" id="gajiDetail" class="hidden-input" placeholder="Nominal / keterangan">
         </div>
         <div class="form-group">
             <label>📑 Kualifikasi / Deskripsi</label>
-            <textarea name="deskripsi" rows="4" placeholder="- Minimal SMA/SMK&#10;- Pengalaman 1 tahun" required></textarea>
+            <textarea name="deskripsi" rows="4" required></textarea>
         </div>
-        <button type="submit">Kirim Lowongan</button>
+        <button type="submit">Kirim Lowongan (SINYAL) 📡</button>
     </form>
-    <div id="statusBox" class="status-box"></div>
-    <div id="successButtons" class="success-buttons" style="display: none;">
-        <a href="../data-center/" class="btn-more">🔍 Lihat Data Center (Penampung)</a>
-        <a href="https://whatsapp.com/channel/0029VajH5Wu3QxRx0NTwWm0V" target="_blank" class="btn-wa">🟢 Gabung WA Channel</a>
+    <div id="alertBox" class="alert"></div>
+    <div style="text-align: center;">
+        <a href="../data-center/" class="link-btn" target="_blank">🔍 Buka Otak (Data Center)</a>
     </div>
 </div>
 
 <script>
     const form = document.getElementById('lokerForm');
-    const statusBox = document.getElementById('statusBox');
-    const successDiv = document.getElementById('successButtons');
+    const alertBox = document.getElementById('alertBox');
     const jenisSelect = document.getElementById('jenisSelect');
     const jenisManual = document.getElementById('jenisManual');
     const gajiSelect = document.getElementById('gajiSelect');
@@ -111,22 +103,19 @@
         }
     });
 
-    function saveToLocalStorage(data) {
-        let list = localStorage.getItem('lowonganList');
-        list = list ? JSON.parse(list) : [];
-        list.unshift(data);
-        if (list.length > 200) list = list.slice(0, 200);
-        localStorage.setItem('lowonganList', JSON.stringify(list));
-    }
+    // BroadcastChannel untuk mengirim sinyal ke otak (data center)
+    const channel = new BroadcastChannel('saluran_lowongan');
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
+
         let jenis = jenisSelect.value;
         if (jenis === 'manual') jenis = jenisManual.value.trim();
         let gaji = gajiSelect.value;
         if (gaji !== 'Tidak disebutkan') gaji = gaji + ': ' + gajiDetail.value.trim();
 
-        const lowongan = {
+        const lowonganBaru = {
+            id: Date.now(),
             email: form.email.value.trim(),
             perusahaan: form.perusahaan.value.trim(),
             posisi: form.posisi.value.trim(),
@@ -136,21 +125,24 @@
             deskripsi: form.deskripsi.value.trim(),
             tanggal: new Date().toLocaleString('id-ID')
         };
-        // Validasi sederhana
-        if (!lowongan.email || !lowongan.perusahaan || !lowongan.posisi) {
-            statusBox.className = 'status-box error';
-            statusBox.innerText = '❌ Email, Perusahaan, dan Posisi wajib diisi';
-            return;
-        }
-        saveToLocalStorage(lowongan);
-        statusBox.className = 'status-box success';
-        statusBox.innerText = '✅ Lowongan tersimpan (maks 200 data)';
-        successDiv.style.display = 'flex';
+
+        // Kirim sinyal ke otak (BroadcastChannel)
+        channel.postMessage({
+            aksi: 'TAMBAH_LOWONGAN',
+            data: lowonganBaru
+        });
+
+        // Tampilkan pesan sukses
+        alertBox.className = 'alert success';
+        alertBox.innerText = '✅ Lowongan terkirim ke otak (data center)';
         form.reset();
         jenisManual.style.display = 'none';
         gajiDetail.style.display = 'none';
         jenisSelect.value = 'Full-Time';
         gajiSelect.value = 'Tidak disebutkan';
+
+        // Hilangkan pesan setelah 3 detik
+        setTimeout(() => { alertBox.style.display = 'none'; alertBox.className = 'alert'; }, 3000);
     });
 </script>
 </body>
