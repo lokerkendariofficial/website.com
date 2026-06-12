@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Pasang Lowongan - Organ 🧩</title>
+    <title>FB - Pasang Lowongan</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
@@ -10,21 +10,18 @@
         h2 { color: #2c3e66; text-align: center; margin-bottom: 8px; }
         .sub { color: #666; text-align: center; font-size: 14px; margin-bottom: 25px; }
         .form-group { margin-bottom: 18px; }
-        label { display: block; font-weight: 600; margin-bottom: 6px; color: #333; font-size: 14px; }
+        label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
         input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 12px; font-size: 14px; background: #fafafa; }
-        input:focus, select:focus, textarea:focus { border-color: #007bff; outline: none; background: white; }
         .hidden-input { display: none; margin-top: 8px; }
         button { width: 100%; padding: 14px; background: #2c3e66; color: white; border: none; border-radius: 40px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        button:hover { background: #1e2b48; }
         .alert { margin-top: 15px; padding: 12px; border-radius: 12px; text-align: center; display: none; }
         .success { display: block; background: #d4edda; color: #155724; }
-        .link-btn { display: inline-block; text-align: center; margin-top: 20px; color: #007bff; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h2>📢 Pasang Lowongan Baru</h2>
-    <p class="sub">Organ Pengirim Sinyal (BroadcastChannel)</p>
+    <h2>📢 Pasang Lowongan (Organ)</h2>
+    <p class="sub">Data akan tersimpan & muncul di Data Center</p>
     <form id="lokerForm">
         <div class="form-group">
             <label>📧 Email Perusahaan</label>
@@ -62,17 +59,17 @@
                 <option value="Harian">Harian</option>
                 <option value="Persen">Persentase</option>
             </select>
-            <input type="text" id="gajiDetail" class="hidden-input" placeholder="Nominal / keterangan">
+            <input type="text" id="gajiDetail" class="hidden-input" placeholder="Nominal/keterangan">
         </div>
         <div class="form-group">
             <label>📑 Kualifikasi / Deskripsi</label>
             <textarea name="deskripsi" rows="4" required></textarea>
         </div>
-        <button type="submit">Kirim Lowongan (SINYAL) 📡</button>
+        <button type="submit">Kirim Lowongan</button>
     </form>
     <div id="alertBox" class="alert"></div>
-    <div style="text-align: center;">
-        <a href="../data-center/" class="link-btn" target="_blank">🔍 Buka Otak (Data Center)</a>
+    <div style="text-align: center; margin-top: 15px;">
+        <a href="../data-center/" target="_blank">🔍 Buka Data Center (Otak)</a>
     </div>
 </div>
 
@@ -103,9 +100,6 @@
         }
     });
 
-    // BroadcastChannel untuk mengirim sinyal ke otak (data center)
-    const channel = new BroadcastChannel('saluran_lowongan');
-
     form.addEventListener('submit', (e) => {
         e.preventDefault();
 
@@ -126,22 +120,21 @@
             tanggal: new Date().toLocaleString('id-ID')
         };
 
-        // Kirim sinyal ke otak (BroadcastChannel)
-        channel.postMessage({
-            aksi: 'TAMBAH_LOWONGAN',
-            data: lowonganBaru
-        });
+        // Ambil data lama dari localStorage
+        let daftar = localStorage.getItem('lowonganOtak');
+        daftar = daftar ? JSON.parse(daftar) : [];
+        daftar.unshift(lowonganBaru);
+        if (daftar.length > 200) daftar = daftar.slice(0, 200);
+        localStorage.setItem('lowonganOtak', JSON.stringify(daftar));
 
-        // Tampilkan pesan sukses
         alertBox.className = 'alert success';
-        alertBox.innerText = '✅ Lowongan terkirim ke otak (data center)';
+        alertBox.innerText = '✅ Lowongan tersimpan! Lihat di Data Center.';
         form.reset();
         jenisManual.style.display = 'none';
         gajiDetail.style.display = 'none';
         jenisSelect.value = 'Full-Time';
         gajiSelect.value = 'Tidak disebutkan';
 
-        // Hilangkan pesan setelah 3 detik
         setTimeout(() => { alertBox.style.display = 'none'; alertBox.className = 'alert'; }, 3000);
     });
 </script>
