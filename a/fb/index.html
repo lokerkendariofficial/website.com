@@ -2,21 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>FB - Pasang Lowongan</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .container { background: white; max-width: 550px; width: 100%; padding: 30px; border-radius: 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        h2 { color: #2c3e66; text-align: center; margin-bottom: 8px; }
-        .sub { color: #666; text-align: center; font-size: 14px; margin-bottom: 25px; }
-        .form-group { margin-bottom: 18px; }
-        label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 12px; font-size: 14px; background: #fafafa; }
-        .hidden-input { display: none; margin-top: 8px; }
-        button { width: 100%; padding: 14px; background: #2c3e66; color: white; border: none; border-radius: 40px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .alert { margin-top: 15px; padding: 12px; border-radius: 12px; text-align: center; display: none; }
-        .success { display: block; background: #d4edda; color: #155724; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
@@ -73,70 +61,6 @@
     </div>
 </div>
 
-<script>
-    const form = document.getElementById('lokerForm');
-    const alertBox = document.getElementById('alertBox');
-    const jenisSelect = document.getElementById('jenisSelect');
-    const jenisManual = document.getElementById('jenisManual');
-    const gajiSelect = document.getElementById('gajiSelect');
-    const gajiDetail = document.getElementById('gajiDetail');
-
-    jenisSelect.addEventListener('change', () => {
-        if (jenisSelect.value === 'manual') {
-            jenisManual.style.display = 'block';
-            jenisManual.required = true;
-        } else {
-            jenisManual.style.display = 'none';
-            jenisManual.required = false;
-        }
-    });
-    gajiSelect.addEventListener('change', () => {
-        if (gajiSelect.value !== 'Tidak disebutkan') {
-            gajiDetail.style.display = 'block';
-            gajiDetail.required = true;
-        } else {
-            gajiDetail.style.display = 'none';
-            gajiDetail.required = false;
-        }
-    });
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        let jenis = jenisSelect.value;
-        if (jenis === 'manual') jenis = jenisManual.value.trim();
-        let gaji = gajiSelect.value;
-        if (gaji !== 'Tidak disebutkan') gaji = gaji + ': ' + gajiDetail.value.trim();
-
-        const lowonganBaru = {
-            id: Date.now(),
-            email: form.email.value.trim(),
-            perusahaan: form.perusahaan.value.trim(),
-            posisi: form.posisi.value.trim(),
-            lokasi: form.lokasi.value.trim(),
-            jenis: jenis,
-            gaji: gaji,
-            deskripsi: form.deskripsi.value.trim(),
-            tanggal: new Date().toLocaleString('id-ID')
-        };
-
-        // Ambil data lama dari localStorage
-        let daftar = localStorage.getItem('lowonganOtak');
-        daftar = daftar ? JSON.parse(daftar) : [];
-        daftar.unshift(lowonganBaru);
-        if (daftar.length > 200) daftar = daftar.slice(0, 200);
-        localStorage.setItem('lowonganOtak', JSON.stringify(daftar));
-
-        alertBox.className = 'alert success';
-        alertBox.innerText = '✅ Lowongan tersimpan! Lihat di Data Center.';
-        form.reset();
-        jenisManual.style.display = 'none';
-        gajiDetail.style.display = 'none';
-        jenisSelect.value = 'Full-Time';
-        gajiSelect.value = 'Tidak disebutkan';
-
-        setTimeout(() => { alertBox.style.display = 'none'; alertBox.className = 'alert'; }, 3000);
-    });
-</script>
+<script src="script.js"></script>
 </body>
 </html>
