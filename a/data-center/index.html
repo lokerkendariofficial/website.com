@@ -2,65 +2,78 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Center - Loker Kendari</title>
+    <title>Data Center - Otak 🧠</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #f0f2f5; padding: 30px 20px; }
         .container { max-width: 1100px; margin: 0 auto; }
-        h1 { color: #2c3e66; text-align: center; margin-bottom: 8px; }
-        .subtitle { text-align: center; color: #666; margin-bottom: 25px; }
-        .lowongan-list { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: #2c3e66; margin-bottom: 8px; }
+        .sub { text-align: center; color: #666; margin-bottom: 25px; }
+        .lowongan-list { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .row { display: flex; flex-wrap: wrap; align-items: center; padding: 14px 20px; border-bottom: 1px solid #e9ecef; transition: background 0.2s; }
-        .row:hover { background: #f8f9fc; }
+        .row:hover { background: #f8f9fc; cursor: pointer; }
         .email { flex: 2; min-width: 170px; font-weight: 600; color: #007bff; font-size: 13px; word-break: break-all; }
         .perusahaan-posisi { flex: 3; min-width: 200px; font-size: 14px; font-weight: 500; color: #333; }
         .lokasi { flex: 2; min-width: 150px; font-size: 13px; color: #6c757d; }
-        .tanggal { flex: 1; min-width: 90px; font-size: 12px; color: #6c757d; }
-        .btn-detail { background: none; border: 1px solid #007bff; color: #007bff; padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; }
-        .btn-detail:hover { background: #007bff; color: white; }
-        .detail-card { background: #fff3e0; border-left: 6px solid #ff9800; margin-top: 25px; padding: 20px; border-radius: 16px; display: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .tanggal { flex: 1; min-width: 100px; font-size: 12px; color: #6c757d; }
+        .detail-card { background: #fff8e7; border-left: 6px solid #ff9800; margin-top: 25px; padding: 20px; border-radius: 20px; display: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .detail-card h3 { color: #e67e22; margin-bottom: 15px; }
         .detail-row { margin-bottom: 12px; font-size: 14px; }
-        .detail-label { font-weight: 700; display: inline-block; width: 130px; color: #555; }
+        .detail-label { font-weight: 700; display: inline-block; width: 140px; color: #555; }
         .detail-value { color: #333; word-break: break-word; }
-        .empty { text-align: center; padding: 50px; background: white; border-radius: 16px; color: #888; }
-        .btn-back { display: inline-block; margin-top: 25px; background: #2c3e66; color: white; padding: 10px 24px; border-radius: 30px; text-decoration: none; font-weight: bold; text-align: center; }
+        .empty { text-align: center; padding: 50px; background: white; border-radius: 20px; color: #888; }
+        .btn-back { display: inline-block; margin-top: 25px; background: #2c3e66; color: white; padding: 10px 24px; border-radius: 40px; text-decoration: none; font-weight: bold; }
         footer { text-align: center; margin-top: 30px; font-size: 12px; color: #888; }
-        @media (max-width: 700px) { .row { flex-direction: column; align-items: flex-start; gap: 6px; } .btn-detail { margin-top: 6px; } }
+        @media (max-width: 700px) { .row { flex-direction: column; align-items: flex-start; gap: 8px; } }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>📋 Data Center Lowongan</h1>
-    <p class="subtitle">Menampung semua data dari otak (fb/index)</p>
+    <h1>🧠 Data Center (Otak)</h1>
+    <p class="sub">Menerima sinyal dari organ → menampilkan kartu lowongan</p>
     <div id="listContainer" class="lowongan-list"></div>
     <div id="detailCard" class="detail-card"></div>
     <div style="text-align: center;">
         <a href="../fb/" class="btn-back">+ Pasang Lowongan Baru</a>
     </div>
-    <footer>Loker Kendari Official – Data tersimpan di browser (max 200 lowongan)</footer>
+    <footer>Data disimpan di localStorage & real-time via BroadcastChannel</footer>
 </div>
 
 <script>
-    let lowonganData = [];
+    let daftarLowongan = [];
 
-    function loadData() {
-        const stored = localStorage.getItem('lowonganList');
-        lowonganData = stored ? JSON.parse(stored) : [];
+    // Referensi DOM
+    const listContainer = document.getElementById('listContainer');
+    const detailCard = document.getElementById('detailCard');
+
+    // Broadcast Channel untuk mendengar sinyal dari organ (fb)
+    const channel = new BroadcastChannel('saluran_lowongan');
+
+    // Simpan ke localStorage
+    function simpanKeLocalStorage() {
+        localStorage.setItem('lowonganOtak', JSON.stringify(daftarLowongan));
+    }
+
+    // Muat dari localStorage
+    function muatDariLocalStorage() {
+        const stored = localStorage.getItem('lowonganOtak');
+        if (stored) {
+            daftarLowongan = JSON.parse(stored);
+        } else {
+            daftarLowongan = [];
+        }
         renderList();
     }
 
+    // Render daftar baris
     function renderList() {
-        const container = document.getElementById('listContainer');
-        if (!lowonganData.length) {
-            container.innerHTML = '<div class="empty">Belum ada lowongan. Silakan pasang lowongan di halaman FB.</div>';
-            document.getElementById('detailCard').style.display = 'none';
+        if (!daftarLowongan.length) {
+            listContainer.innerHTML = '<div class="empty">Belum ada lowongan. Kirim dari halaman FB (organ).</div>';
+            detailCard.style.display = 'none';
             return;
         }
         let html = '';
-        lowonganData.forEach((item, idx) => {
-            // Ambil hanya tanggal (YYYY/MM/DD)
+        daftarLowongan.forEach((item, idx) => {
             let tgl = item.tanggal ? item.tanggal.split(' ')[0] : '-';
             html += `
                 <div class="row" data-index="${idx}">
@@ -68,30 +81,37 @@
                     <div class="perusahaan-posisi">${escapeHtml(item.perusahaan || '-')} - ${escapeHtml(item.posisi || '-')}</div>
                     <div class="lokasi">📍 ${escapeHtml(item.lokasi || '-')}</div>
                     <div class="tanggal">📅 ${escapeHtml(tgl)}</div>
-                    <button class="btn-detail" onclick="showDetail(${idx})">Konfirmasi Detail</button>
                 </div>
             `;
         });
-        container.innerHTML = html;
+        listContainer.innerHTML = html;
+
+        // Pasang event listener ke setiap baris
+        document.querySelectorAll('.row').forEach(row => {
+            row.addEventListener('click', () => {
+                const idx = row.getAttribute('data-index');
+                tampilkanDetail(parseInt(idx));
+            });
+        });
     }
 
-    function showDetail(index) {
-        const item = lowonganData[index];
+    // Tampilkan kartu detail
+    function tampilkanDetail(index) {
+        const item = daftarLowongan[index];
         if (!item) return;
-        const card = document.getElementById('detailCard');
-        card.style.display = 'block';
-        card.innerHTML = `
+        detailCard.style.display = 'block';
+        detailCard.innerHTML = `
             <h3>🔍 Detail Lowongan</h3>
             <div class="detail-row"><span class="detail-label">Perusahaan:</span> <span class="detail-value">${escapeHtml(item.perusahaan || '-')}</span></div>
             <div class="detail-row"><span class="detail-label">Posisi:</span> <span class="detail-value">${escapeHtml(item.posisi || '-')}</span></div>
             <div class="detail-row"><span class="detail-label">Lokasi:</span> <span class="detail-value">${escapeHtml(item.lokasi || '-')}</span></div>
-            <div class="detail-row"><span class="detail-label">Deskripsi/Kualifikasi:</span> <span class="detail-value">${escapeHtml(item.deskripsi || '-').replace(/\n/g, '<br>')}</span></div>
+            <div class="detail-row"><span class="detail-label">Deskripsi:</span> <span class="detail-value">${escapeHtml(item.deskripsi || '-').replace(/\n/g, '<br>')}</span></div>
             <div class="detail-row"><span class="detail-label">Email:</span> <span class="detail-value">${escapeHtml(item.email || '-')}</span></div>
-            <div class="detail-row"><span class="detail-label">Jenis Pekerjaan:</span> <span class="detail-value">${escapeHtml(item.jenis || '-')}</span></div>
-            <div class="detail-row"><span class="detail-label">Estimasi Gaji:</span> <span class="detail-value">${escapeHtml(item.gaji || '-')}</span></div>
+            <div class="detail-row"><span class="detail-label">Jenis:</span> <span class="detail-value">${escapeHtml(item.jenis || '-')}</span></div>
+            <div class="detail-row"><span class="detail-label">Gaji:</span> <span class="detail-value">${escapeHtml(item.gaji || '-')}</span></div>
             <div class="detail-row"><span class="detail-label">Tanggal Pasang:</span> <span class="detail-value">${escapeHtml(item.tanggal || '-')}</span></div>
         `;
-        card.scrollIntoView({ behavior: 'smooth' });
+        detailCard.scrollIntoView({ behavior: 'smooth' });
     }
 
     function escapeHtml(str) {
@@ -104,7 +124,30 @@
         });
     }
 
-    loadData();
+    // Menambahkan lowongan baru (dari sinyal atau dari form)
+    function tambahLowongan(lowonganBaru) {
+        // Cegah duplikat berdasarkan id (jika ada)
+        if (!lowonganBaru.id) lowonganBaru.id = Date.now();
+        daftarLowongan.unshift(lowonganBaru); // tambah di awal
+        if (daftarLowongan.length > 200) daftarLowongan = daftarLowongan.slice(0, 200);
+        simpanKeLocalStorage();
+        renderList();
+    }
+
+    // Mendengarkan sinyal dari BroadcastChannel
+    channel.onmessage = (event) => {
+        const pesan = event.data;
+        if (pesan.aksi === 'TAMBAH_LOWONGAN' && pesan.data) {
+            tambahLowongan(pesan.data);
+            // Opsional: tampilkan notifikasi kilat
+            const oldTitle = document.title;
+            document.title = '✨ Lowongan baru masuk!';
+            setTimeout(() => { document.title = oldTitle; }, 2000);
+        }
+    };
+
+    // Inisialisasi
+    muatDariLocalStorage();
 </script>
 </body>
 </html>
