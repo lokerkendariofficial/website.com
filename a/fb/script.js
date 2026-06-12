@@ -1,4 +1,3 @@
-// script.js untuk form di a/fb/
 const form = document.getElementById('lokerForm');
 const statusMessage = document.getElementById('statusMessage');
 const btnKirim = document.getElementById('btnKirim');
@@ -40,7 +39,7 @@ gajiSelect.addEventListener('change', function() {
     }
 });
 
-// Fungsi menyimpan data lowongan ke localStorage
+// Fungsi menyimpan data dengan batas 200
 function saveToLocalStorage(formDataObj) {
     let lowonganList = localStorage.getItem('lowonganList');
     if (lowonganList) {
@@ -48,7 +47,12 @@ function saveToLocalStorage(formDataObj) {
     } else {
         lowonganList = [];
     }
-    lowonganList.unshift(formDataObj); // tambah di awal
+    // Tambah di awal
+    lowonganList.unshift(formDataObj);
+    // Batasi maksimal 200
+    if (lowonganList.length > 200) {
+        lowonganList = lowonganList.slice(0, 200);
+    }
     localStorage.setItem('lowonganList', JSON.stringify(lowonganList));
 }
 
@@ -56,62 +60,46 @@ function saveToLocalStorage(formDataObj) {
 form.addEventListener('submit', function(e) {
     e.preventDefault();
     
-    btnKirim.disabled = true;
-    btnKirim.innerText = "Sedang Mengirim...";
-
-    const formData = new FormData(form);
-    let formDataObj = {};
-    for (let [key, value] of formData.entries()) {
-        formDataObj[key] = value;
-    }
+    // Ambil semua data
+    let formDataObj = {
+        'Email Perusahaan': document.querySelector('[name="Email Perusahaan"]').value,
+        'Nama Perusahaan': document.querySelector('[name="Nama Perusahaan"]').value,
+        'Judul Pekerjaan': document.querySelector('[name="Judul Pekerjaan"]').value,
+        'Kualifikasi': document.querySelector('[name="Kualifikasi"]').value,
+        'Alamat Perusahaan': document.querySelector('[name="Alamat Perusahaan"]').value,
+        'Tanggal Submit': new Date().toLocaleString('id-ID')
+    };
     
-    // Proses jenis kerja manual
-    if (jenisKebutuhanSelect.value === 'manual') {
-        formDataObj['Jenis Kebutuhan'] = '(Manual) ' + jenisKebutuhanManual.value;
-    }
-    // Proses detail gaji
-    if (gajiSelect.value !== 'Gaji Tidak Di Sebutkan') {
-        formDataObj['Estimasi Gaji'] = gajiSelect.value + ': ' + gajiDetail.value;
+    // Proses jenis kerja
+    let jenis = jenisKebutuhanSelect.value;
+    if (jenis === 'manual') jenis = '(Manual) ' + jenisKebutuhanManual.value;
+    formDataObj['Jenis Kebutuhan'] = jenis;
+    
+    // Proses gaji
+    let gaji = gajiSelect.value;
+    if (gaji !== 'Gaji Tidak Di Sebutkan') {
+        formDataObj['Estimasi Gaji'] = gaji + ': ' + gajiDetail.value;
     } else {
-        formDataObj['Estimasi Gaji'] = 'Gaji Tidak Di Sebutkan';
+        formDataObj['Estimasi Gaji'] = gaji;
     }
     
-    // Kirim ke Web3Forms
-    fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formData
-    })
-    .then(async (response) => {
-        let json = await response.json();
-        if (response.status == 200) {
-            // Setelah berhasil kirim ke email, simpan ke localStorage
-            saveToLocalStorage(formDataObj);
-            
-            statusMessage.className = "status-box success";
-            statusMessage.innerHTML = "✅ Sukses! Info lowongan telah dikirim dan disimpan.";
-            successButtons.style.display = "flex";
-            form.reset();
-            jenisKebutuhanManual.style.display = 'none';
-            gajiDetail.style.display = 'none';
-            jenisKebutuhanSelect.value = '';
-            gajiSelect.value = '';
-        } else {
-            statusMessage.className = "status-box error";
-            statusMessage.innerHTML = "❌ Gagal: " + json.message;
-        }
-    })
-    .catch(error => {
-        console.log(error);
-        statusMessage.className = "status-box error";
-        statusMessage.innerHTML = "❌ Terjadi kesalahan jaringan. Silakan periksa koneksi internet Anda.";
-    })
-    .finally(() => {
-        btnKirim.disabled = false;
-        btnKirim.innerText = "Kirim Info Loker";
-    });
+    // Simpan
+    saveToLocalStorage(formDataObj);
+    
+    // Tampilkan pesan sukses
+    statusMessage.className = "status-box success";
+    statusMessage.innerHTML = "✅ Lowongan tersimpan (maksimal 200 data).";
+    successButtons.style.display = "flex";
+    
+    // Reset form
+    form.reset();
+    jenisKebutuhanManual.style.display = 'none';
+    gajiDetail.style.display = 'none';
+    jenisKebutuhanSelect.value = '';
+    gajiSelect.value = '';
 });
 
-// Arahkan tombol lihat lowongan ke data center
+// Tombol lihat lowongan
 document.getElementById('btnMoreLowongan').addEventListener('click', function(e) {
     e.preventDefault();
     window.location.href = '../data-center/';
